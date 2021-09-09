@@ -30,7 +30,7 @@ export const formatCellFilterInfos = ({
 };
 
 const Styled = {
-	Modal: styled.div`
+	Modal: styled.div<{ isModal?: boolean }>`
 		display: ${({ isModal }) => (isModal ? 'flex' : 'none')};
 		top: 52px;
 		position: absolute;

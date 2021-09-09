@@ -1,35 +1,28 @@
 import React from 'react';
-import Card from 'components/atoms/Card';
 import styled from 'styled-components';
 
 import GlobalStyled from 'styles/GlobalStyled';
+import GlobalSidebar from 'components/molecules/GlobalSidebar';
 
 const Styled = {
 	Wrapper: styled(GlobalStyled.Row)`
 		flex-direction: column;
+		height: 100%;
 	`,
 	Canvas: styled.canvas`
 		margin: auto;
 	`,
-	ScaleImg: styled.img``,
 };
 
 const MainPage = (): JSX.Element => {
 	return (
 		<Styled.Wrapper>
 			<GlobalStyled.Container flexDirection="row">
-				<GlobalStyled.Col
-					flexDirection="column"
-					width={40}
-					p={4}
-				></GlobalStyled.Col>
-				<GlobalStyled.Col flexDirection="column" width={60} p={4}>
-					<GlobalStyled.Row mb={4}>
-						<Card></Card>
-					</GlobalStyled.Row>
-					<GlobalStyled.Row>
-						<Card></Card>
-					</GlobalStyled.Row>
+				<GlobalStyled.Col flexDirection="column" width={20}>
+					<GlobalSidebar />
+				</GlobalStyled.Col>
+				<GlobalStyled.Col flexDirection="column" width={80}>
+					<Styled.Canvas />
 				</GlobalStyled.Col>
 			</GlobalStyled.Container>
 		</Styled.Wrapper>

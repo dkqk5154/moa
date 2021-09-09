@@ -12,8 +12,6 @@ import Spinner from 'components/atoms/Spinner';
 
 import { mainRouter, loginRouter } from 'config/routerUrl';
 
-import GlobalNav from 'components/molecules/GlobalNav';
-
 import { CurrentUserContext } from 'contexts/CurrentUserContext';
 // import useInterval from 'hooks/useInterval';
 
@@ -63,7 +61,6 @@ function App() {
 				<ThemeProvider theme={theme}>
 					<ModalProvider>
 						<Styled.Wrapper>
-							<GlobalNav />
 							<Suspense
 								fallback={
 									<Spinner height="80vh" size={'10rem'} />

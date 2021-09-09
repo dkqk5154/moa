@@ -1,8 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+
 import App from './App';
 import { CurrentUserProvider } from './contexts/CurrentUserContext';
 import reportWebVitals from './reportWebVitals';
+import { store } from './app/store';
 
 import GlobalStyle from './styles/GlobalStyle';
 import 'styles/font.css';
@@ -10,9 +13,11 @@ import 'styles/font.css';
 ReactDOM.render(
 	<React.StrictMode>
 		<GlobalStyle />
-		<CurrentUserProvider>
-			<App />
-		</CurrentUserProvider>
+		<Provider store={store}>
+			<CurrentUserProvider>
+				<App />
+			</CurrentUserProvider>
+		</Provider>
 	</React.StrictMode>,
 	document.getElementById('root'),
 );

@@ -38,7 +38,7 @@ const DateRadioButton = (props: DateButtonProps) => {
 	const { info, children } = props;
 	return (
 		<Styled.Wrapper {...props} fontSize={3}>
-			<GlobalStyled.Row bottom={1}>
+			<GlobalStyled.Row mb={1}>
 				<b>{moment(info).format('ddd')}</b>
 			</GlobalStyled.Row>
 			<GlobalStyled.Row fontSize={3}>

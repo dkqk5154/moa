@@ -33,7 +33,7 @@ const Styled = {
 		justify-content: center;
 		text-align: center;
 	`,
-	Modal: styled.div`
+	Modal: styled.div<{ isModal?: boolean }>`
 		display: ${({ isModal }) => (isModal ? 'flex' : 'none')};
 		top: 52px;
 		position: absolute;

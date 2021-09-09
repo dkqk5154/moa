@@ -52,17 +52,17 @@ const Weather = (props: WeatherProps) => {
 				<Styled.WeatherName isShow={isShowName}>
 					{name}
 				</Styled.WeatherName>
-				<Styled.Temperature isShow={isShowTemperature} bottom={margin}>
+				<Styled.Temperature isShow={isShowTemperature} mb={margin}>
 					<b>{temperature}</b>℃
 				</Styled.Temperature>
 			</GlobalStyled.Col>
 		</GlobalStyled.Row>
 	) : (
 		<Styled.Wrapper>
-			<Styled.Temperature isShow={isShowTemperature} bottom={margin}>
+			<Styled.Temperature isShow={isShowTemperature} mb={margin}>
 				{temperature}℃
 			</Styled.Temperature>
-			<GlobalStyled.Row bottom={isShowName ? margin : 0}>
+			<GlobalStyled.Row mb={isShowName ? margin : 0}>
 				<Svg name={imgSrc} size={size} stroke={stroke} />
 			</GlobalStyled.Row>
 			<Styled.WeatherName isShow={isShowName}>{name}</Styled.WeatherName>

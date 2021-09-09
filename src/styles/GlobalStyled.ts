@@ -77,7 +77,7 @@ const Parent = {
 	`,
 };
 
-const GlobalStyled = {
+const GlobalStyled: { [key: string]: any } = {
 	Container: styled(Parent.Container)`
 		${Parent.Col}:last-child {
 			border-left: 0px;
