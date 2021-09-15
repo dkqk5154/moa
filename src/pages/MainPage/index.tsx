@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import GlobalStyled from 'styles/GlobalStyled';
 import GlobalSidebar from 'components/molecules/GlobalSidebar';
+import Character from 'components/atoms/Character';
 
 const Styled = {
 	Wrapper: styled(GlobalStyled.Row)`
@@ -22,7 +23,7 @@ const MainPage = (): JSX.Element => {
 					<GlobalSidebar />
 				</GlobalStyled.Col>
 				<GlobalStyled.Col flexDirection="column" width={80}>
-					<Styled.Canvas />
+					<Character />
 				</GlobalStyled.Col>
 			</GlobalStyled.Container>
 		</Styled.Wrapper>

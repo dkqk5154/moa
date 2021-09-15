@@ -143,8 +143,8 @@ const Input = forwardRef((props: InputProps, ref): JSX.Element => {
 		<Styled.Wrapper>
 			{label ? <Styled.Label mr={1}>{label}</Styled.Label> : ''}
 			<Styled.Input
-				{...props}
 				css={css}
+				{...props}
 				icon={dataUri}
 				paddingLeft={dataUri ? '36px' : undefined}
 			/>
