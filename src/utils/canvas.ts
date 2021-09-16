@@ -64,28 +64,39 @@ export const getImgDataToRgba = (imgData: Array<number>) => {
 	return result;
 };
 
-export const drawImage = ({ ref, imgSrc }: { ref: any; imgSrc: string }) => {
-	let frameWidth = 50;
-	let frameHeight = 64;
-	let row = 1;
-	let column = 16;
+export interface DrawProps {
+	canvas: HTMLCanvasElement;
+	image: string;
+	sx: number;
+	sy: number;
+	sWidth: number;
+	sHeight: number;
+	x: number;
+	y: number;
+	width: number;
+	height: number;
+}
 
-	const canvas = ref.current;
+export const draw = ({
+	canvas,
+	image,
+	sx,
+	sy,
+	sWidth,
+	sHeight,
+	x,
+	y,
+	width,
+	height,
+}: DrawProps) => {
 	const ctx = canvas.getContext('2d');
-	const imageFile = new Image();
-	imageFile.src = imgSrc;
-	// context.drawImage(img,sx,sy,swidth,sheight,x,y,width,height);.
-	ctx.drawImage(
-		imageFile,
-		0,
-		0,
-		// column * frameWidth,
-		// row * frameHeight,
-		// frameWidth,
-		// frameHeight,
-		// 10,
-		// 30,
-		// frameWidth,
-		// frameHeight,
-	);
+	if (!ctx) return;
+	else {
+		let srcImg = new Image();
+		srcImg.src = image;
+		srcImg.onload = () => {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.drawImage(srcImg, sx, sy, sWidth, sHeight, x, y, width, height);
+		};
+	}
 };
