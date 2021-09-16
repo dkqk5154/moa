@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 
 import GlobalStyled from 'styles/GlobalStyled';
@@ -13,18 +13,47 @@ const Styled = {
 	Canvas: styled.canvas`
 		margin: auto;
 	`,
+	MapWrapper: styled.div`
+		display: flex;
+		width: 100%;
+		height: 100%;
+	`,
 };
 
 const MainPage = (): JSX.Element => {
+	const MapWrapperRef = useRef(null);
+	const [mapContainerInfo, setMapContainerInfo] = useState({
+		width: 0,
+		height: 0,
+	});
+
+	const handleResize = () => {
+		console.log({
+			width: MapWrapperRef?.current?.offsetWidth,
+			height: MapWrapperRef?.current?.offsetHeight,
+		});
+		setMapContainerInfo({
+			width: MapWrapperRef?.current?.offsetWidth,
+			height: MapWrapperRef?.current?.offsetHeight,
+		});
+	};
+
+	useEffect(() => {
+		setMapContainerInfo({
+			width: MapWrapperRef?.current?.offsetWidth,
+			height: MapWrapperRef?.current?.offsetHeight,
+		});
+		window.addEventListener('resize', handleResize);
+		return () => window.removeEventListener('resize', handleResize);
+	}, []);
+
 	return (
 		<Styled.Wrapper>
 			<GlobalStyled.Container flexDirection="row">
-				<GlobalStyled.Col flexDirection="column" width={20}>
-					<GlobalSidebar />
-				</GlobalStyled.Col>
-				<GlobalStyled.Col flexDirection="column" width={80}>
-					<Character />
-				</GlobalStyled.Col>
+				<GlobalSidebar />
+				<Styled.MapWrapper ref={MapWrapperRef}>
+					<Character {...mapContainerInfo} />
+				</Styled.MapWrapper>
 			</GlobalStyled.Container>
 		</Styled.Wrapper>
 	);
