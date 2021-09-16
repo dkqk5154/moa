@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import styled from 'styled-components';
 
 import { useAppSelector, useAppDispatch } from 'app/hooks';
@@ -7,35 +7,122 @@ import {
 	moveLeft,
 	moveDown,
 	moveUp,
-	setPositon,
-	selectPositon,
+	// setPosition,
+	selectDelay,
+	selectPosition,
 } from './characterSlice';
-import { drawImage } from 'utils/canvas';
+import { draw } from 'utils/canvas';
+import useInterval from 'hooks/useInterval';
+
+import TestUser from 'images/TestUser';
 
 const Styled = {
 	Character: styled.canvas`
-		width: 100%;
-		height: 100%;
+		border: 1px solid #ffffff;
 	`,
 };
 
-export interface CharacterProps {}
+export interface CharacterProps {
+	width: number;
+	height: number;
+}
 
-const Character = (props: CharacterProps): JSX.Element => {
+const Character = ({ width, height }: CharacterProps): JSX.Element => {
+	const [direction, setDirection] = useState('down');
+	const [isKeyPress, setIsKeyPress] = useState(false);
+	const [pushKeyArray, setPushKeyArray] = useState([]);
 	const characterRef = useRef(null);
 
-	useEffect(() => {
-		drawImage({
-			ref: characterRef,
-			imgSrc: require('./test-avater.png').default,
-		});
-		setPositon({ x: 0, y: 0 });
-	}, []);
-
-	const position = useAppSelector(selectPositon);
+	const position = useAppSelector(selectPosition);
+	const delay = useAppSelector(selectDelay);
 	const dispatch = useAppDispatch();
 
-	return <Styled.Character ref={characterRef} />;
+	useInterval(
+		() => {
+			switch (direction) {
+				case 'up':
+					dispatch(moveUp());
+					break;
+				case 'left':
+					dispatch(moveLeft());
+					break;
+				case 'down':
+					dispatch(moveDown());
+					break;
+				case 'right':
+					dispatch(moveRight());
+					break;
+				default:
+					break;
+			}
+		},
+		isKeyPress ? delay : null,
+	);
+
+	useEffect(() => {
+		draw({
+			canvas: characterRef.current,
+			image: TestUser.source,
+			...TestUser[direction],
+			sWidth: 64,
+			sHeight: 64,
+			...position,
+			width: TestUser.width,
+			height: TestUser.height,
+		});
+	}, [position, direction, width, height]);
+
+	const handleKeyPress = (e: KeyboardEvent) => {
+		const commonFunction = () => {
+			setIsKeyPress(true);
+			setPushKeyArray(prevState => prevState.concat(e.code));
+		};
+		switch (e.code) {
+			case 'KeyW':
+				setDirection('up');
+				commonFunction();
+				break;
+			case 'KeyA':
+				setDirection('left');
+				commonFunction();
+				break;
+			case 'KeyS':
+				setDirection('down');
+				commonFunction();
+				break;
+			case 'KeyD':
+				setDirection('right');
+				commonFunction();
+				break;
+			default:
+				break;
+		}
+	};
+
+	const handleKeyUp = useCallback(
+		(e: KeyboardEvent) => {
+			const isEmptyPushKey = pushKeyArray.filter(res => res !== e.code);
+			if (isEmptyPushKey.length === 0) {
+				setIsKeyPress(false);
+			}
+			setPushKeyArray(isEmptyPushKey);
+		},
+		[pushKeyArray],
+	);
+
+	useEffect(() => {
+		window.addEventListener('keypress', handleKeyPress);
+		window.addEventListener('keyup', handleKeyUp);
+
+		return () => {
+			window.removeEventListener('keypress', handleKeyPress);
+			window.removeEventListener('keyup', handleKeyUp);
+		};
+	}, [handleKeyUp]);
+
+	return (
+		<Styled.Character ref={characterRef} width={width} height={height} />
+	);
 };
 
 export default Character;
