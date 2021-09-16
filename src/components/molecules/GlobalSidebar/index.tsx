@@ -10,6 +10,7 @@ const Styled = {
 	Wrapper: styled(GlobalStyled.Row)`
 		flex-direction: column;
 		height: 100%;
+		width: 300px;
 	`,
 };
 
