@@ -66,7 +66,7 @@ export const getImgDataToRgba = (imgData: Array<number>) => {
 
 export interface DrawProps {
 	canvas: HTMLCanvasElement;
-	image: string;
+	imageSource: string;
 	sx: number;
 	sy: number;
 	sWidth: number;
@@ -75,11 +75,45 @@ export interface DrawProps {
 	y: number;
 	width: number;
 	height: number;
+	isClear?: boolean;
 }
 
-export const draw = ({
+export interface MoveClearProps {
+	canvas: HTMLCanvasElement;
+	sWidth: number;
+	sHeight: number;
+	x: number;
+	y: number;
+}
+
+// export const draw = ({
+// 	canvas,
+// 	image,
+// 	sx,
+// 	sy,
+// 	sWidth,
+// 	sHeight,
+// 	x,
+// 	y,
+// 	width,
+// 	height,
+// 	isClear,
+// }: DrawProps) => {
+// 	const ctx = canvas.getContext('2d');
+// 	if (!ctx) return;
+// 	else {
+// 		let srcImg = new Image();
+// 		srcImg.src = image;
+// 		srcImg.onload = () => {
+// 			if (isClear) ctx.clearRect(0, 0, canvas.width, canvas.height);
+// 			ctx.drawImage(srcImg, sx, sy, sWidth, sHeight, x, y, width, height);
+// 		};
+// 	}
+// };
+
+export const draw = async ({
 	canvas,
-	image,
+	imageSource,
 	sx,
 	sy,
 	sWidth,
@@ -88,15 +122,42 @@ export const draw = ({
 	y,
 	width,
 	height,
+	isClear,
 }: DrawProps) => {
 	const ctx = canvas.getContext('2d');
 	if (!ctx) return;
 	else {
-		let srcImg = new Image();
-		srcImg.src = image;
-		srcImg.onload = () => {
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			ctx.drawImage(srcImg, sx, sy, sWidth, sHeight, x, y, width, height);
+		const imageData = new Image();
+		imageData.src = imageSource;
+		imageData.onload = () => {
+			if (isClear) {
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+			}
+			ctx.drawImage(
+				imageData,
+				sx,
+				sy,
+				sWidth,
+				sHeight,
+				x,
+				y,
+				width,
+				height,
+			);
 		};
+	}
+};
+
+export const cleanCanvas = ({
+	canvas,
+	sWidth,
+	sHeight,
+	x,
+	y,
+}: MoveClearProps) => {
+	const ctx = canvas.getContext('2d');
+	if (!ctx) return;
+	else {
+		ctx.clearRect(x, y, sWidth, sHeight);
 	}
 };
