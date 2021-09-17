@@ -34,7 +34,8 @@ export const characterSlice = createSlice({
 			{ position },
 			action: PayloadAction<CharacterState['position']>,
 		) => {
-			position = action.payload;
+			position.x = action.payload.x;
+			position.y = action.payload.y;
 		},
 		setSpeed: (
 			{ speed },
@@ -52,11 +53,11 @@ export const selectPosition = (state: RootState) => state.character.position;
 export const selectSpeed = (state: RootState) => state.character.speed;
 export const selectDelay = (state: RootState) => state.character.delay;
 
-export const setIfPosition =
-	(position: CharacterState['position']): AppThunk =>
-	dispatch => {
-		dispatch(setPosition(position));
-	};
+// export const setIfPosition =
+// 	(position: CharacterState['position']): AppThunk =>
+// 	dispatch => {
+// 		dispatch(setPosition(position));
+// 	};
 
 export const setIfSpeed =
 	(speed: CharacterState['speed']): AppThunk =>

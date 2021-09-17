@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import styled from 'styled-components';
 
 import { useAppSelector, useAppDispatch } from 'app/hooks';
@@ -7,10 +7,10 @@ import {
 	moveLeft,
 	moveDown,
 	moveUp,
-	// setPosition,
 	selectDelay,
 	selectPosition,
 } from './characterSlice';
+import { selectInfos } from 'components/atoms/Block/blockSlice';
 import { draw } from 'utils/canvas';
 import useInterval from 'hooks/useInterval';
 
@@ -18,7 +18,8 @@ import TestUser from 'images/TestUser';
 
 const Styled = {
 	Character: styled.canvas`
-		border: 1px solid #ffffff;
+		display: absolute;
+		top: 0;
 	`,
 };
 
@@ -31,25 +32,32 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 	const [direction, setDirection] = useState('down');
 	const [isKeyPress, setIsKeyPress] = useState(false);
 	const [pushKeyArray, setPushKeyArray] = useState([]);
-	const characterRef = useRef(null);
 
 	const position = useAppSelector(selectPosition);
+	const blockInfos = useAppSelector(selectInfos);
 	const delay = useAppSelector(selectDelay);
 	const dispatch = useAppDispatch();
 
+	const canvas = useRef(null);
+
 	useInterval(
 		() => {
+			const commonFunction = () => {};
 			switch (direction) {
 				case 'up':
+					commonFunction();
 					dispatch(moveUp());
 					break;
 				case 'left':
+					commonFunction();
 					dispatch(moveLeft());
 					break;
 				case 'down':
+					commonFunction();
 					dispatch(moveDown());
 					break;
 				case 'right':
+					commonFunction();
 					dispatch(moveRight());
 					break;
 				default:
@@ -60,19 +68,22 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 	);
 
 	useEffect(() => {
-		draw({
-			canvas: characterRef.current,
-			image: TestUser.source,
-			...TestUser[direction],
-			sWidth: 64,
-			sHeight: 64,
-			...position,
-			width: TestUser.width,
-			height: TestUser.height,
-		});
+		if (canvas) {
+			draw({
+				canvas: canvas.current,
+				imageSource: TestUser.source,
+				...TestUser[direction],
+				sWidth: TestUser.width,
+				sHeight: TestUser.height,
+				...position,
+				width: TestUser.width,
+				height: TestUser.height,
+				isClear: true,
+			});
+		}
 	}, [position, direction, width, height]);
 
-	const handleKeyPress = (e: KeyboardEvent) => {
+	const handleKeyPress = useCallback((e: KeyboardEvent) => {
 		const commonFunction = () => {
 			setIsKeyPress(true);
 			setPushKeyArray(prevState => prevState.concat(e.code));
@@ -97,7 +108,7 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 			default:
 				break;
 		}
-	};
+	}, []);
 
 	const handleKeyUp = useCallback(
 		(e: KeyboardEvent) => {
@@ -118,11 +129,9 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 			window.removeEventListener('keypress', handleKeyPress);
 			window.removeEventListener('keyup', handleKeyUp);
 		};
-	}, [handleKeyUp]);
+	}, [handleKeyUp, handleKeyPress]);
 
-	return (
-		<Styled.Character ref={characterRef} width={width} height={height} />
-	);
+	return <Styled.Character ref={canvas} width={width} height={height} />;
 };
 
 export default Character;
