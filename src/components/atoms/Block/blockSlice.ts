@@ -6,8 +6,8 @@ export interface BlockState {
 }
 
 export type BlockStateInfosProps = {
-	x: number;
-	y: number;
+	position: { x: number; y: number };
+	size: { width: number; height: number };
 	key: string;
 	imageInfo: {
 		source: string;
@@ -27,14 +27,14 @@ export const blockSlice = createSlice({
 	initialState,
 	// The `reducers` field lets us define reducers and generate associated actions
 	reducers: {
-		setInfos: (state, action: PayloadAction<BlockState>) => {
+		setBlockInfos: (state, action: PayloadAction<BlockState>) => {
 			state.infos = action.payload.infos;
 		},
 	},
 });
 
-export const { setInfos } = blockSlice.actions;
+export const { setBlockInfos } = blockSlice.actions;
 
-export const selectInfos = (state: RootState) => state.block.infos;
+export const selectBlockInfos = (state: RootState) => state.block.infos;
 
 export default blockSlice.reducer;
