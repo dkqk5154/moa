@@ -5,10 +5,8 @@ import {
 	useAppSelector,
 	// useAppDispatch
 } from 'app/hooks';
-import { selectInfos, BlockStateInfosProps } from './blockSlice';
+import { selectBlockInfos, BlockStateInfosProps } from './blockSlice';
 import { draw } from 'utils/canvas';
-
-import TestBlock from 'images/TestBlock';
 
 const Styled = {
 	Block: styled.canvas`
@@ -23,13 +21,12 @@ export interface CharacterProps {
 }
 
 const Character = ({ width, height }: CharacterProps): JSX.Element => {
-	const blockInfos = useAppSelector(selectInfos);
+	const blockInfos = useAppSelector(selectBlockInfos);
 	const canvas = useRef(null);
 	// const dispatch = useAppDispatch();
 
 	useEffect(() => {
 		if (canvas) {
-			console.log('blockInfos : ', blockInfos);
 			blockInfos.map((res: BlockStateInfosProps) => {
 				draw({
 					canvas: canvas.current,
@@ -37,8 +34,7 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 					...res.imageInfo,
 					sWidth: res.imageInfo.width,
 					sHeight: res.imageInfo.height,
-					x: res.x,
-					y: res.y,
+					...res.position,
 				});
 				return res;
 			});
