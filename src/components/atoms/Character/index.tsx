@@ -3,18 +3,18 @@ import styled from 'styled-components';
 
 import { useAppSelector, useAppDispatch } from 'app/hooks';
 import {
-	moveRight,
-	moveLeft,
-	moveDown,
-	moveUp,
 	selectDelay,
 	selectPosition,
+	selectSpeed,
+	selectSize,
+	selectImageInfo,
+	setPosition,
 } from './characterSlice';
-import { selectInfos } from 'components/atoms/Block/blockSlice';
+import { selectBlockInfos } from 'components/atoms/Block/blockSlice';
 import { draw } from 'utils/canvas';
 import useInterval from 'hooks/useInterval';
 
-import TestUser from 'images/TestUser';
+import { isCollision } from 'utils/objectEvent';
 
 const Styled = {
 	Character: styled.canvas`
@@ -34,54 +34,103 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 	const [pushKeyArray, setPushKeyArray] = useState([]);
 
 	const position = useAppSelector(selectPosition);
-	const blockInfos = useAppSelector(selectInfos);
+	const speed = useAppSelector(selectSpeed);
+	const blockInfos = useAppSelector(selectBlockInfos);
 	const delay = useAppSelector(selectDelay);
+	const size = useAppSelector(selectSize);
+	const imageInfo = useAppSelector(selectImageInfo);
 	const dispatch = useAppDispatch();
 
 	const canvas = useRef(null);
 
 	useInterval(
 		() => {
-			const commonFunction = () => {};
-			switch (direction) {
-				case 'up':
-					commonFunction();
-					dispatch(moveUp());
-					break;
-				case 'left':
-					commonFunction();
-					dispatch(moveLeft());
-					break;
-				case 'down':
-					commonFunction();
-					dispatch(moveDown());
-					break;
-				case 'right':
-					commonFunction();
-					dispatch(moveRight());
-					break;
-				default:
-					break;
-			}
+			let movePosition = { x: 0, y: 0 };
+			const commonFunction = (movePosition: { x: number; y: number }) => {
+				const isObjectCollision = isCollision({
+					self: {
+						position: movePosition,
+						size,
+					},
+					objects: blockInfos,
+				});
+				if (!isObjectCollision) {
+					dispatch(setPosition(movePosition));
+				}
+			};
+			const objectSetPosition = () => {
+				switch (direction) {
+					case 'up':
+						movePosition = {
+							x: position.x,
+							y: position.y - speed,
+						};
+						commonFunction(movePosition);
+						break;
+					case 'down':
+						movePosition = {
+							x: position.x,
+							y: position.y + speed,
+						};
+						commonFunction(movePosition);
+						break;
+					case 'left':
+						movePosition = {
+							x: position.x - speed,
+							y: position.y,
+						};
+						commonFunction(movePosition);
+						break;
+					case 'right':
+						movePosition = {
+							x: position.x + speed,
+							y: position.y,
+						};
+						commonFunction(movePosition);
+						break;
+
+					default:
+						break;
+				}
+			};
+			objectSetPosition();
 		},
 		isKeyPress ? delay : null,
 	);
 
 	useEffect(() => {
+		// console.log(
+		// 	'blockInfos : ',
+		// 	blockInfos.map(res => res.position),
+		// );
+		console.log(
+			'isCollision : ',
+			isCollision({
+				self: {
+					position,
+					size,
+				},
+				objects: blockInfos,
+			}),
+		);
+		// console.log('position : ', position);
+	}, [position, size, blockInfos]);
+
+	useEffect(() => {
 		if (canvas) {
 			draw({
 				canvas: canvas.current,
-				imageSource: TestUser.source,
-				...TestUser[direction],
-				sWidth: TestUser.width,
-				sHeight: TestUser.height,
+				imageSource: imageInfo.source,
+				...imageInfo[direction],
+				sWidth: imageInfo.width,
+				sHeight: imageInfo.height,
 				...position,
-				width: TestUser.width,
-				height: TestUser.height,
+				width: imageInfo.width,
+				height: imageInfo.height,
 				isClear: true,
 			});
 		}
-	}, [position, direction, width, height]);
+	}, [imageInfo, position, direction, width, height]);
 
 	const handleKeyPress = useCallback((e: KeyboardEvent) => {
 		const commonFunction = () => {
