@@ -7,10 +7,15 @@ import Character from 'components/atoms/Character';
 import Block from 'components/atoms/Block';
 
 import { useAppDispatch } from 'app/hooks';
-import { setPosition } from 'components/atoms/Character/characterSlice';
-import { setInfos } from 'components/atoms/Block/blockSlice';
+import {
+	setPosition,
+	setImageInfo,
+	setSize,
+} from 'components/atoms/Character/characterSlice';
+import { setBlockInfos } from 'components/atoms/Block/blockSlice';
 
 import TestBlock from 'images/TestBlock';
+import TestUser from 'images/TestUser';
 
 const Styled = {
 	Wrapper: styled(GlobalStyled.Row)`
@@ -27,9 +32,9 @@ const Styled = {
 	`,
 };
 
-const testBlockInfos = new Array(30).fill({
-	x: 0,
-	y: 0,
+const testBlockInfos = new Array(60).fill({
+	position: { x: 0, y: 0 },
+	size: { width: TestBlock.width, height: TestBlock.height },
 	key: '1',
 	imageInfo: {
 		source: TestBlock.source,
@@ -49,19 +54,50 @@ const MainPage = (): JSX.Element => {
 	const dispatch = useAppDispatch();
 
 	useEffect(() => {
+		dispatch(setImageInfo(TestUser));
+		dispatch(setSize({ width: TestUser.width, height: TestUser.height }));
 		dispatch(setPosition({ x: 64, y: 64 }));
 		dispatch(
-			setInfos({
+			setBlockInfos({
 				infos: testBlockInfos.map((res, i) => {
-					if (i >= 15) {
+					const lineBlockCount = 13;
+					if (i >= lineBlockCount * 3) {
 						return {
 							...res,
-							y: (i - 15) * res.imageInfo.height,
+							position: {
+								x: res.position.x,
+								y:
+									lineBlockCount * res.imageInfo.height -
+									(i - lineBlockCount * 3) *
+										res.imageInfo.height,
+							},
+						};
+					} else if (i >= lineBlockCount * 2) {
+						return {
+							...res,
+							position: {
+								x:
+									lineBlockCount * res.imageInfo.width -
+									(i - lineBlockCount * 2) *
+										res.imageInfo.width,
+								y: lineBlockCount * res.imageInfo.height,
+							},
+						};
+					} else if (i >= lineBlockCount) {
+						return {
+							...res,
+							position: {
+								x: lineBlockCount * res.imageInfo.width,
+								y: (i - lineBlockCount) * res.imageInfo.height,
+							},
 						};
 					}
 					return {
 						...res,
-						x: i * res.imageInfo.width,
+						position: {
+							x: i * res.imageInfo.width,
+							y: 0,
+						},
 					};
 				}),
 			}),
