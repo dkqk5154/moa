@@ -18,7 +18,7 @@ import { isCollision } from 'utils/objectEvent';
 
 const Styled = {
 	Character: styled.canvas`
-		display: absolute;
+		position: absolute;
 		top: 0;
 	`,
 };
@@ -32,6 +32,7 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 	const [direction, setDirection] = useState('down');
 	const [isKeyPress, setIsKeyPress] = useState(false);
 	const [pushKeyArray, setPushKeyArray] = useState([]);
+	const [animationFrame, setAnimationFrame] = useState(0);
 
 	const position = useAppSelector(selectPosition);
 	const speed = useAppSelector(selectSpeed);
@@ -41,7 +42,7 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 	const imageInfo = useAppSelector(selectImageInfo);
 	const dispatch = useAppDispatch();
 
-	const canvas = useRef(null);
+	const canvasRef = useRef(null);
 
 	useInterval(
 		() => {
@@ -55,6 +56,9 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 					objects: blockInfos,
 				});
 				if (!isObjectCollision) {
+					setAnimationFrame((prevState: number) =>
+						prevState >= 2 ? 1 : prevState + 1,
+					);
 					dispatch(setPosition(movePosition));
 				}
 			};
@@ -99,29 +103,12 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 	);
 
 	useEffect(() => {
-		// console.log(
-		// 	'blockInfos : ',
-		// 	blockInfos.map(res => res.position),
-		// );
-		console.log(
-			'isCollision : ',
-			isCollision({
-				self: {
-					position,
-					size,
-				},
-				objects: blockInfos,
-			}),
-		);
-		// console.log('position : ', position);
-	}, [position, size, blockInfos]);
-
-	useEffect(() => {
-		if (canvas) {
+		if (canvasRef) {
 			draw({
-				canvas: canvas.current,
+				canvas: canvasRef.current,
 				imageSource: imageInfo.source,
-				...imageInfo[direction],
+				sx: imageInfo[direction].sx + animationFrame * imageInfo.width,
+				sy: imageInfo[direction].sy,
 				sWidth: imageInfo.width,
 				sHeight: imageInfo.height,
 				...position,
@@ -130,7 +117,7 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 				isClear: true,
 			});
 		}
-	}, [imageInfo, position, direction, width, height]);
+	}, [imageInfo, position, direction, width, height, animationFrame]);
 
 	const handleKeyPress = useCallback((e: KeyboardEvent) => {
 		const commonFunction = () => {
@@ -164,6 +151,7 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 			const isEmptyPushKey = pushKeyArray.filter(res => res !== e.code);
 			if (isEmptyPushKey.length === 0) {
 				setIsKeyPress(false);
+				setAnimationFrame(0);
 			}
 			setPushKeyArray(isEmptyPushKey);
 		},
@@ -180,7 +168,7 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 		};
 	}, [handleKeyUp, handleKeyPress]);
 
-	return <Styled.Character ref={canvas} width={width} height={height} />;
+	return <Styled.Character ref={canvasRef} width={width} height={height} />;
 };
 
 export default Character;
