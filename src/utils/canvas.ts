@@ -133,6 +133,7 @@ export const draw = async ({
 			if (isClear) {
 				ctx.clearRect(0, 0, canvas.width, canvas.height);
 			}
+
 			ctx.drawImage(
 				imageData,
 				sx,
