@@ -56,11 +56,11 @@ const MainPage = (): JSX.Element => {
 	useEffect(() => {
 		dispatch(setImageInfo(TestUser));
 		dispatch(setSize({ width: TestUser.width, height: TestUser.height }));
-		dispatch(setPosition({ x: 64, y: 64 }));
+		dispatch(setPosition({ x: 128, y: 128 }));
 		dispatch(
 			setBlockInfos({
 				infos: testBlockInfos.map((res, i) => {
-					const lineBlockCount = 13;
+					const lineBlockCount = 50;
 					if (i >= lineBlockCount * 3) {
 						return {
 							...res,
