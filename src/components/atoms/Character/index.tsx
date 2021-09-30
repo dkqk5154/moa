@@ -9,9 +9,8 @@ import {
 	selectSize,
 	selectImageInfo,
 	setPosition,
-} from './characterSlice';
+} from 'components/atoms/Character/characterSlice';
 import { selectBlockInfos } from 'components/atoms/Block/blockSlice';
-import { draw } from 'utils/canvas';
 import useInterval from 'hooks/useInterval';
 
 import { isCollision } from 'utils/objectEvent';
@@ -104,20 +103,41 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 
 	useEffect(() => {
 		if (canvasRef) {
-			draw({
-				canvas: canvasRef.current,
-				imageSource: imageInfo.source,
-				sx: imageInfo[direction].sx + animationFrame * imageInfo.width,
-				sy: imageInfo[direction].sy,
-				sWidth: imageInfo.width,
-				sHeight: imageInfo.height,
-				...position,
-				width: imageInfo.width,
-				height: imageInfo.height,
-				isClear: true,
-			});
+			const canvas = canvasRef.current;
+			const ctx = canvas.getContext('2d');
+
+			const playerImage = new Image();
+			playerImage.src = imageInfo.source;
+			playerImage.onload = () => {
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				ctx.save();
+				ctx.translate(
+					canvas.width / 2 - position.x,
+					canvas.height / 2 - position.y,
+				);
+				ctx.drawImage(
+					playerImage,
+					imageInfo[direction].sx + animationFrame * imageInfo.width,
+					imageInfo[direction].sy,
+					imageInfo.width,
+					imageInfo.height,
+					position.x,
+					position.y,
+					imageInfo.width,
+					imageInfo.height,
+				);
+				ctx.restore();
+			};
 		}
-	}, [imageInfo, position, direction, width, height, animationFrame]);
+	}, [
+		imageInfo,
+		position,
+		direction,
+		width,
+		height,
+		animationFrame,
+		blockInfos,
+	]);
 
 	const handleKeyPress = useCallback((e: KeyboardEvent) => {
 		const commonFunction = () => {
