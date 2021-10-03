@@ -1,13 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from 'app/store';
 
-export interface BlockState {
+export interface BlockStateProps {
 	infos: Array<BlockStateInfosProps>;
 }
+
+export type BlockTypeProps = 'object' | 'block' | 'tile'
 
 export type BlockStateInfosProps = {
 	position: { x: number; y: number };
 	size: { width: number; height: number };
+	type : string;
 	key: string;
 	imageInfo: {
 		source: string;
@@ -18,7 +21,7 @@ export type BlockStateInfosProps = {
 	};
 };
 
-const initialState: BlockState = {
+const initialState: BlockStateProps = {
 	infos: [],
 };
 
@@ -27,7 +30,7 @@ export const blockSlice = createSlice({
 	initialState,
 	// The `reducers` field lets us define reducers and generate associated actions
 	reducers: {
-		setBlockInfos: (state, action: PayloadAction<BlockState>) => {
+		setBlockInfos: (state, action: PayloadAction<BlockStateProps>) => {
 			state.infos = action.payload.infos;
 		},
 	},
@@ -35,6 +38,7 @@ export const blockSlice = createSlice({
 
 export const { setBlockInfos } = blockSlice.actions;
 
-export const selectBlockInfos = (state: RootState) => state.block.infos;
+export const selectBlockInfos = (state: RootState) => state.block.infos.filter(res=>res.type === 'block');
+export const selectTileInfos = (state: RootState) => state.block.infos.filter(res=>res.type === 'tile');
 
 export default blockSlice.reducer;
