@@ -24,7 +24,6 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 	const blockInfos = useAppSelector(selectBlockInfos);
 	const canvasRef = useRef(null);
 	const [loadingImageInfo, setLoadingImageInfo] = useState({});
-	// const dispatch = useAppDispatch();
 
 	const position = useAppSelector(selectPosition);
 
@@ -59,22 +58,6 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 				canvas.height / 2 - position.y,
 			);
 
-			// blockInfos.forEach((inRes: BlockStateInfosProps) => {
-			// 	const imageData = new Image();
-			// 	imageData.src = inRes.imageInfo.source;
-			// 	ctx.drawImage(
-			// 		imageData,
-			// 		inRes.imageInfo.sx,
-			// 		inRes.imageInfo.sy,
-			// 		inRes.imageInfo.width,
-			// 		inRes.imageInfo.height,
-			// 		inRes.position.x,
-			// 		inRes.position.y,
-			// 		inRes.imageInfo.width,
-			// 		inRes.imageInfo.height,
-			// 	);
-			// });
-
 			blockInfos.forEach((res: BlockStateInfosProps) => {
 				ctx.drawImage(
 					loadingImageInfo[res.imageInfo.source],
@@ -88,33 +71,6 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 					res.imageInfo.height,
 				);
 			});
-
-			// const imageSourceInfos = Array.from(
-			// 	new Set(blockInfos.map(res => res.imageInfo.source)),
-			// );
-
-			// imageSourceInfos.forEach((res: string) => {
-			// 	const imageData = new Image();
-			// 	imageData.src = res;
-			// 	imageData.onload = () => {
-			// 		blockInfos.map((inRes: BlockStateInfosProps) => {
-			// 			if (res === inRes.imageInfo.source) {
-			// 				ctx.drawImage(
-			// 					imageData,
-			// 					inRes.imageInfo.sx,
-			// 					inRes.imageInfo.sy,
-			// 					inRes.imageInfo.width,
-			// 					inRes.imageInfo.height,
-			// 					inRes.position.x,
-			// 					inRes.position.y,
-			// 					inRes.imageInfo.width,
-			// 					inRes.imageInfo.height,
-			// 				);
-			// 			}
-			// 			return res;
-			// 		});
-			// 	};
-			// });
 
 			ctx.restore();
 		}
