@@ -33,8 +33,8 @@ const Styled = {
 	`,
 	MapWrapper: styled.div`
 		display: flex;
-		width: 100%;
 		height: 100%;
+		width: 100%;
 	`,
 };
 
@@ -47,8 +47,8 @@ const testBlockInfos = new Array(120).fill({
 		source: TestBlock.source,
 		width: TestBlock.width,
 		height: TestBlock.height,
-		sx: TestBlock.grayBlock.sx,
-		sy: TestBlock.grayBlock.sy,
+		sx: TestBlock.info.grayBlock.sx,
+		sy: TestBlock.info.grayBlock.sy,
 	},
 });
 
@@ -61,8 +61,8 @@ const testTileInfos = new Array(60).fill({
 		source: TestTile.source,
 		width: TestTile.width,
 		height: TestTile.height,
-		sx: TestTile.grassTile.sx,
-		sy: TestTile.grassTile.sy,
+		sx: TestTile.info.grassTile.sx,
+		sy: TestTile.info.grassTile.sy,
 	},
 });
 
