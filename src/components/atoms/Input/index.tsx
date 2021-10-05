@@ -10,7 +10,6 @@ import {
 	ColorProps,
 	layout,
 } from 'styled-system';
-import GlobalStyled from 'styles/GlobalStyled';
 import theme from 'styles/theme';
 import Svg, { SvgProps } from 'images/Svg';
 
@@ -24,11 +23,13 @@ export type colorThemeProps = {
 };
 
 const Styled = {
-	Wrapper: styled(GlobalStyled.HeightRow)`
+	Wrapper: styled.div`
+		display: flex;
 		justify-content: center;
 		flex-direction: row;
 	`,
-	Label: styled(GlobalStyled.Row)`
+	Label: styled.div`
+		display: flex;
 		align-items: center;
 		font-size: ${props => props.theme.fontSizes[1]}px;
 		color: ${props => props.theme.colors.gray300};
@@ -132,24 +133,14 @@ const colorThemes: colorThemeProps = {
 };
 
 const Input = forwardRef((props: InputProps, ref): JSX.Element => {
-	const { label, css, imageInfo } = props;
+	const { css, imageInfo } = props;
 
 	const svgString = encodeURIComponent(
 		renderToStaticMarkup(<Svg {...imageInfo} />),
 	);
 	const dataUri = imageInfo.name ? `data:image/svg+xml,${svgString}` : '';
 
-	return (
-		<Styled.Wrapper>
-			{label ? <Styled.Label mr={1}>{label}</Styled.Label> : ''}
-			<Styled.Input
-				css={css}
-				{...props}
-				icon={dataUri}
-				paddingLeft={dataUri ? '36px' : undefined}
-			/>
-		</Styled.Wrapper>
-	);
+	return <Styled.Input css={css} {...props} icon={dataUri} />;
 });
 
 Input.defaultProps = {

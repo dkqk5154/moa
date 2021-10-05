@@ -1,8 +1,6 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
 
-import GlobalStyled from 'styles/GlobalStyled';
-
 const Keyframes = {
 	spinnerSpin: keyframes`
     to {
@@ -15,7 +13,8 @@ const Keyframes = {
 };
 
 const Styled = {
-	Body: styled(GlobalStyled.Row)<{ height: string }>`
+	Body: styled.div<{ height: string }>`
+		display: flex;
 		width: 100%;
 		height: ${props => props.height};
 		margin: auto;

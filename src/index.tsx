@@ -7,12 +7,10 @@ import { CurrentUserProvider } from './contexts/CurrentUserContext';
 import reportWebVitals from './reportWebVitals';
 import { store } from './app/store';
 
-import GlobalStyle from './styles/GlobalStyle';
-import 'styles/font.css';
+import './index.css';
 
 ReactDOM.render(
 	<React.StrictMode>
-		<GlobalStyle />
 		<Provider store={store}>
 			<CurrentUserProvider>
 				<App />

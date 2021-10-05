@@ -10,13 +10,12 @@ import theme from 'styles/theme';
 
 import Spinner from 'components/atoms/Spinner';
 
-import { mainRouter, loginRouter } from 'config/routerUrl';
+import { mainRouter } from 'config/routerUrl';
 
 import { CurrentUserContext } from 'contexts/CurrentUserContext';
 // import useInterval from 'hooks/useInterval';
 
 const MainPage = lazy(() => import('pages/MainPage'));
-const LoginPage = lazy(() => import('pages/LoginPage'));
 
 // const TermPage = lazy(() => import('pages/TermPage'));
 // const PrivacyPage = lazy(() => import('pages/PrivacyPage'));
@@ -72,11 +71,7 @@ function App() {
 										path={mainRouter.root.value}
 										component={MainPage}
 									/>
-									<Route
-										exact
-										path={loginRouter.root.value}
-										component={LoginPage}
-									/>
+
 									<Route
 										component={() => {
 											return <div>Err</div>;

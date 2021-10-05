@@ -3,14 +3,18 @@ import styled from 'styled-components';
 import { withRouter, RouteChildrenProps } from 'react-router-dom';
 
 import hideRouters from 'config/globalHideRouters';
-
-import GlobalStyled from 'styles/GlobalStyled';
+import Button from 'components/atoms/Button';
 
 const Styled = {
-	Wrapper: styled(GlobalStyled.Row)`
+	Wrapper: styled.div`
+		display: flex;
 		flex-direction: column;
 		height: 100%;
 		width: 300px;
+		padding: var(--space5);
+		background-color: var(--gray6);
+		color: var(--white);
+		font-size: var(--font-size5);
 	`,
 };
 
@@ -26,8 +30,8 @@ const GlobalSidebar = (props: RouteChildrenProps): JSX.Element => {
 	return isHide ? (
 		<></>
 	) : (
-		<Styled.Wrapper p={5} bg="gray6" color="white" fontSize={5}>
-			<GlobalStyled.Container flexDirection="row"></GlobalStyled.Container>
+		<Styled.Wrapper>
+			<Button>CUSTOM</Button>
 		</Styled.Wrapper>
 	);
 };

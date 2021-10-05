@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 
-import GlobalStyled from 'styles/GlobalStyled';
 import GlobalSidebar from 'components/molecules/GlobalSidebar';
 import Character from 'components/atoms/Character';
 import Block from 'components/atoms/Block';
@@ -20,8 +19,13 @@ import TestTile from 'images/TestTile';
 import TestUser from 'images/TestUser';
 
 const Styled = {
-	Wrapper: styled(GlobalStyled.Row)`
+	Wrapper: styled.div`
+		display: flex;
 		flex-direction: column;
+		height: 100%;
+	`,
+	Container: styled.div`
+		display: flex;
 		height: 100%;
 	`,
 	Canvas: styled.canvas`
@@ -119,8 +123,6 @@ const MainPage = (): JSX.Element => {
 		//test tile
 		const formatTileInfos = testTileInfos.map((res, i) => {
 			let y = Math.round(i / 5);
-			console.log('res.size.height * y : ', res.size.height * y);
-			console.log('y : ', y);
 			return {
 				...res,
 				position: { x: res.size.width * i, y: res.size.height * y },
@@ -152,14 +154,14 @@ const MainPage = (): JSX.Element => {
 
 	return (
 		<Styled.Wrapper>
-			<GlobalStyled.Container flexDirection="row">
+			<Styled.Container>
 				<GlobalSidebar />
 				<Styled.MapWrapper ref={MapWrapperRef}>
 					<Character {...mapContainerInfo} />
 					<Block {...mapContainerInfo} />
 					<Tile {...mapContainerInfo} />
 				</Styled.MapWrapper>
-			</GlobalStyled.Container>
+			</Styled.Container>
 		</Styled.Wrapper>
 	);
 };

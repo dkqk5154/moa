@@ -11,6 +11,7 @@ import { selectPosition } from 'components/atoms/Character/characterSlice';
 const Styled = {
 	Block: styled.canvas`
 		position: absolute;
+		z-index: -50;
 		top: 0;
 	`,
 };

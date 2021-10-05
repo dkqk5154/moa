@@ -1,0 +1,91 @@
+@import url('//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css');
+
+html {
+	--white: #ffffff;
+	--black: #000000;
+	--gray1: #a1a6b6;
+	--gray2: #6b7185;
+	--gray3: #3a3f50;
+	--gray4: #282b39;
+	--gray5: #242735;
+	--gray6: #11131b;
+	--primary1: #99c1f8;
+	--primary2: #6ea7f5;
+	--primary3: #3082f2;
+	--primary4: #046cfc;
+	--primary5: #004eba;
+	--primary6: #1c2f50;
+	--success1: #b8ecd5;
+	--success2: #8ae0ba;
+	--success3: #58d49d;
+	--success4: #10c274;
+	--success5: #048a4f;
+	--warning1: #fce2ac;
+	--warning2: #fad076;
+	--warning3: #f8bc3b;
+	--warning4: #f7ac0a;
+	--warning5: #bd850f;
+	--danger1: #feb4b6;
+	--danger2: #f28286;
+	--danger3: #fe4c52;
+	--danger4: #fe383f;
+	--danger5: #be3637;
+	--transparent: rgba(0; 0; 0; 0);
+
+	--space1: 4px;
+	--space2: 8px;
+	--space3: 12px;
+	--space4: 16px;
+	--space5: 20px;
+
+	--font-size1: 10px;
+	--font-size2: 12px;
+	--font-size3: 14px;
+	--font-size4: 16px;
+	--font-size5: 18px;
+	--font-size6: 24px;
+	--font-size7: 32px;
+
+	--radius1: 4px;
+	--radius2: 8px;
+	--radius3: 12px;
+}
+body {
+	font-size: var(--font-size3);
+	color: var(--white);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	font-family: Spoqa Han Sans Neo, sans-serif;
+	background-color: var(--gray5);
+	margin: 0;
+}
+img {
+	max-width: 100%;
+	vertical-align: middle;
+	border-style: none;
+}
+ul {
+	list-style-type: none;
+	margin-top: 0;
+	margin-bottom: 0;
+	padding-left: 0px;
+}
+a {
+	text-decoration: none;
+	color: inherit;
+}
+*,
+::before,
+::after {
+	box-sizing: border-box;
+}
+::-webkit-scrollbar {
+	width: 6px;
+	height: 6px;
+}
+::-webkit-scrollbar-thumb {
+	border-radius: 3px;
+	background-color: #dcdcdc;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+}

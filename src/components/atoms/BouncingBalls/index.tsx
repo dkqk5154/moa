@@ -1,8 +1,6 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
 
-import GlobalStyled from 'styles/GlobalStyled';
-
 const Keyframes = {
 	bouncingBalls: keyframes`
     0% {
@@ -25,7 +23,8 @@ interface StyledBouncingBallsProps {
 }
 
 const Styled = {
-	Body: styled(GlobalStyled.Row)<{ height: string; width: string }>`
+	Body: styled.div<{ height: string; width: string }>`
+		display: flex;
 		width: ${props => props.width};
 		height: ${props => props.height};
 		margin: auto;
