@@ -113,16 +113,4 @@ export const selectDelay = (state: RootState) => state.character.delay;
 export const selectSize = (state: RootState) => state.character.size;
 export const selectImageInfo = (state: RootState) => state.character.imageInfo;
 
-// export const setIfPosition =
-// 	(position: CharacterState['position']): AppThunk =>
-// 	dispatch => {
-// 		dispatch(setPosition(position));
-// 	};
-
-export const setIfSpeed =
-	(speed: CharacterState['speed']): AppThunk =>
-	dispatch => {
-		dispatch(setSpeed(speed));
-	};
-
 export default characterSlice.reducer;
