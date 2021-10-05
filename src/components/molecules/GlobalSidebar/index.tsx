@@ -1,39 +1,91 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { withRouter, RouteChildrenProps } from 'react-router-dom';
 
-import hideRouters from 'config/globalHideRouters';
 import Button from 'components/atoms/Button';
+
+import { selectStatus, setStatus } from './globalSidebarSlice';
+import { useAppSelector, useAppDispatch } from 'app/hooks';
+import BuildMenu from './BuildMenu';
 
 const Styled = {
 	Wrapper: styled.div`
 		display: flex;
 		flex-direction: column;
 		height: 100%;
-		width: 300px;
+		width: 100px;
 		padding: var(--space5);
 		background-color: var(--gray6);
 		color: var(--white);
 		font-size: var(--font-size5);
 	`,
+	SubMenu: styled.div`
+		position: absolute;
+		left: 95px;
+		display: flex;
+		width: 300px;
+		height: 100%;
+		background-color: var(--gray6);
+		border-left: 2px solid var(--gray5);
+	`,
+	Column: styled.div`
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+	`,
+	Row: styled.div`
+		width: 100%;
+		display: flex;
+		margin-bottom: var(--space3);
+	`,
 };
 
-export interface GlobalSidebarProps extends RouteChildrenProps {}
+export interface GlobalSidebarProps {}
 
-const GlobalSidebar = (props: RouteChildrenProps): JSX.Element => {
-	const { location } = props;
+const GlobalSidebar = ({}: GlobalSidebarProps): JSX.Element => {
+	const status = useAppSelector(selectStatus);
+	const dispatch = useAppDispatch();
 
-	const isHide = hideRouters.some(
-		(res: string) => res === location?.pathname,
-	);
+	const handleClickCustomButton = (
+		e: React.MouseEvent<HTMLButtonElement>,
+	) => {
+		e.preventDefault();
+		dispatch(setStatus('custom'));
+	};
 
-	return isHide ? (
-		<></>
-	) : (
-		<Styled.Wrapper>
-			<Button>CUSTOM</Button>
-		</Styled.Wrapper>
+	const handleClickHomeButton = (e: React.MouseEvent<HTMLButtonElement>) => {
+		e.preventDefault();
+		dispatch(setStatus('home'));
+	};
+
+	return (
+		<>
+			<Styled.Wrapper>
+				<Styled.Row>
+					<Button onClick={handleClickHomeButton}>
+						<img
+							alt="ic-build"
+							src={require('images/ic-home.svg').default}
+						/>
+					</Button>
+				</Styled.Row>
+				<Styled.Row>
+					<Button onClick={handleClickCustomButton}>
+						<img
+							alt="ic-build"
+							src={require('images/ic-build.svg').default}
+						/>
+					</Button>
+				</Styled.Row>
+			</Styled.Wrapper>
+			{status !== 'home' ? (
+				<Styled.SubMenu>
+					<BuildMenu />
+				</Styled.SubMenu>
+			) : (
+				''
+			)}
+		</>
 	);
 };
 
-export default withRouter(GlobalSidebar);
+export default GlobalSidebar;
