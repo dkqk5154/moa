@@ -5,13 +5,17 @@ import {
 	useAppSelector,
 	// useAppDispatch
 } from 'app/hooks';
-import { selectBlockInfos, BlockStateInfosProps } from './blockSlice';
+import {
+	selectTileInfos,
+	BlockStateInfosProps,
+} from 'components/atoms/Block/blockSlice';
 import { selectPosition } from 'components/atoms/Character/characterSlice';
 
 const Styled = {
-	Block: styled.canvas`
+	Tile: styled.canvas`
 		position: absolute;
 		top: 0;
+		z-index: -100;
 	`,
 };
 
@@ -21,15 +25,16 @@ export interface CharacterProps {
 }
 
 const Character = ({ width, height }: CharacterProps): JSX.Element => {
-	const blockInfos = useAppSelector(selectBlockInfos);
+	const tileInfos = useAppSelector(selectTileInfos);
 	const canvasRef = useRef(null);
 	const [loadingImageInfo, setLoadingImageInfo] = useState({});
+	// const dispatch = useAppDispatch();
 
 	const position = useAppSelector(selectPosition);
 
 	useEffect(() => {
 		const imageSourceInfos = Array.from(
-			new Set(blockInfos.map(res => res.imageInfo.source)),
+			new Set(tileInfos.map(res => res.imageInfo.source)),
 		);
 
 		imageSourceInfos.forEach((res: string) => {
@@ -44,7 +49,7 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 				});
 			};
 		});
-	}, [blockInfos]);
+	}, [tileInfos]);
 
 	useEffect(() => {
 		if (canvasRef && Object.keys(loadingImageInfo).length) {
@@ -58,7 +63,7 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 				canvas.height / 2 - position.y,
 			);
 
-			blockInfos.forEach((res: BlockStateInfosProps) => {
+			tileInfos.forEach((res: BlockStateInfosProps) => {
 				ctx.drawImage(
 					loadingImageInfo[res.imageInfo.source],
 					res.imageInfo.sx,
@@ -74,9 +79,9 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 
 			ctx.restore();
 		}
-	}, [position, width, height, blockInfos, loadingImageInfo]);
+	}, [position, width, height, tileInfos, loadingImageInfo]);
 
-	return <Styled.Block ref={canvasRef} width={width} height={height} />;
+	return <Styled.Tile ref={canvasRef} width={width} height={height} />;
 };
 
 export default Character;
