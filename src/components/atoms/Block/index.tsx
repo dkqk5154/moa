@@ -30,7 +30,11 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 
 	useEffect(() => {
 		const imageSourceInfos = Array.from(
-			new Set(blockInfos.map(res => res.imageInfo.source)),
+			new Set(
+				blockInfos.map(
+					(res: BlockStateInfosProps) => res.imageInfo.source,
+				),
+			),
 		);
 
 		imageSourceInfos.forEach((res: string) => {
@@ -62,14 +66,14 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 			blockInfos.forEach((res: BlockStateInfosProps) => {
 				ctx.drawImage(
 					loadingImageInfo[res.imageInfo.source],
-					res.imageInfo.sx,
-					res.imageInfo.sy,
-					res.imageInfo.width,
-					res.imageInfo.height,
+					res.imageInfo.up.sx,
+					res.imageInfo.up.sy,
+					res.size.width,
+					res.size.height,
 					res.position.x,
 					res.position.y,
-					res.imageInfo.width,
-					res.imageInfo.height,
+					res.size.width,
+					res.size.height,
 				);
 			});
 
