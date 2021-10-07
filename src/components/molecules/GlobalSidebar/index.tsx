@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 import Button from 'components/atoms/Button';
 
 import { selectStatus, setStatus } from './globalSidebarSlice';
 import { useAppSelector, useAppDispatch } from 'app/hooks';
-import BuildMenu from './BuildMenu';
+import BuildMenu from 'components/atoms/BuildMenu';
 
 const Styled = {
 	Wrapper: styled.div`
@@ -20,7 +20,8 @@ const Styled = {
 	`,
 	SubMenu: styled.div`
 		position: absolute;
-		left: 95px;
+		left: 94px;
+		z-index: 1000;
 		display: flex;
 		width: 300px;
 		height: 100%;
@@ -39,9 +40,9 @@ const Styled = {
 	`,
 };
 
-export interface GlobalSidebarProps {}
+// export interface GlobalSidebarProps {}
 
-const GlobalSidebar = ({}: GlobalSidebarProps): JSX.Element => {
+const GlobalSidebar = (): JSX.Element => {
 	const status = useAppSelector(selectStatus);
 	const dispatch = useAppDispatch();
 
