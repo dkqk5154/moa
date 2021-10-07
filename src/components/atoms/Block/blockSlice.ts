@@ -5,19 +5,31 @@ export interface BlockStateProps {
 	infos: Array<BlockStateInfosProps>;
 }
 
-export type BlockTypeProps = 'object' | 'block' | 'tile'
+export type BlockTypeProps = 'object' | 'block' | 'tile';
 
 export type BlockStateInfosProps = {
 	position: { x: number; y: number };
 	size: { width: number; height: number };
-	type : string;
+	type: string;
 	key: string;
 	imageInfo: {
 		source: string;
-		width: number;
-		height: number;
-		sx: number;
-		sy: number;
+		up: {
+			sx: number;
+			sy: number;
+		};
+		down: {
+			sx: number;
+			sy: number;
+		};
+		left: {
+			sx: number;
+			sy: number;
+		};
+		right: {
+			sx: number;
+			sy: number;
+		};
 	};
 };
 
@@ -38,7 +50,9 @@ export const blockSlice = createSlice({
 
 export const { setBlockInfos } = blockSlice.actions;
 
-export const selectBlockInfos = (state: RootState) => state.block.infos.filter(res=>res.type === 'block');
-export const selectTileInfos = (state: RootState) => state.block.infos.filter(res=>res.type === 'tile');
+export const selectBlockInfos = (state: RootState) =>
+	state.block.infos.filter(res => res.type === 'block');
+export const selectTileInfos = (state: RootState) =>
+	state.block.infos.filter(res => res.type === 'tile');
 
 export default blockSlice.reducer;
