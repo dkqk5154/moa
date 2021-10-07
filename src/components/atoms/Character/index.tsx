@@ -8,12 +8,14 @@ import {
 	selectSpeed,
 	selectSize,
 	selectImageInfo,
+	selectDirection,
 	setPosition,
+	setDirection,
 } from 'components/atoms/Character/characterSlice';
 import { selectBlockInfos } from 'components/atoms/Block/blockSlice';
 import useInterval from 'hooks/useInterval';
 
-import { isCollision } from 'utils/objectEvent';
+import { isCollision, isClamp } from 'utils/objectEvent';
 
 const Styled = {
 	Character: styled.canvas`
@@ -25,15 +27,16 @@ const Styled = {
 export interface CharacterProps {
 	width: number;
 	height: number;
+	mapSize: { width: number; height: number };
 }
 
-const Character = ({ width, height }: CharacterProps): JSX.Element => {
-	const [direction, setDirection] = useState('down');
+const Character = ({ width, height, mapSize }: CharacterProps): JSX.Element => {
 	const [isKeyPress, setIsKeyPress] = useState(false);
 	const [pushKeyArray, setPushKeyArray] = useState([]);
 	const [animationFrame, setAnimationFrame] = useState(0);
 
 	const position = useAppSelector(selectPosition);
+	const direction = useAppSelector(selectDirection);
 	const speed = useAppSelector(selectSpeed);
 	const blockInfos = useAppSelector(selectBlockInfos);
 	const delay = useAppSelector(selectDelay);
@@ -47,14 +50,19 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 		() => {
 			let movePosition = { x: 0, y: 0 };
 			const commonFunction = (movePosition: { x: number; y: number }) => {
+				const objectInfo = {
+					position: movePosition,
+					size,
+				};
 				const isObjectCollision = isCollision({
-					self: {
-						position: movePosition,
-						size,
-					},
+					self: objectInfo,
 					objects: blockInfos,
 				});
-				if (!isObjectCollision) {
+				const isObjectClamp = isClamp({
+					position: objectInfo['position'],
+					mapSize,
+				});
+				if (!isObjectCollision && isObjectClamp) {
 					setAnimationFrame((prevState: number) =>
 						prevState >= 2 ? 1 : prevState + 1,
 					);
@@ -117,14 +125,14 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 				);
 				ctx.drawImage(
 					playerImage,
-					imageInfo[direction].sx + animationFrame * imageInfo.width,
+					imageInfo[direction].sx + animationFrame * size.width,
 					imageInfo[direction].sy,
-					imageInfo.width,
-					imageInfo.height,
+					size.width,
+					size.height,
 					position.x,
 					position.y,
-					imageInfo.width,
-					imageInfo.height,
+					size.width,
+					size.height,
 				);
 				ctx.restore();
 			};
@@ -133,38 +141,42 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 		imageInfo,
 		position,
 		direction,
+		size,
 		width,
 		height,
 		animationFrame,
 		blockInfos,
 	]);
 
-	const handleKeyPress = useCallback((e: KeyboardEvent) => {
-		const commonFunction = () => {
-			setIsKeyPress(true);
-			setPushKeyArray(prevState => prevState.concat(e.code));
-		};
-		switch (e.code) {
-			case 'KeyW':
-				setDirection('up');
-				commonFunction();
-				break;
-			case 'KeyA':
-				setDirection('left');
-				commonFunction();
-				break;
-			case 'KeyS':
-				setDirection('down');
-				commonFunction();
-				break;
-			case 'KeyD':
-				setDirection('right');
-				commonFunction();
-				break;
-			default:
-				break;
-		}
-	}, []);
+	const handleKeyPress = useCallback(
+		(e: KeyboardEvent) => {
+			const commonFunction = () => {
+				setIsKeyPress(true);
+				setPushKeyArray(prevState => prevState.concat(e.code));
+			};
+			switch (e.code) {
+				case 'KeyW':
+					dispatch(setDirection('up'));
+					commonFunction();
+					break;
+				case 'KeyA':
+					dispatch(setDirection('left'));
+					commonFunction();
+					break;
+				case 'KeyS':
+					dispatch(setDirection('down'));
+					commonFunction();
+					break;
+				case 'KeyD':
+					dispatch(setDirection('right'));
+					commonFunction();
+					break;
+				default:
+					break;
+			}
+		},
+		[dispatch],
+	);
 
 	const handleKeyUp = useCallback(
 		(e: KeyboardEvent) => {
