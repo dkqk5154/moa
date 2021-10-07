@@ -29,6 +29,18 @@ export const isCollision = ({ self, objects }: CollisionParams) => {
 	return result;
 };
 
+export const isClamp = ({ position, mapSize }: ClampParams) => {
+	if (
+		position.x <= mapSize.width &&
+		position.x >= 0 &&
+		position.y < mapSize.height &&
+		position.y >= 0
+	) {
+		return true;
+	}
+	return false;
+};
+
 export interface ObjectParams {
 	position: { x: number; y: number };
 	size: { width: number; height: number };
@@ -37,4 +49,9 @@ export interface ObjectParams {
 export interface CollisionParams {
 	self: ObjectParams;
 	objects: Array<ObjectParams>;
+}
+
+export interface ClampParams {
+	position: ObjectParams['position'];
+	mapSize: { width: number; height: number };
 }
