@@ -1,11 +1,25 @@
 const info = {
 	source: require('./image.png').default,
-	width: 48,
-	height: 48,
 	info: {
 		grassTile: {
-			sx: 0,
-			sy: 0,
+			width: 48,
+			height: 48,
+			up: {
+				sx: 0,
+				sy: 0,
+			},
+			left: {
+				sx: 0,
+				sy: 0,
+			},
+			right: {
+				sx: 0,
+				sy: 0,
+			},
+			down: {
+				sx: 0,
+				sy: 0,
+			},
 		},
 	},
 };
