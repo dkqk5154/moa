@@ -16,15 +16,16 @@ const Styled = {
 		position: absolute;
 		top: 0;
 		z-index: -100;
+		background-color: var(--black);
 	`,
 };
 
-export interface CharacterProps {
+export interface MapProps {
 	width: number;
 	height: number;
 }
 
-const Character = ({ width, height }: CharacterProps): JSX.Element => {
+const Map = ({ width, height }: MapProps): JSX.Element => {
 	const tileInfos = useAppSelector(selectTileInfos);
 	const canvasRef = useRef(null);
 	const [loadingImageInfo, setLoadingImageInfo] = useState({});
@@ -66,14 +67,14 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 			tileInfos.forEach((res: BlockStateInfosProps) => {
 				ctx.drawImage(
 					loadingImageInfo[res.imageInfo.source],
-					res.imageInfo.sx,
-					res.imageInfo.sy,
-					res.imageInfo.width,
-					res.imageInfo.height,
+					res.imageInfo.up.sx,
+					res.imageInfo.up.sy,
+					res.size.width,
+					res.size.height,
 					res.position.x,
 					res.position.y,
-					res.imageInfo.width,
-					res.imageInfo.height,
+					res.size.width,
+					res.size.height,
 				);
 			});
 
@@ -84,4 +85,4 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 	return <Styled.Tile ref={canvasRef} width={width} height={height} />;
 };
 
-export default Character;
+export default Map;
