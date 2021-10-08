@@ -5,7 +5,7 @@ export interface BlockStateProps {
 	infos: Array<BlockStateInfosProps>;
 }
 
-export type BlockTypeProps = 'object' | 'block' | 'tile';
+export type BlockTypeProps = 'object' | 'block' | 'tile' | 'system';
 
 export type BlockStateInfosProps = {
 	position: { x: number; y: number };
@@ -45,14 +45,26 @@ export const blockSlice = createSlice({
 		setBlockInfos: (state, action: PayloadAction<BlockStateProps>) => {
 			state.infos = action.payload.infos;
 		},
+		addBlockInfos: (
+			state,
+			action: PayloadAction<BlockStateProps['infos']>,
+		) => {
+			state.infos = [...state.infos, ...action.payload];
+		},
+		addBlockInfo: (state, action: PayloadAction<BlockStateInfosProps>) => {
+			state.infos = [...state.infos, action.payload];
+		},
 	},
 });
 
-export const { setBlockInfos } = blockSlice.actions;
+export const { setBlockInfos, addBlockInfos, addBlockInfo } =
+	blockSlice.actions;
 
 export const selectBlockInfos = (state: RootState) =>
 	state.block.infos.filter(res => res.type === 'block');
 export const selectTileInfos = (state: RootState) =>
 	state.block.infos.filter(res => res.type === 'tile');
+export const selectSystemBlockInfos = (state: RootState) =>
+	state.block.infos.filter(res => res.type === 'system');
 
 export default blockSlice.reducer;
