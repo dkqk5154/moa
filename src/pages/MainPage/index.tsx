@@ -5,8 +5,9 @@ import GlobalSidebar from 'components/molecules/GlobalSidebar';
 import Character from 'components/atoms/Character';
 import Block from 'components/atoms/Block';
 import Map from 'components/atoms/Map';
+import SystemBlock from 'components/atoms/SystemBlock';
 
-import { useAppDispatch } from 'app/hooks';
+import { useAppDispatch, useAppSelector } from 'app/hooks';
 import {
 	setPosition,
 	setImageInfo,
@@ -16,7 +17,9 @@ import {
 	setBlockInfos,
 	BlockStateInfosProps,
 } from 'components/atoms/Block/blockSlice';
-import { setBuildBlockInfos } from 'components/atoms/BuildMenu/buildMenuSlice';
+// import { setBuildBlockInfos } from 'components/atoms/BuildMenu/buildMenuSlice';
+
+import { selectStatus } from 'components/molecules/GlobalSidebar/globalSidebarSlice';
 
 import TestBlock from 'images/TestBlock';
 import TestTile from 'images/TestTile';
@@ -71,6 +74,7 @@ const testTileInfos: Array<BlockStateInfosProps> = new Array(60).fill({
 });
 
 const mapSize = { width: 1280, height: 1080 };
+const spawnPoint = { x: 128, y: 128 };
 
 const MainPage = (): JSX.Element => {
 	const MapWrapperRef = useRef(null);
@@ -78,12 +82,15 @@ const MainPage = (): JSX.Element => {
 		width: 0,
 		height: 0,
 	});
+
+	const status = useAppSelector(selectStatus);
+
 	const dispatch = useAppDispatch();
 
 	useEffect(() => {
 		dispatch(setImageInfo(TestUser));
 		dispatch(setSize({ width: TestUser.width, height: TestUser.height }));
-		dispatch(setPosition({ x: 128, y: 128 }));
+		dispatch(setPosition(spawnPoint));
 
 		let mapBlockInfos = [];
 		for (
@@ -109,10 +116,21 @@ const MainPage = (): JSX.Element => {
 						...TestTile.info.grassTile,
 					},
 				});
+				mapBlockInfos.push({
+					position: { x: j, y: i },
+					size: {
+						width: TestTile.info.grassTile.width,
+						height: TestTile.info.grassTile.height,
+					},
+					key: '1',
+					type: 'system',
+					imageInfo: {
+						source: TestTile.source,
+						...TestTile.info.grassTile,
+					},
+				});
 			}
 		}
-
-		console.log('mapBlockInfos : ', mapBlockInfos);
 
 		//test block
 		const formatBlockInfos = testBlockInfos.map(
@@ -203,6 +221,11 @@ const MainPage = (): JSX.Element => {
 					<Character {...mapContainerInfo} mapSize={mapSize} />
 					<Block {...mapContainerInfo} />
 					<Map {...mapContainerInfo} />
+					{status === 'build' ? (
+						<SystemBlock {...mapContainerInfo} />
+					) : (
+						''
+					)}
 				</Styled.MapWrapper>
 			</Styled.Container>
 		</Styled.Wrapper>
