@@ -45,8 +45,24 @@ const info = {
 };
 
 export interface TestBlockInfoProps {
-	sx: number;
-	sy: number;
+	width: number;
+	height: number;
+	up: {
+		sx: number;
+		sy: number;
+	};
+	right: {
+		sx: number;
+		sy: number;
+	};
+	left: {
+		sx: number;
+		sy: number;
+	};
+	down: {
+		sx: number;
+		sy: number;
+	};
 }
 
 export default info;
