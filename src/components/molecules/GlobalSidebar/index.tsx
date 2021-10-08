@@ -50,7 +50,7 @@ const GlobalSidebar = (): JSX.Element => {
 		e: React.MouseEvent<HTMLButtonElement>,
 	) => {
 		e.preventDefault();
-		dispatch(setStatus('custom'));
+		dispatch(setStatus('build'));
 	};
 
 	const handleClickHomeButton = (e: React.MouseEvent<HTMLButtonElement>) => {
