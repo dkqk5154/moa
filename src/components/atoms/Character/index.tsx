@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback, useRef, useMemo } from 'react';
 import styled from 'styled-components';
 
 import { useAppSelector, useAppDispatch } from 'app/hooks';
@@ -13,6 +13,7 @@ import {
 	setDirection,
 } from 'components/atoms/Character/characterSlice';
 import { selectBlockInfos } from 'components/atoms/Block/blockSlice';
+import { selectStatus } from 'components/molecules/GlobalSidebar/globalSidebarSlice';
 import useInterval from 'hooks/useInterval';
 
 import { isCollision, isClamp } from 'utils/objectEvent';
@@ -37,14 +38,20 @@ const Character = ({ width, height, mapSize }: CharacterProps): JSX.Element => {
 
 	const position = useAppSelector(selectPosition);
 	const direction = useAppSelector(selectDirection);
-	const speed = useAppSelector(selectSpeed);
+	const reduceSpeed = useAppSelector(selectSpeed);
 	const blockInfos = useAppSelector(selectBlockInfos);
 	const delay = useAppSelector(selectDelay);
 	const size = useAppSelector(selectSize);
 	const imageInfo = useAppSelector(selectImageInfo);
+	const status = useAppSelector(selectStatus);
 	const dispatch = useAppDispatch();
 
 	const canvasRef = useRef(null);
+
+	const speed = useMemo(
+		() => (status === 'build' ? 200 : reduceSpeed),
+		[status, reduceSpeed],
+	);
 
 	useInterval(
 		() => {
@@ -123,17 +130,20 @@ const Character = ({ width, height, mapSize }: CharacterProps): JSX.Element => {
 					canvas.width / 2 - position.x,
 					canvas.height / 2 - position.y,
 				);
-				ctx.drawImage(
-					playerImage,
-					imageInfo[direction].sx + animationFrame * size.width,
-					imageInfo[direction].sy,
-					size.width,
-					size.height,
-					position.x,
-					position.y,
-					size.width,
-					size.height,
-				);
+				if (status !== 'build') {
+					ctx.drawImage(
+						playerImage,
+						imageInfo[direction].sx + animationFrame * size.width,
+						imageInfo[direction].sy,
+						size.width,
+						size.height,
+						position.x,
+						position.y,
+						size.width,
+						size.height,
+					);
+				}
+
 				ctx.restore();
 			};
 		}
@@ -146,6 +156,7 @@ const Character = ({ width, height, mapSize }: CharacterProps): JSX.Element => {
 		height,
 		animationFrame,
 		blockInfos,
+		status,
 	]);
 
 	const handleKeyPress = useCallback(
