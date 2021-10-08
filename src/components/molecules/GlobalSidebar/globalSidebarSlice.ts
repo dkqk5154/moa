@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from 'app/store';
 
 export interface GlobalSideBarStateProps {
-	status: 'home' | 'custom' | 'popup';
+	status: 'home' | 'build' | 'popup';
 }
 
 const initialState: GlobalSideBarStateProps = {
