@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 
-// import { setBlockInfos } from './globalSidebarSlice';
-
 import { useAppDispatch } from 'app/hooks';
 import testBlock, { TestBlockInfoProps } from 'images/TestBlock';
+import { setSelectBuildInfo } from './buildMenuSlice';
+import testTile from 'images/TestTile';
 
 const Styled = {
 	Wrapper: styled.div`
@@ -21,6 +21,7 @@ const Styled = {
 		align-items: center;
 		background-color: var(--gray5);
 		padding: var(--space3);
+		border-radius: var(--radius3);
 	`,
 	TileCutImage: styled.div<{ src: string; sx: number; sy: number }>`
 		background-image: ${({ src }) => `url(${src})`};
@@ -33,19 +34,41 @@ const Styled = {
 };
 
 export interface BuildMenuProps {
-	info: any;
+	info?: any;
 }
 
-const BuildMenu = (props: BuildMenuProps) => {
+const BuildMenu = ({ info = {} }: BuildMenuProps) => {
 	const dispatch = useAppDispatch();
 
-	const blockInfos = Object.keys(testBlock.info).map(
-		(res: string, i: number) => {
-			const { sx, sy }: TestBlockInfoProps = testBlock.info[res].up;
+	const formatBlockInfos = ({
+		info,
+		source,
+		type,
+	}: {
+		info: { [key: string]: TestBlockInfoProps };
+		source: string;
+		type: string;
+	}) => {
+		return Object.keys(info).map((res: string) => {
+			const { width, height, up } = info[res];
+			const { sx, sy } = up;
+
 			return (
 				<Styled.ImageWrapper
+					key={res}
 					onClick={() => {
-						console.log('click');
+						dispatch(
+							setSelectBuildInfo({
+								position: { x: 0, y: 0 },
+								size: { width: width, height: height },
+								type: type,
+								key: '0',
+								imageInfo: {
+									source: source,
+									...info[res],
+								},
+							}),
+						);
 					}}
 				>
 					<Styled.TileCutImage
@@ -58,13 +81,27 @@ const BuildMenu = (props: BuildMenuProps) => {
 					</span>
 				</Styled.ImageWrapper>
 			);
-		},
-	);
+		});
+	};
 
-	return <Styled.Wrapper>{blockInfos}</Styled.Wrapper>;
-};
-BuildMenu.defaultProps = {
-	info: '',
+	const blockInfos = formatBlockInfos({
+		info: testBlock.info,
+		source: testBlock.source,
+		type: 'block',
+	});
+
+	const tileInfos = formatBlockInfos({
+		info: testTile.info,
+		source: testTile.source,
+		type: 'tile',
+	});
+
+	return (
+		<Styled.Wrapper>
+			{blockInfos}
+			{tileInfos}
+		</Styled.Wrapper>
+	);
 };
 
 export default BuildMenu;
