@@ -11,17 +11,17 @@ import { selectPosition } from 'components/atoms/Character/characterSlice';
 const Styled = {
 	Block: styled.canvas`
 		position: absolute;
-		z-index: -50;
+		z-index: 100;
 		top: 0;
 	`,
 };
 
-export interface CharacterProps {
+export interface BlockProps {
 	width: number;
 	height: number;
 }
 
-const Character = ({ width, height }: CharacterProps): JSX.Element => {
+const Block = ({ width, height }: BlockProps): JSX.Element => {
 	const blockInfos = useAppSelector(selectBlockInfos);
 	const canvasRef = useRef(null);
 	const [loadingImageInfo, setLoadingImageInfo] = useState({});
@@ -84,4 +84,4 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 	return <Styled.Block ref={canvasRef} width={width} height={height} />;
 };
 
-export default Character;
+export default Block;
