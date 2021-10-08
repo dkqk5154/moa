@@ -16,7 +16,7 @@ export const buildMenuSlice = createSlice({
 	name: 'BuildMenu',
 	initialState,
 	reducers: {
-		setBuildSelectInfo: (
+		setSelectBuildInfo: (
 			state,
 			action: PayloadAction<BuildMenuStateProps['selectBuildBlockInfo']>,
 		) => {
@@ -31,10 +31,10 @@ export const buildMenuSlice = createSlice({
 	},
 });
 
-export const { setBuildSelectInfo, setBuildBlockInfos } =
+export const { setSelectBuildInfo, setBuildBlockInfos } =
 	buildMenuSlice.actions;
 
-export const selectBuildBlockInfo = (state: RootState) =>
+export const selectSelectBuildBlockInfo = (state: RootState) =>
 	state.buildMenuReducer.selectBuildBlockInfo;
 
 export default buildMenuSlice.reducer;
