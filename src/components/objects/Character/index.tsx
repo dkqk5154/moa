@@ -11,9 +11,9 @@ import {
 	selectDirection,
 	setPosition,
 	setDirection,
-} from 'components/atoms/Character/characterSlice';
-import { selectBlockInfos } from 'components/atoms/Block/blockSlice';
-import { selectStatus } from 'components/molecules/GlobalSidebar/globalSidebarSlice';
+} from 'components/objects/Character/characterSlice';
+import { selectBlockInfos } from 'components/objects/Block/blockSlice';
+import { selectStatus } from 'components/ui/molecules/GlobalSidebar/globalSidebarSlice';
 import useInterval from 'hooks/useInterval';
 
 import { isCollision, isClamp } from 'utils/objectEvent';

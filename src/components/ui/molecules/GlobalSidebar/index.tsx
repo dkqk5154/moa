@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import Button from 'components/atoms/Button';
+import Button from 'components/ui/atoms/Button';
 
 import { selectStatus, setStatus } from './globalSidebarSlice';
 import { useAppSelector, useAppDispatch } from 'app/hooks';
-import BuildMenu from 'components/atoms/BuildMenu';
+import BuildMenu from 'components/ui/atoms/BuildMenu';
 
 const Styled = {
 	Wrapper: styled.div`

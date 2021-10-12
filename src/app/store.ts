@@ -1,8 +1,8 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import characterReducer from 'components/atoms/Character/characterSlice';
-import blockReducer from 'components/atoms/Block/blockSlice';
-import globalSidebarReducer from 'components/molecules/GlobalSidebar/globalSidebarSlice';
-import buildMenuReducer from 'components/atoms/BuildMenu/buildMenuSlice';
+import characterReducer from 'components/objects/Character/characterSlice';
+import blockReducer from 'components/objects/Block/blockSlice';
+import globalSidebarReducer from 'components/ui/molecules/GlobalSidebar/globalSidebarSlice';
+import buildMenuReducer from 'components/ui/atoms/BuildMenu/buildMenuSlice';
 
 export const store = configureStore({
 	reducer: {

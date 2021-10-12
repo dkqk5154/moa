@@ -7,9 +7,9 @@ import {
 	addBlockInfo,
 	// selectBlockInfos,
 	BlockStateInfosProps,
-} from 'components/atoms/Block/blockSlice';
-import { selectPosition } from 'components/atoms/Character/characterSlice';
-import { selectSelectBuildBlockInfo } from 'components/atoms/BuildMenu/buildMenuSlice';
+} from 'components/objects/Block/blockSlice';
+import { selectPosition } from 'components/objects/Character/characterSlice';
+import { selectSelectBuildBlockInfo } from 'components/ui/atoms/BuildMenu/buildMenuSlice';
 
 const Styled = {
 	Canvas: styled.canvas`

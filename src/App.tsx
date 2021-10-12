@@ -8,7 +8,7 @@ import createFetcher from 'config/fetcher';
 
 import theme from 'styles/theme';
 
-import Spinner from 'components/atoms/Spinner';
+import Spinner from 'components/ui/atoms/Spinner';
 
 import { mainRouter } from 'config/routerUrl';
 

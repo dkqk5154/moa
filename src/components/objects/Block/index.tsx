@@ -5,37 +5,36 @@ import {
 	useAppSelector,
 	// useAppDispatch
 } from 'app/hooks';
-import {
-	selectTileInfos,
-	BlockStateInfosProps,
-} from 'components/atoms/Block/blockSlice';
-import { selectPosition } from 'components/atoms/Character/characterSlice';
+import { selectBlockInfos, BlockStateInfosProps } from './blockSlice';
+import { selectPosition } from 'components/objects/Character/characterSlice';
 
 const Styled = {
-	Tile: styled.canvas`
+	Block: styled.canvas`
 		position: absolute;
+		z-index: 100;
 		top: 0;
-		z-index: -100;
-		background-color: var(--black);
 	`,
 };
 
-export interface MapProps {
+export interface BlockProps {
 	width: number;
 	height: number;
 }
 
-const Map = ({ width, height }: MapProps): JSX.Element => {
-	const tileInfos = useAppSelector(selectTileInfos);
+const Block = ({ width, height }: BlockProps): JSX.Element => {
+	const blockInfos = useAppSelector(selectBlockInfos);
 	const canvasRef = useRef(null);
 	const [loadingImageInfo, setLoadingImageInfo] = useState({});
-	// const dispatch = useAppDispatch();
 
 	const point = useAppSelector(selectPosition);
 
 	useEffect(() => {
 		const imageSourceInfos = Array.from(
-			new Set(tileInfos.map(res => res.imageInfo.source)),
+			new Set(
+				blockInfos.map(
+					(res: BlockStateInfosProps) => res.imageInfo.source,
+				),
+			),
 		);
 
 		imageSourceInfos.forEach((res: string) => {
@@ -50,7 +49,7 @@ const Map = ({ width, height }: MapProps): JSX.Element => {
 				});
 			};
 		});
-	}, [tileInfos]);
+	}, [blockInfos]);
 
 	useEffect(() => {
 		if (canvasRef && Object.keys(loadingImageInfo).length) {
@@ -64,7 +63,7 @@ const Map = ({ width, height }: MapProps): JSX.Element => {
 				canvas.height / 2 - point.y,
 			);
 
-			tileInfos.forEach((res: BlockStateInfosProps) => {
+			blockInfos.forEach((res: BlockStateInfosProps) => {
 				ctx.drawImage(
 					loadingImageInfo[res.imageInfo.source],
 					res.imageInfo.up.sx,
@@ -80,9 +79,9 @@ const Map = ({ width, height }: MapProps): JSX.Element => {
 
 			ctx.restore();
 		}
-	}, [point, width, height, tileInfos, loadingImageInfo]);
+	}, [point, width, height, blockInfos, loadingImageInfo]);
 
-	return <Styled.Tile ref={canvasRef} width={width} height={height} />;
+	return <Styled.Block ref={canvasRef} width={width} height={height} />;
 };
 
-export default Map;
+export default Block;

@@ -5,7 +5,7 @@ import { useAppDispatch } from 'app/hooks';
 import testBlock, { TestBlockInfoProps } from 'images/TestBlock';
 import { setSelectBuildInfo } from './buildMenuSlice';
 import testTile from 'images/TestTile';
-import { BlockTypeProps } from 'components/atoms/Block/blockSlice';
+import { BlockTypeProps } from 'components/objects/Block/blockSlice';
 
 const Styled = {
 	Wrapper: styled.div`

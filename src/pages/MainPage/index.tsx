@@ -1,25 +1,25 @@
 import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 
-import GlobalSidebar from 'components/molecules/GlobalSidebar';
-import Character from 'components/atoms/Character';
-import Block from 'components/atoms/Block';
-import Map from 'components/atoms/Map';
-import SystemBlock from 'components/atoms/SystemBlock';
+import GlobalSidebar from 'components/ui/molecules/GlobalSidebar';
+import Character from 'components/objects/Character';
+import Block from 'components/objects/Block';
+import Map from 'components/objects/Map';
+import SystemBlock from 'components/objects/Block/SystemBlock';
 
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import {
 	setPosition,
 	setImageInfo,
 	setSize,
-} from 'components/atoms/Character/characterSlice';
+} from 'components/objects/Character/characterSlice';
 import {
 	setBlockInfos,
 	BlockStateInfosProps,
-} from 'components/atoms/Block/blockSlice';
+} from 'components/objects/Block/blockSlice';
 // import { setBuildBlockInfos } from 'components/atoms/BuildMenu/buildMenuSlice';
 
-import { selectStatus } from 'components/molecules/GlobalSidebar/globalSidebarSlice';
+import { selectStatus } from 'components/ui/molecules/GlobalSidebar/globalSidebarSlice';
 
 import TestBlock from 'images/TestBlock';
 import TestTile from 'images/TestTile';
