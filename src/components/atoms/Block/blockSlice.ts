@@ -10,8 +10,9 @@ export type BlockTypeProps = 'object' | 'block' | 'tile' | 'system';
 export type BlockStateInfosProps = {
 	position: { x: number; y: number };
 	size: { width: number; height: number };
-	type: string;
+	type: BlockTypeProps;
 	key: string;
+	actionType?: any;
 	imageInfo: {
 		source: string;
 		up: {
@@ -52,6 +53,7 @@ export const blockSlice = createSlice({
 			state.infos = [...state.infos, ...action.payload];
 		},
 		addBlockInfo: (state, action: PayloadAction<BlockStateInfosProps>) => {
+			console.log(state.infos, action.payload);
 			state.infos = [...state.infos, action.payload];
 		},
 	},
