@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
 import App from './App';
-import { CurrentUserProvider } from './contexts/CurrentUserContext';
+// import { CurrentUserProvider } from './contexts/CurrentUserContext';
 import reportWebVitals from './reportWebVitals';
 import { store } from './app/store';
 
@@ -12,9 +12,7 @@ import './index.css';
 ReactDOM.render(
 	<React.StrictMode>
 		<Provider store={store}>
-			<CurrentUserProvider>
-				<App />
-			</CurrentUserProvider>
+			<App />
 		</Provider>
 	</React.StrictMode>,
 	document.getElementById('root'),

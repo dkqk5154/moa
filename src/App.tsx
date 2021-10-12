@@ -1,4 +1,4 @@
-import { Suspense, lazy, useContext, useMemo } from 'react';
+import { Suspense, lazy, useMemo } from 'react';
 import { SWRConfig } from 'swr';
 import styled, { ThemeProvider } from 'styled-components';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
@@ -12,7 +12,7 @@ import Spinner from 'components/atoms/Spinner';
 
 import { mainRouter } from 'config/routerUrl';
 
-import { CurrentUserContext } from 'contexts/CurrentUserContext';
+// import { CurrentUserContext } from 'contexts/CurrentUserContext';
 // import useInterval from 'hooks/useInterval';
 
 const MainPage = lazy(() => import('pages/MainPage'));
@@ -50,9 +50,9 @@ const Styled = {
 };
 
 function App() {
-	const [currentUser] = useContext(CurrentUserContext);
+	// const [currentUser] = useContext(CurrentUserContext);
 
-	const fetcher = useMemo(() => createFetcher(currentUser), [currentUser]);
+	const fetcher = useMemo(() => createFetcher(''), []);
 
 	return (
 		<Router>
