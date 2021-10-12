@@ -74,7 +74,7 @@ const testTileInfos: Array<BlockStateInfosProps> = new Array(60).fill({
 });
 
 const mapSize = { width: 1280, height: 1080 };
-const spawnPoint = { x: 128, y: 128 };
+const spawnPoint = { x: 48 * 5, y: 48 * 5 };
 
 const MainPage = (): JSX.Element => {
 	const MapWrapperRef = useRef(null);
@@ -192,6 +192,16 @@ const MainPage = (): JSX.Element => {
 					...formatBlockInfos,
 					...formatTileInfos,
 					...mapBlockInfos,
+					{
+						position: spawnPoint,
+						size: {
+							width: 48,
+							height: 48,
+						},
+						key: 'spawn_point',
+						type: 'system',
+						imageInfo: {},
+					},
 				],
 			}),
 		);
