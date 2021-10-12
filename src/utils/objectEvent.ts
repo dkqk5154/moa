@@ -1,13 +1,13 @@
-export const objectPositionCheck = ({ position, size }: ObjectParams) => {
+export const objectPositionCheck = ({ point, size }: ObjectParams) => {
 	return {
-		x1: position.x,
-		y1: position.y,
-		x2: position.x + size.width,
-		y2: position.y,
-		x3: position.x,
-		y3: position.y + size.height,
-		x4: position.x + size.width,
-		y4: position.y + size.height,
+		x1: point.x,
+		y1: point.y,
+		x2: point.x + size.width,
+		y2: point.y,
+		x3: point.x,
+		y3: point.y + size.height,
+		x4: point.x + size.width,
+		y4: point.y + size.height,
 	};
 };
 
@@ -29,12 +29,12 @@ export const isCollision = ({ self, objects }: CollisionParams) => {
 	return result;
 };
 
-export const isClamp = ({ position, mapSize }: ClampParams) => {
+export const isClamp = ({ point, mapSize }: ClampParams) => {
 	if (
-		position.x <= mapSize.width &&
-		position.x >= 0 &&
-		position.y < mapSize.height &&
-		position.y >= 0
+		point.x <= mapSize.width &&
+		point.x >= 0 &&
+		point.y < mapSize.height &&
+		point.y >= 0
 	) {
 		return true;
 	}
@@ -42,7 +42,7 @@ export const isClamp = ({ position, mapSize }: ClampParams) => {
 };
 
 export interface ObjectParams {
-	position: { x: number; y: number };
+	point: { x: number; y: number };
 	size: { width: number; height: number };
 }
 
@@ -52,6 +52,6 @@ export interface CollisionParams {
 }
 
 export interface ClampParams {
-	position: ObjectParams['position'];
+	point: ObjectParams['point'];
 	mapSize: { width: number; height: number };
 }

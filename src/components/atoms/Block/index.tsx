@@ -26,7 +26,7 @@ const Block = ({ width, height }: BlockProps): JSX.Element => {
 	const canvasRef = useRef(null);
 	const [loadingImageInfo, setLoadingImageInfo] = useState({});
 
-	const position = useAppSelector(selectPosition);
+	const point = useAppSelector(selectPosition);
 
 	useEffect(() => {
 		const imageSourceInfos = Array.from(
@@ -59,8 +59,8 @@ const Block = ({ width, height }: BlockProps): JSX.Element => {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			ctx.save();
 			ctx.translate(
-				canvas.width / 2 - position.x,
-				canvas.height / 2 - position.y,
+				canvas.width / 2 - point.x,
+				canvas.height / 2 - point.y,
 			);
 
 			blockInfos.forEach((res: BlockStateInfosProps) => {
@@ -70,8 +70,8 @@ const Block = ({ width, height }: BlockProps): JSX.Element => {
 					res.imageInfo.up.sy,
 					res.size.width,
 					res.size.height,
-					res.position.x,
-					res.position.y,
+					res.point.x,
+					res.point.y,
 					res.size.width,
 					res.size.height,
 				);
@@ -79,7 +79,7 @@ const Block = ({ width, height }: BlockProps): JSX.Element => {
 
 			ctx.restore();
 		}
-	}, [position, width, height, blockInfos, loadingImageInfo]);
+	}, [point, width, height, blockInfos, loadingImageInfo]);
 
 	return <Styled.Block ref={canvasRef} width={width} height={height} />;
 };

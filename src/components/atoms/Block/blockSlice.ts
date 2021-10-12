@@ -8,7 +8,7 @@ export interface BlockStateProps {
 export type BlockTypeProps = 'object' | 'block' | 'tile' | 'system';
 
 export type BlockStateInfosProps = {
-	position: { x: number; y: number };
+	point: { x: number; y: number };
 	size: { width: number; height: number };
 	type: BlockTypeProps;
 	key: string;

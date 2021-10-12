@@ -60,7 +60,7 @@ const BuildMenu = ({ info = {} }: BuildMenuProps) => {
 					onClick={() => {
 						dispatch(
 							setSelectBuildInfo({
-								position: { x: 0, y: 0 },
+								point: { x: 0, y: 0 },
 								size: { width: width, height: height },
 								type: type,
 								key: '0',

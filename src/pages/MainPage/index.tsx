@@ -46,7 +46,7 @@ const Styled = {
 };
 
 const testBlockInfos: Array<BlockStateInfosProps> = new Array(120).fill({
-	position: { x: 0, y: 0 },
+	point: { x: 0, y: 0 },
 	size: {
 		width: TestBlock.info.grayBlock.width,
 		height: TestBlock.info.grayBlock.height,
@@ -60,7 +60,7 @@ const testBlockInfos: Array<BlockStateInfosProps> = new Array(120).fill({
 });
 
 const testTileInfos: Array<BlockStateInfosProps> = new Array(60).fill({
-	position: { x: 0, y: 0 },
+	point: { x: 0, y: 0 },
 	size: {
 		width: TestTile.info.grassTile.width,
 		height: TestTile.info.grassTile.height,
@@ -104,7 +104,7 @@ const MainPage = (): JSX.Element => {
 				j += TestTile.info.grassTile.width
 			) {
 				mapBlockInfos.push({
-					position: { x: j, y: i },
+					point: { x: j, y: i },
 					size: {
 						width: TestTile.info.grassTile.width,
 						height: TestTile.info.grassTile.height,
@@ -117,7 +117,7 @@ const MainPage = (): JSX.Element => {
 					},
 				});
 				mapBlockInfos.push({
-					position: { x: j, y: i },
+					point: { x: j, y: i },
 					size: {
 						width: TestTile.info.grassTile.width,
 						height: TestTile.info.grassTile.height,
@@ -139,8 +139,8 @@ const MainPage = (): JSX.Element => {
 				if (i >= lineBlockCount * 3) {
 					return {
 						...res,
-						position: {
-							x: res.position.x,
+						point: {
+							x: res.point.x,
 							y:
 								lineBlockCount * res.size.height -
 								(i - lineBlockCount * 3) * res.size.height,
@@ -149,7 +149,7 @@ const MainPage = (): JSX.Element => {
 				} else if (i >= lineBlockCount * 2) {
 					return {
 						...res,
-						position: {
+						point: {
 							x:
 								lineBlockCount * res.size.width -
 								(i - lineBlockCount * 2) * res.size.width,
@@ -159,7 +159,7 @@ const MainPage = (): JSX.Element => {
 				} else if (i >= lineBlockCount) {
 					return {
 						...res,
-						position: {
+						point: {
 							x: lineBlockCount * res.size.width,
 							y: (i - lineBlockCount) * res.size.height,
 						},
@@ -167,7 +167,7 @@ const MainPage = (): JSX.Element => {
 				}
 				return {
 					...res,
-					position: {
+					point: {
 						x: i * res.size.width,
 						y: 0,
 					},
@@ -181,7 +181,7 @@ const MainPage = (): JSX.Element => {
 				let y = Math.round(i / 5);
 				return {
 					...res,
-					position: { x: res.size.width * i, y: res.size.height * y },
+					point: { x: res.size.width * i, y: res.size.height * y },
 				};
 			},
 		);
@@ -193,7 +193,7 @@ const MainPage = (): JSX.Element => {
 					...formatTileInfos,
 					...mapBlockInfos,
 					{
-						position: spawnPoint,
+						point: spawnPoint,
 						size: {
 							width: 48,
 							height: 48,

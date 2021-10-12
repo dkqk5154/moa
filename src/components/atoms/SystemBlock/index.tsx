@@ -33,7 +33,7 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 	const selectBuildBlockInfo = useAppSelector(selectSelectBuildBlockInfo);
 	const systemBlockInfos = useAppSelector(selectSystemBlockInfos);
 	// const blockInfos = useAppSelector(selectBlockInfos);
-	const position = useAppSelector(selectPosition);
+	const point = useAppSelector(selectPosition);
 
 	const dispatch = useAppDispatch();
 
@@ -68,15 +68,15 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 		const isSpawn = systemBlockInfos.some(
 			res =>
 				res.key === 'spawn_point' &&
-				res.position.x === mouseBlockPoint.x &&
-				res.position.y === mouseBlockPoint.y,
+				res.point.x === mouseBlockPoint.x &&
+				res.point.y === mouseBlockPoint.y,
 		);
 		console.log('isSpawn : ', isSpawn);
 		if (selectBuildBlockInfo && !isSpawn) {
 			dispatch(
 				addBlockInfo({
 					...selectBuildBlockInfo,
-					position: mouseBlockPoint,
+					point: mouseBlockPoint,
 				}),
 			);
 		}
@@ -92,20 +92,20 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			ctx.save();
 			ctx.translate(
-				canvas.width / 2 - position.x,
-				canvas.height / 2 - position.y,
+				canvas.width / 2 - point.x,
+				canvas.height / 2 - point.y,
 			);
 
 			const formatMouseBlockPointX =
-				mousePoint.x - (canvas.width / 2 - position.x);
+				mousePoint.x - (canvas.width / 2 - point.x);
 			const formatMouseBlockPointY =
-				mousePoint.y - (canvas.height / 2 - position.y);
+				mousePoint.y - (canvas.height / 2 - point.y);
 
 			canvas.addEventListener('mouseup', handleCanvasMouseUp);
 
 			systemBlockInfos.forEach(
-				({ position, size, key }: BlockStateInfosProps) => {
-					const { x, y } = position;
+				({ point, size, key }: BlockStateInfosProps) => {
+					const { x, y } = point;
 
 					if (
 						x + size.width > formatMouseBlockPointX &&
@@ -116,8 +116,8 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 					) {
 						// const isBlockOrObject = blockInfos.some(
 						// 	res =>
-						// 		res.position.x === position.x &&
-						// 		res.position.y === position.y &&
+						// 		res.point.x === point.x &&
+						// 		res.point.y === point.y &&
 						// 		(res.type === 'block' || res.type === 'object'),
 						// );
 						if (key === 'spawn_point') {
@@ -125,7 +125,7 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 						} else {
 							ctx.fillStyle = '#64ef6480';
 						}
-						setMouseBlockPoint(position);
+						setMouseBlockPoint(point);
 						// ctx.fillStyle = '#64ef6480';
 					} else {
 						ctx.fillStyle = '#fbace67a';
@@ -155,7 +155,7 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 			canvas.removeEventListener('mouseup', handleCanvasMouseUp);
 		};
 	}, [
-		position,
+		point,
 		width,
 		height,
 		systemBlockInfos,

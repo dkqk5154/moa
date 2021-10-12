@@ -31,7 +31,7 @@ const Map = ({ width, height }: MapProps): JSX.Element => {
 	const [loadingImageInfo, setLoadingImageInfo] = useState({});
 	// const dispatch = useAppDispatch();
 
-	const position = useAppSelector(selectPosition);
+	const point = useAppSelector(selectPosition);
 
 	useEffect(() => {
 		const imageSourceInfos = Array.from(
@@ -60,8 +60,8 @@ const Map = ({ width, height }: MapProps): JSX.Element => {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			ctx.save();
 			ctx.translate(
-				canvas.width / 2 - position.x,
-				canvas.height / 2 - position.y,
+				canvas.width / 2 - point.x,
+				canvas.height / 2 - point.y,
 			);
 
 			tileInfos.forEach((res: BlockStateInfosProps) => {
@@ -71,8 +71,8 @@ const Map = ({ width, height }: MapProps): JSX.Element => {
 					res.imageInfo.up.sy,
 					res.size.width,
 					res.size.height,
-					res.position.x,
-					res.position.y,
+					res.point.x,
+					res.point.y,
 					res.size.width,
 					res.size.height,
 				);
@@ -80,7 +80,7 @@ const Map = ({ width, height }: MapProps): JSX.Element => {
 
 			ctx.restore();
 		}
-	}, [position, width, height, tileInfos, loadingImageInfo]);
+	}, [point, width, height, tileInfos, loadingImageInfo]);
 
 	return <Styled.Tile ref={canvasRef} width={width} height={height} />;
 };

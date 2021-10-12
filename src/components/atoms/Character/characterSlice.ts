@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from 'app/store';
 
 export interface CharacterState {
-	position: { x: number; y: number };
+	point: { x: number; y: number };
 	size: { width: number; height: number };
 	direction: 'up' | 'left' | 'right' | 'down';
 	speed: number;
@@ -29,7 +29,7 @@ export interface CharacterState {
 }
 
 const initialState: CharacterState = {
-	position: { x: 0, y: 0 },
+	point: { x: 0, y: 0 },
 	direction: 'down',
 	size: { width: 0, height: 0 },
 	speed: 64,
@@ -60,24 +60,24 @@ export const characterSlice = createSlice({
 	initialState,
 	// The `reducers` field lets us define reducers and generate associated actions
 	reducers: {
-		moveRight: ({ position, speed }: CharacterState) => {
-			position.x += speed;
+		moveRight: ({ point, speed }: CharacterState) => {
+			point.x += speed;
 		},
-		moveLeft: ({ position, speed }: CharacterState) => {
-			position.x -= speed;
+		moveLeft: ({ point, speed }: CharacterState) => {
+			point.x -= speed;
 		},
-		moveUp: ({ position, speed }: CharacterState) => {
-			position.y -= speed;
+		moveUp: ({ point, speed }: CharacterState) => {
+			point.y -= speed;
 		},
-		moveDown: ({ position, speed }: CharacterState) => {
-			position.y += speed;
+		moveDown: ({ point, speed }: CharacterState) => {
+			point.y += speed;
 		},
 		setPosition: (
-			{ position },
-			action: PayloadAction<CharacterState['position']>,
+			{ point },
+			action: PayloadAction<CharacterState['point']>,
 		) => {
-			position.x = action.payload.x;
-			position.y = action.payload.y;
+			point.x = action.payload.x;
+			point.y = action.payload.y;
 		},
 		setDirection: (
 			state,
@@ -112,7 +112,7 @@ export const {
 	setImageInfo,
 } = characterSlice.actions;
 
-export const selectPosition = (state: RootState) => state.character.position;
+export const selectPosition = (state: RootState) => state.character.point;
 export const selectSpeed = (state: RootState) => state.character.speed;
 export const selectDelay = (state: RootState) => state.character.delay;
 export const selectSize = (state: RootState) => state.character.size;

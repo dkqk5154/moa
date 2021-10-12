@@ -36,7 +36,7 @@ const Character = ({ width, height, mapSize }: CharacterProps): JSX.Element => {
 	const [pushKeyArray, setPushKeyArray] = useState([]);
 	const [animationFrame, setAnimationFrame] = useState(0);
 
-	const position = useAppSelector(selectPosition);
+	const point = useAppSelector(selectPosition);
 	const direction = useAppSelector(selectDirection);
 	const reduceSpeed = useAppSelector(selectSpeed);
 	const blockInfos = useAppSelector(selectBlockInfos);
@@ -58,7 +58,7 @@ const Character = ({ width, height, mapSize }: CharacterProps): JSX.Element => {
 			let movePosition = { x: 0, y: 0 };
 			const commonFunction = (movePosition: { x: number; y: number }) => {
 				const objectInfo = {
-					position: movePosition,
+					point: movePosition,
 					size,
 				};
 				const isObjectCollision = isCollision({
@@ -66,7 +66,7 @@ const Character = ({ width, height, mapSize }: CharacterProps): JSX.Element => {
 					objects: blockInfos,
 				});
 				const isObjectClamp = isClamp({
-					position: objectInfo['position'],
+					point: objectInfo['point'],
 					mapSize,
 				});
 				if (!isObjectCollision && isObjectClamp) {
@@ -80,29 +80,29 @@ const Character = ({ width, height, mapSize }: CharacterProps): JSX.Element => {
 				switch (direction) {
 					case 'up':
 						movePosition = {
-							x: position.x,
-							y: position.y - speed,
+							x: point.x,
+							y: point.y - speed,
 						};
 						commonFunction(movePosition);
 						break;
 					case 'down':
 						movePosition = {
-							x: position.x,
-							y: position.y + speed,
+							x: point.x,
+							y: point.y + speed,
 						};
 						commonFunction(movePosition);
 						break;
 					case 'left':
 						movePosition = {
-							x: position.x - speed,
-							y: position.y,
+							x: point.x - speed,
+							y: point.y,
 						};
 						commonFunction(movePosition);
 						break;
 					case 'right':
 						movePosition = {
-							x: position.x + speed,
-							y: position.y,
+							x: point.x + speed,
+							y: point.y,
 						};
 						commonFunction(movePosition);
 						break;
@@ -127,8 +127,8 @@ const Character = ({ width, height, mapSize }: CharacterProps): JSX.Element => {
 				ctx.clearRect(0, 0, canvas.width, canvas.height);
 				ctx.save();
 				ctx.translate(
-					canvas.width / 2 - position.x,
-					canvas.height / 2 - position.y,
+					canvas.width / 2 - point.x,
+					canvas.height / 2 - point.y,
 				);
 				if (status !== 'build') {
 					ctx.drawImage(
@@ -137,8 +137,8 @@ const Character = ({ width, height, mapSize }: CharacterProps): JSX.Element => {
 						imageInfo[direction].sy,
 						size.width,
 						size.height,
-						position.x,
-						position.y,
+						point.x,
+						point.y,
 						size.width,
 						size.height,
 					);
@@ -149,7 +149,7 @@ const Character = ({ width, height, mapSize }: CharacterProps): JSX.Element => {
 		}
 	}, [
 		imageInfo,
-		position,
+		point,
 		direction,
 		size,
 		width,
