@@ -5,6 +5,7 @@ import { useAppDispatch } from 'app/hooks';
 import testBlock, { TestBlockInfoProps } from 'images/TestBlock';
 import { setSelectBuildInfo } from './buildMenuSlice';
 import testTile from 'images/TestTile';
+import { BlockTypeProps } from 'components/atoms/Block/blockSlice';
 
 const Styled = {
 	Wrapper: styled.div`
@@ -47,7 +48,7 @@ const BuildMenu = ({ info = {} }: BuildMenuProps) => {
 	}: {
 		info: { [key: string]: TestBlockInfoProps };
 		source: string;
-		type: string;
+		type: BlockTypeProps;
 	}) => {
 		return Object.keys(info).map((res: string) => {
 			const { width, height, up } = info[res];
