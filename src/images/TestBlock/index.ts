@@ -1,12 +1,12 @@
 const info = {
 	source: require('./image.png').default,
 	info: {
-		grassBlock: {
+		stairsBlock: {
 			width: 48,
 			height: 48,
 			up: {
-				sx: 0,
-				sy: 0,
+				sx: 48 * 6,
+				sy: 48 * 2,
 			},
 			right: {
 				sx: 0,
