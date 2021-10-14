@@ -18,11 +18,11 @@ export const isCollision = ({ self, objects }: CollisionParams) => {
 		const selfPosition = objectPositionCheck(self);
 		const objectPosition = objectPositionCheck(object);
 		const objectCheck =
-			objectPosition.x1 > selfPosition.x4 ||
-			objectPosition.y1 > selfPosition.y4;
+			objectPosition.x1 >= selfPosition.x4 ||
+			objectPosition.y1 >= selfPosition.y4;
 		const selfCheck =
-			selfPosition.x1 > objectPosition.x4 ||
-			selfPosition.y1 > objectPosition.y4;
+			selfPosition.x1 >= objectPosition.x4 ||
+			selfPosition.y1 >= objectPosition.y4;
 
 		return (objectCheck || selfCheck) === false;
 	});
@@ -30,15 +30,12 @@ export const isCollision = ({ self, objects }: CollisionParams) => {
 };
 
 export const isClamp = ({ point, mapSize }: ClampParams) => {
-	if (
-		point.x <= mapSize.width &&
-		point.x >= 0 &&
-		point.y < mapSize.height &&
-		point.y >= 0
-	) {
-		return true;
-	}
-	return false;
+	return (
+		point.x >= mapSize.width ||
+		point.x < 0 ||
+		point.y >= mapSize.height ||
+		point.y < 0
+	);
 };
 
 export interface ObjectParams {
