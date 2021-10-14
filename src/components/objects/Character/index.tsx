@@ -55,10 +55,10 @@ const Character = ({ width, height, mapSize }: CharacterProps): JSX.Element => {
 
 	useInterval(
 		() => {
-			let movePosition = { x: 0, y: 0 };
-			const commonFunction = (movePosition: { x: number; y: number }) => {
+			let movePoint = { x: 0, y: 0 };
+			const commonFunction = (movePoint: { x: number; y: number }) => {
 				const objectInfo = {
-					point: movePosition,
+					point: movePoint,
 					size,
 				};
 				const isObjectCollision = isCollision({
@@ -69,42 +69,48 @@ const Character = ({ width, height, mapSize }: CharacterProps): JSX.Element => {
 					point: objectInfo['point'],
 					mapSize,
 				});
-				if (!isObjectCollision && isObjectClamp) {
+
+				const isMove =
+					status === 'build'
+						? true
+						: !isObjectCollision && !isObjectClamp;
+
+				if (isMove) {
 					setAnimationFrame((prevState: number) =>
 						prevState >= 2 ? 1 : prevState + 1,
 					);
-					dispatch(setPosition(movePosition));
+					dispatch(setPosition(movePoint));
 				}
 			};
 			const objectSetPosition = () => {
 				switch (direction) {
 					case 'up':
-						movePosition = {
+						movePoint = {
 							x: point.x,
 							y: point.y - speed,
 						};
-						commonFunction(movePosition);
+						commonFunction(movePoint);
 						break;
 					case 'down':
-						movePosition = {
+						movePoint = {
 							x: point.x,
 							y: point.y + speed,
 						};
-						commonFunction(movePosition);
+						commonFunction(movePoint);
 						break;
 					case 'left':
-						movePosition = {
+						movePoint = {
 							x: point.x - speed,
 							y: point.y,
 						};
-						commonFunction(movePosition);
+						commonFunction(movePoint);
 						break;
 					case 'right':
-						movePosition = {
+						movePoint = {
 							x: point.x + speed,
 							y: point.y,
 						};
-						commonFunction(movePosition);
+						commonFunction(movePoint);
 						break;
 
 					default:
