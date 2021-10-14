@@ -53,7 +53,6 @@ export const blockSlice = createSlice({
 			state.infos = [...state.infos, ...action.payload];
 		},
 		addBlockInfo: (state, action: PayloadAction<BlockStateInfosProps>) => {
-			console.log(state.infos, action.payload);
 			state.infos = [...state.infos, action.payload];
 		},
 	},
