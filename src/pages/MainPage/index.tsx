@@ -207,6 +207,12 @@ const MainPage = (): JSX.Element => {
 		);
 	}, [dispatch]);
 
+	useEffect(() => {
+		if (status === 'home') {
+			dispatch(setPosition(spawnPoint));
+		}
+	}, [status, dispatch]);
+
 	const handleResize = () => {
 		setMapContainerInfo({
 			width: MapWrapperRef?.current?.offsetWidth,
