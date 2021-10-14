@@ -3,8 +3,9 @@ import styled from 'styled-components';
 
 import { useAppDispatch } from 'app/hooks';
 import testBlock, { TestBlockInfoProps } from 'images/TestBlock';
-import { setSelectBuildInfo } from './buildMenuSlice';
 import testTile from 'images/TestTile';
+import testObject from 'images/TestObject';
+import { setSelectBuildInfo } from './buildMenuSlice';
 import { BlockTypeProps } from 'components/objects/Block/blockSlice';
 
 const Styled = {
@@ -54,6 +55,17 @@ const BuildMenu = ({ info = {} }: BuildMenuProps) => {
 			const { width, height, up } = info[res];
 			const { sx, sy } = up;
 
+			console.log({
+				point: { x: 0, y: 0 },
+				size: { width: width, height: height },
+				type: type,
+				key: '0',
+				imageInfo: {
+					source: source,
+					...info[res],
+				},
+			});
+
 			return (
 				<Styled.ImageWrapper
 					key={res}
@@ -72,11 +84,7 @@ const BuildMenu = ({ info = {} }: BuildMenuProps) => {
 						);
 					}}
 				>
-					<Styled.TileCutImage
-						sx={sx}
-						sy={sy}
-						src={require('images/TestBlock/image.png').default}
-					/>
+					<Styled.TileCutImage sx={-sx} sy={sy} src={source} />
 					<span>
 						<b>{res}</b>
 					</span>
@@ -97,10 +105,17 @@ const BuildMenu = ({ info = {} }: BuildMenuProps) => {
 		type: 'tile',
 	});
 
+	const objectInfos = formatBlockInfos({
+		info: testObject.info,
+		source: testObject.source,
+		type: 'object',
+	});
+
 	return (
 		<Styled.Wrapper>
 			{blockInfos}
 			{tileInfos}
+			{objectInfos}
 		</Styled.Wrapper>
 	);
 };
