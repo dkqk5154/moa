@@ -38,7 +38,7 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 	const dispatch = useAppDispatch();
 
 	useEffect(() => {
-		const imageSourceInfos = Array.from(
+		let imageSourceInfos = Array.from(
 			new Set(
 				systemBlockInfos.map(
 					(res: BlockStateInfosProps) => res.imageInfo.source,
@@ -46,19 +46,25 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 			),
 		);
 
+		if (selectBuildBlockInfo?.imageInfo) {
+			imageSourceInfos.push(selectBuildBlockInfo.imageInfo.source);
+		}
+
 		imageSourceInfos.forEach((res: string) => {
-			const imageData = new Image();
-			imageData.src = res;
-			imageData.onload = () => {
-				setLoadingImageInfo(prevState => {
-					return {
-						...prevState,
-						[res]: imageData,
-					};
-				});
-			};
+			if (res) {
+				const imageData = new Image();
+				imageData.src = res;
+				imageData.onload = () => {
+					setLoadingImageInfo(prevState => {
+						return {
+							...prevState,
+							[res]: imageData,
+						};
+					});
+				};
+			}
 		});
-	}, [systemBlockInfos]);
+	}, [systemBlockInfos, selectBuildBlockInfo]);
 
 	const handleCanvasMouseMove = ({ offsetX, offsetY }) => {
 		setMousePoint({ x: offsetX, y: offsetY });
@@ -71,7 +77,6 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 				res.point.x === mouseBlockPoint.x &&
 				res.point.y === mouseBlockPoint.y,
 		);
-		console.log('isSpawn : ', isSpawn);
 		if (selectBuildBlockInfo && !isSpawn) {
 			dispatch(
 				addBlockInfo({
@@ -136,7 +141,7 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 
 			ctx.restore();
 
-			if (selectBuildBlockInfo) {
+			if (loadingImageInfo[selectBuildBlockInfo?.imageInfo?.source]) {
 				ctx.drawImage(
 					loadingImageInfo[selectBuildBlockInfo.imageInfo.source],
 					selectBuildBlockInfo.imageInfo.up.sx,
