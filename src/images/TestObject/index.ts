@@ -2,11 +2,11 @@ const info = {
 	source: require('./image.png').default,
 	info: {
 		TestObject1: {
-			width: 48,
+			width: 48 * 2,
 			height: 48,
 			up: {
-				sx: 48,
-				sy: 48,
+				sx: 0,
+				sy: 48 * 41,
 			},
 			right: {
 				sx: 0,
