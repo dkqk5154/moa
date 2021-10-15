@@ -24,6 +24,7 @@ import { selectStatus } from 'components/ui/molecules/GlobalSidebar/globalSideba
 import TestBlock from 'images/TestBlock';
 import TestTile from 'images/TestTile';
 import TestUser from 'images/TestUser';
+import ObjectBlock from 'components/objects/Block/ObjectBlock';
 
 const Styled = {
 	Wrapper: styled.div`
@@ -237,6 +238,7 @@ const MainPage = (): JSX.Element => {
 					<Character {...mapContainerInfo} mapSize={mapSize} />
 					<Block {...mapContainerInfo} />
 					<Map {...mapContainerInfo} />
+					<ObjectBlock {...mapContainerInfo} />
 					{status === 'build' ? (
 						<SystemBlock {...mapContainerInfo} />
 					) : (
