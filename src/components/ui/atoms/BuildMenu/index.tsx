@@ -8,6 +8,14 @@ import testObject from 'images/TestObject';
 import { setSelectBuildInfo } from './buildMenuSlice';
 import { BlockTypeProps } from 'components/objects/Block/blockSlice';
 
+interface TileCutImageProps {
+	src: string;
+	sx: number;
+	sy: number;
+	width: number;
+	height: number;
+}
+
 const Styled = {
 	Wrapper: styled.div`
 		width: 100%;
@@ -25,7 +33,7 @@ const Styled = {
 		padding: var(--space3);
 		border-radius: var(--radius3);
 	`,
-	TileCutImage: styled.div<{ src: string; sx: number; sy: number }>`
+	TileCutImage: styled.div<TileCutImageProps>`
 		background-image: ${({ src }) => `url(${src})`};
 		background-position: ${({ sx, sy }) => `${sx}px -${sy}px`};
 		background-repeat: no-repeat;
@@ -84,7 +92,13 @@ const BuildMenu = ({ info = {} }: BuildMenuProps) => {
 						);
 					}}
 				>
-					<Styled.TileCutImage sx={-sx} sy={sy} src={source} />
+					<Styled.TileCutImage
+						sx={-sx}
+						sy={sy}
+						src={source}
+						width={width}
+						height={height}
+					/>
 					<span>
 						<b>{res}</b>
 					</span>
