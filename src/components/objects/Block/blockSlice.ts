@@ -65,6 +65,8 @@ export const selectBlockInfos = (state: RootState) =>
 	state.block.infos.filter(res => res.type === 'block');
 export const selectTileInfos = (state: RootState) =>
 	state.block.infos.filter(res => res.type === 'tile');
+export const selectObjectBlock = (state: RootState) =>
+	state.block.infos.filter(res => res.type === 'object');
 export const selectSystemBlockInfos = (state: RootState) =>
 	state.block.infos.filter(res => res.type === 'system');
 
