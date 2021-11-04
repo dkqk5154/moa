@@ -1,4 +1,6 @@
-export const objectPositionCheck = ({ point, size }: ObjectParams) => {
+import { BlockStateInfosProps } from 'components/objects/Block/blockSlice';
+
+export const objectPositionCheck = ({ point, size }: SelfObjectParams) => {
 	return {
 		x1: point.x,
 		y1: point.y,
@@ -11,10 +13,15 @@ export const objectPositionCheck = ({ point, size }: ObjectParams) => {
 	};
 };
 
-export const isCollision = ({ self, objects }: CollisionParams) => {
-	// console.log('self : ', self);
-	// console.log('objects[0] : ', objects[0]);
-	const result = objects.some((object: ObjectParams) => {
+export const isCollision = ({
+	self,
+	objects,
+}: {
+	self: SelfObjectParams;
+	objects: Array<BlockStateInfosProps>;
+}) => {
+	let result = {} as BlockStateInfosProps;
+	objects.some((object: BlockStateInfosProps) => {
 		const selfPosition = objectPositionCheck(self);
 		const objectPosition = objectPositionCheck(object);
 		const objectCheck =
@@ -24,7 +31,11 @@ export const isCollision = ({ self, objects }: CollisionParams) => {
 			selfPosition.x1 >= objectPosition.x4 ||
 			selfPosition.y1 >= objectPosition.y4;
 
-		return (objectCheck || selfCheck) === false;
+		if ((objectCheck || selfCheck) === false) {
+			result = object;
+			return true;
+		}
+		return false;
 	});
 	return result;
 };
@@ -38,17 +49,12 @@ export const isClamp = ({ point, mapSize }: ClampParams) => {
 	);
 };
 
-export interface ObjectParams {
+export interface SelfObjectParams {
 	point: { x: number; y: number };
 	size: { width: number; height: number };
 }
 
-export interface CollisionParams {
-	self: ObjectParams;
-	objects: Array<ObjectParams>;
-}
-
 export interface ClampParams {
-	point: ObjectParams['point'];
+	point: SelfObjectParams['point'];
 	mapSize: { width: number; height: number };
 }

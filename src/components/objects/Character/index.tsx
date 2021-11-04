@@ -61,10 +61,11 @@ const Character = ({ width, height, mapSize }: CharacterProps): JSX.Element => {
 					point: movePoint,
 					size,
 				};
-				const isObjectCollision = isCollision({
+				const collisionObjectInfo = isCollision({
 					self: objectInfo,
 					objects: blockInfos,
 				});
+
 				const isObjectClamp = isClamp({
 					point: objectInfo['point'],
 					mapSize,
@@ -73,7 +74,7 @@ const Character = ({ width, height, mapSize }: CharacterProps): JSX.Element => {
 				const isMove =
 					status === 'build'
 						? true
-						: !isObjectCollision && !isObjectClamp;
+						: !collisionObjectInfo.type && !isObjectClamp;
 
 				if (isMove) {
 					setAnimationFrame((prevState: number) =>
