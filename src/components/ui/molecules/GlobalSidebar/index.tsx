@@ -5,7 +5,7 @@ import Button from 'components/ui/atoms/Button';
 
 import { selectStatus, setStatus } from './globalSidebarSlice';
 import { useAppSelector, useAppDispatch } from 'app/hooks';
-import BuildMenu from 'components/ui/atoms/BuildMenu';
+import BuildMenu from 'components/ui/molecules/BuildMenu';
 
 const Styled = {
 	Wrapper: styled.div`

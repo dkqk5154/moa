@@ -9,7 +9,7 @@ import {
 	BlockStateInfosProps,
 } from 'components/objects/Block/blockSlice';
 import { selectPosition } from 'components/objects/Character/characterSlice';
-import { selectSelectBuildBlockInfo } from 'components/ui/atoms/BuildMenu/buildMenuSlice';
+import { selectSelectBuildBlockInfo } from 'components/ui/molecules/BuildMenu/buildMenuSlice';
 
 const Styled = {
 	Canvas: styled.canvas`

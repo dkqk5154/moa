@@ -7,14 +7,7 @@ import testTile from 'images/TestTile';
 import testObject from 'images/TestObject';
 import { setSelectBuildInfo } from './buildMenuSlice';
 import { BlockTypeProps } from 'components/objects/Block/blockSlice';
-
-interface TileCutImageProps {
-	src: string;
-	sx: number;
-	sy: number;
-	width: number;
-	height: number;
-}
+import TileImage from 'components/ui/atoms/TileImage';
 
 const Styled = {
 	Wrapper: styled.div`
@@ -33,21 +26,15 @@ const Styled = {
 		padding: var(--space3);
 		border-radius: var(--radius3);
 	`,
-	TileCutImage: styled.div<TileCutImageProps>`
-		background-image: ${({ src }) => `url(${src})`};
-		background-position: ${({ sx, sy }) => `${sx}px -${sy}px`};
-		background-repeat: no-repeat;
-		width: 48px;
-		height: 48px;
+	TileImageWrapper: styled.div`
+		display: flex;
 		margin-bottom: var(--space3);
 	`,
 };
 
-export interface BuildMenuProps {
-	info?: any;
-}
+export interface BuildMenuProps {}
 
-const BuildMenu = ({ info = {} }: BuildMenuProps) => {
+const BuildMenu = () => {
 	const dispatch = useAppDispatch();
 
 	const formatBlockInfos = ({
@@ -63,23 +50,13 @@ const BuildMenu = ({ info = {} }: BuildMenuProps) => {
 			const { width, height, up } = info[res];
 			const { sx, sy } = up;
 
-			console.log({
-				point: { x: 0, y: 0 },
-				size: { width: width, height: height },
-				type: type,
-				key: '0',
-				imageInfo: {
-					source: source,
-					...info[res],
-				},
-			});
-
 			return (
 				<Styled.ImageWrapper
 					key={res}
 					onClick={() => {
 						dispatch(
 							setSelectBuildInfo({
+								name: res,
 								point: { x: 0, y: 0 },
 								size: { width: width, height: height },
 								type: type,
@@ -92,13 +69,15 @@ const BuildMenu = ({ info = {} }: BuildMenuProps) => {
 						);
 					}}
 				>
-					<Styled.TileCutImage
-						sx={-sx}
-						sy={sy}
-						src={source}
-						width={width}
-						height={height}
-					/>
+					<Styled.TileImageWrapper>
+						<TileImage
+							sx={sx}
+							sy={sy}
+							src={source}
+							width={width}
+							height={height}
+						/>
+					</Styled.TileImageWrapper>
 					<span>
 						<b>{res}</b>
 					</span>

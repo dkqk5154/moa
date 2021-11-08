@@ -6,7 +6,7 @@ import {
 	// useAppDispatch
 } from 'app/hooks';
 import {
-	selectObjectBlock,
+	selectObjectBlockInfos,
 	BlockStateInfosProps,
 } from 'components/objects/Block/blockSlice';
 import { selectPosition } from 'components/objects/Character/characterSlice';
@@ -25,7 +25,7 @@ export interface ObjectBlockProps {
 }
 
 const ObjectBlock = ({ width, height }: ObjectBlockProps): JSX.Element => {
-	const objectBlockInfos = useAppSelector(selectObjectBlock);
+	const objectBlockInfos = useAppSelector(selectObjectBlockInfos);
 	const canvasRef = useRef(null);
 	const [loadingImageInfo, setLoadingImageInfo] = useState({});
 
