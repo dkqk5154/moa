@@ -8,11 +8,15 @@ export interface BlockStateProps {
 export type BlockTypeProps = 'object' | 'block' | 'tile' | 'system';
 
 export type BlockStateInfosProps = {
+	name: string;
 	point: { x: number; y: number };
 	size: { width: number; height: number };
 	type: BlockTypeProps;
 	key: string;
-	actionType?: any;
+	objectInfo?: {
+		type: string;
+		value: any;
+	};
 	imageInfo: {
 		source: string;
 		up: {
@@ -65,7 +69,7 @@ export const selectBlockInfos = (state: RootState) =>
 	state.block.infos.filter(res => res.type === 'block');
 export const selectTileInfos = (state: RootState) =>
 	state.block.infos.filter(res => res.type === 'tile');
-export const selectObjectBlock = (state: RootState) =>
+export const selectObjectBlockInfos = (state: RootState) =>
 	state.block.infos.filter(res => res.type === 'object');
 export const selectSystemBlockInfos = (state: RootState) =>
 	state.block.infos.filter(res => res.type === 'system');
