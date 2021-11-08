@@ -1,15 +1,17 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import characterReducer from 'components/objects/Character/characterSlice';
 import blockReducer from 'components/objects/Block/blockSlice';
+import buildMenuReducer from 'components/ui/molecules/BuildMenu/buildMenuSlice';
 import globalSidebarReducer from 'components/ui/molecules/GlobalSidebar/globalSidebarSlice';
-import buildMenuReducer from 'components/ui/atoms/BuildMenu/buildMenuSlice';
+import globalPopupMenuReducer from 'components/ui/organisms/GlobalPopupMenu/globalPopupMenuSlice';
 
 export const store = configureStore({
 	reducer: {
 		character: characterReducer,
 		block: blockReducer,
-		globalSidebarReducer: globalSidebarReducer,
 		buildMenuReducer: buildMenuReducer,
+		globalSidebarReducer: globalSidebarReducer,
+		globalPopupMenuReducer: globalPopupMenuReducer,
 	},
 });
 
