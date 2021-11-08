@@ -20,7 +20,7 @@ export const isCollision = ({
 	self: SelfObjectParams;
 	objects: Array<BlockStateInfosProps>;
 }) => {
-	let result = {} as BlockStateInfosProps;
+	let result = null as BlockStateInfosProps;
 	objects.some((object: BlockStateInfosProps) => {
 		const selfPosition = objectPositionCheck(self);
 		const objectPosition = objectPositionCheck(object);
