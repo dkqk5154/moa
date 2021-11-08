@@ -25,6 +25,7 @@ import TestBlock from 'images/TestBlock';
 import TestTile from 'images/TestTile';
 import TestUser from 'images/TestUser';
 import ObjectBlock from 'components/objects/Block/ObjectBlock';
+import GlobalPopupMenu from 'components/ui/organisms/GlobalPopupMenu';
 
 const Styled = {
 	Wrapper: styled.div`
@@ -40,6 +41,7 @@ const Styled = {
 		margin: auto;
 	`,
 	MapWrapper: styled.div`
+		position: relative;
 		display: flex;
 		height: 100%;
 		width: 100%;
@@ -47,6 +49,7 @@ const Styled = {
 };
 
 const testBlockInfos: Array<BlockStateInfosProps> = new Array(120).fill({
+	name: 'grayBlock',
 	point: { x: 0, y: 0 },
 	size: {
 		width: TestBlock.info.grayBlock.width,
@@ -61,6 +64,7 @@ const testBlockInfos: Array<BlockStateInfosProps> = new Array(120).fill({
 });
 
 const testTileInfos: Array<BlockStateInfosProps> = new Array(60).fill({
+	name: 'grassTile',
 	point: { x: 0, y: 0 },
 	size: {
 		width: TestTile.info.grassTile.width,
@@ -105,6 +109,7 @@ const MainPage = (): JSX.Element => {
 				j += TestTile.info.grassTile.width
 			) {
 				mapBlockInfos.push({
+					name: 'grassTile',
 					point: { x: j, y: i },
 					size: {
 						width: TestTile.info.grassTile.width,
@@ -118,6 +123,7 @@ const MainPage = (): JSX.Element => {
 					},
 				});
 				mapBlockInfos.push({
+					name: 'grassTile',
 					point: { x: j, y: i },
 					size: {
 						width: TestTile.info.grassTile.width,
@@ -235,6 +241,7 @@ const MainPage = (): JSX.Element => {
 			<Styled.Container>
 				<GlobalSidebar />
 				<Styled.MapWrapper ref={MapWrapperRef}>
+					<GlobalPopupMenu />
 					<Character {...mapContainerInfo} mapSize={mapSize} />
 					<Block {...mapContainerInfo} />
 					<Map {...mapContainerInfo} />
