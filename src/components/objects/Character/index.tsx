@@ -12,7 +12,11 @@ import {
 	setPosition,
 	setDirection,
 } from 'components/objects/Character/characterSlice';
-import { selectBlockInfos } from 'components/objects/Block/blockSlice';
+import {
+	selectBlockInfos,
+	selectObjectBlockInfos,
+} from 'components/objects/Block/blockSlice';
+import { setSelectBlockInfo } from 'components/ui/organisms/GlobalPopupMenu/globalPopupMenuSlice';
 import { selectStatus } from 'components/ui/molecules/GlobalSidebar/globalSidebarSlice';
 import useInterval from 'hooks/useInterval';
 
@@ -40,6 +44,7 @@ const Character = ({ width, height, mapSize }: CharacterProps): JSX.Element => {
 	const direction = useAppSelector(selectDirection);
 	const reduceSpeed = useAppSelector(selectSpeed);
 	const blockInfos = useAppSelector(selectBlockInfos);
+	const objectBlockInfos = useAppSelector(selectObjectBlockInfos);
 	const delay = useAppSelector(selectDelay);
 	const size = useAppSelector(selectSize);
 	const imageInfo = useAppSelector(selectImageInfo);
@@ -61,10 +66,12 @@ const Character = ({ width, height, mapSize }: CharacterProps): JSX.Element => {
 					point: movePoint,
 					size,
 				};
-				const collisionObjectInfo = isCollision({
+				const collisionBlockInfo = isCollision({
 					self: objectInfo,
-					objects: blockInfos,
+					objects: [...blockInfos, ...objectBlockInfos],
 				});
+
+				dispatch(setSelectBlockInfo(collisionBlockInfo));
 
 				const isObjectClamp = isClamp({
 					point: objectInfo['point'],
@@ -74,7 +81,7 @@ const Character = ({ width, height, mapSize }: CharacterProps): JSX.Element => {
 				const isMove =
 					status === 'build'
 						? true
-						: !collisionObjectInfo.type && !isObjectClamp;
+						: !collisionBlockInfo && !isObjectClamp;
 
 				if (isMove) {
 					setAnimationFrame((prevState: number) =>
