@@ -60,28 +60,40 @@ const Character = ({ width, height, mapSize }: CharacterProps): JSX.Element => {
 
 	useInterval(
 		() => {
-			let movePoint = { x: 0, y: 0 };
-			const commonFunction = (movePoint: { x: number; y: number }) => {
-				const objectInfo = {
-					point: movePoint,
-					size,
-				};
-				const collisionBlockInfo = isCollision({
-					self: objectInfo,
+			const commonFunction = (
+				movePoint: {
+					x: number;
+					y: number;
+				},
+				frontPoint: {
+					x: number;
+					y: number;
+				},
+			) => {
+				const isCharacterCollision = isCollision({
+					self: { point: movePoint, size },
 					objects: [...blockInfos, ...objectBlockInfos],
 				});
 
-				dispatch(setSelectBlockInfo(collisionBlockInfo));
+				const selectObjectInfo = isCollision({
+					self: {
+						point: isCharacterCollision ? movePoint : frontPoint,
+						size,
+					},
+					objects: [...blockInfos, ...objectBlockInfos],
+				});
+
+				dispatch(setSelectBlockInfo(selectObjectInfo));
 
 				const isObjectClamp = isClamp({
-					point: objectInfo['point'],
+					point: movePoint,
 					mapSize,
 				});
 
 				const isMove =
 					status === 'build'
 						? true
-						: !collisionBlockInfo && !isObjectClamp;
+						: !isCharacterCollision && !isObjectClamp;
 
 				if (isMove) {
 					setAnimationFrame((prevState: number) =>
@@ -93,32 +105,28 @@ const Character = ({ width, height, mapSize }: CharacterProps): JSX.Element => {
 			const objectSetPosition = () => {
 				switch (direction) {
 					case 'up':
-						movePoint = {
-							x: point.x,
-							y: point.y - speed,
-						};
-						commonFunction(movePoint);
+						commonFunction(
+							{ x: point.x, y: point.y - speed },
+							{ x: point.x, y: point.y - speed * 2 },
+						);
 						break;
 					case 'down':
-						movePoint = {
-							x: point.x,
-							y: point.y + speed,
-						};
-						commonFunction(movePoint);
+						commonFunction(
+							{ x: point.x, y: point.y + speed },
+							{ x: point.x, y: point.y + speed * 2 },
+						);
 						break;
 					case 'left':
-						movePoint = {
-							x: point.x - speed,
-							y: point.y,
-						};
-						commonFunction(movePoint);
+						commonFunction(
+							{ x: point.x - speed, y: point.y },
+							{ x: point.x - speed * 2, y: point.y },
+						);
 						break;
 					case 'right':
-						movePoint = {
-							x: point.x + speed,
-							y: point.y,
-						};
-						commonFunction(movePoint);
+						commonFunction(
+							{ x: point.x + speed, y: point.y },
+							{ x: point.x + speed * 2, y: point.y },
+						);
 						break;
 
 					default:
@@ -196,6 +204,23 @@ const Character = ({ width, height, mapSize }: CharacterProps): JSX.Element => {
 					dispatch(setDirection('right'));
 					commonFunction();
 					break;
+
+				case 'ArrowUp':
+					dispatch(setDirection('up'));
+					commonFunction();
+					break;
+				case 'ArrowLeft':
+					dispatch(setDirection('left'));
+					commonFunction();
+					break;
+				case 'ArrowDown':
+					dispatch(setDirection('down'));
+					commonFunction();
+					break;
+				case 'ArrowRight':
+					dispatch(setDirection('right'));
+					commonFunction();
+					break;
 				default:
 					break;
 			}
@@ -216,11 +241,11 @@ const Character = ({ width, height, mapSize }: CharacterProps): JSX.Element => {
 	);
 
 	useEffect(() => {
-		window.addEventListener('keypress', handleKeyPress);
+		window.addEventListener('keydown', handleKeyPress);
 		window.addEventListener('keyup', handleKeyUp);
 
 		return () => {
-			window.removeEventListener('keypress', handleKeyPress);
+			window.removeEventListener('keydown', handleKeyPress);
 			window.removeEventListener('keyup', handleKeyUp);
 		};
 	}, [handleKeyUp, handleKeyPress]);
