@@ -21,9 +21,9 @@ import {
 
 import { selectStatus } from 'components/ui/molecules/GlobalSidebar/globalSidebarSlice';
 
-import TestBlock from 'images/TestBlock';
-import TestTile from 'images/TestTile';
-import TestUser from 'images/TestUser';
+import TestBlock from 'images/Block';
+import TestTile from 'images/Tile';
+import TestUser from 'images/User';
 import ObjectBlock from 'components/objects/Block/ObjectBlock';
 import GlobalPopupMenu from 'components/ui/organisms/GlobalPopupMenu';
 

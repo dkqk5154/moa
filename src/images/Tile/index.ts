@@ -24,7 +24,7 @@ const info = {
 	},
 };
 
-export interface TestTileInfoProps {
+export interface TileInfoProps {
 	width: number;
 	height: number;
 	up: {

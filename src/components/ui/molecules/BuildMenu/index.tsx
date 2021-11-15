@@ -2,9 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { useAppDispatch } from 'app/hooks';
-import testBlock, { TestBlockInfoProps } from 'images/TestBlock';
-import testTile from 'images/TestTile';
-import testObject from 'images/TestObject';
+import testBlock, { BlockInfoProps } from 'images/Block';
+import testTile from 'images/Tile';
+import testObject from 'images/Object';
 import { setSelectBuildInfo } from './buildMenuSlice';
 import { BlockTypeProps } from 'components/objects/Block/blockSlice';
 import TileImage from 'components/ui/atoms/TileImage';
@@ -42,7 +42,7 @@ const BuildMenu = () => {
 		source,
 		type,
 	}: {
-		info: { [key: string]: TestBlockInfoProps };
+		info: { [key: string]: BlockInfoProps };
 		source: string;
 		type: BlockTypeProps;
 	}) => {

@@ -1,12 +1,12 @@
 const info = {
 	source: require('./image.png').default,
 	info: {
-		TestObject1: {
-			width: 48 * 2,
+		stairsBlock: {
+			width: 48,
 			height: 48,
 			up: {
-				sx: 0,
-				sy: 48 * 41,
+				sx: 48 * 6,
+				sy: 48 * 2,
 			},
 			right: {
 				sx: 0,
@@ -21,10 +21,30 @@ const info = {
 				sy: 0,
 			},
 		},
+		grayBlock: {
+			width: 48,
+			height: 48,
+			up: {
+				sx: 0,
+				sy: 154,
+			},
+			right: {
+				sx: 0,
+				sy: 154,
+			},
+			left: {
+				sx: 0,
+				sy: 154,
+			},
+			down: {
+				sx: 0,
+				sy: 154,
+			},
+		},
 	},
 };
 
-export interface TestBlockInfoProps {
+export interface BlockInfoProps {
 	width: number;
 	height: number;
 	up: {
