@@ -23,7 +23,7 @@ import { selectStatus } from 'components/ui/molecules/GlobalSidebar/globalSideba
 
 import TestBlock from 'images/Block';
 import TestTile from 'images/Tile';
-import TestUser from 'images/User';
+import TestUser from 'images/Character';
 import ObjectBlock from 'components/objects/Block/ObjectBlock';
 import GlobalPopupMenu from 'components/ui/organisms/GlobalPopupMenu';
 

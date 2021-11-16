@@ -1,101 +1,75 @@
 {
-  "name": "moa",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@nivo/bar": "^0.66.0",
-    "@nivo/core": "^0.66.0",
-    "@react-google-maps/api": "^2.1.1",
-    "@reduxjs/toolkit": "^1.6.1",
-    "@styled-system-ts/css": "^0.3.1",
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
-    "@wojtekmaj/react-daterange-picker": "^3.3.0",
-    "amazon-cognito-identity-js": "^4.5.5",
-    "aws-sdk": "^2.810.0",
-    "axios": "^0.21.0",
-    "chart.js": "^2.9.4",
-    "chartjs-plugin-datalabels": "^0.7.0",
-    "file-saver": "^2.0.5",
-    "idb": "3.0.2",
-    "jsonwebtoken": "^8.5.1",
-    "mdx.macro": "^0.2.9",
-    "moment": "^2.29.1",
-    "nivo": "^0.31.0",
-    "node-sass": "^6.0.1",
-    "npm-run-all": "^4.1.5",
-    "pixel-scale": "^1.0.0",
-    "query-string": "^7.0.0",
-    "react": "^17.0.1",
-    "react-async-hook": "^3.6.2",
-    "react-chartjs-2": "^2.11.1",
-    "react-cookie": "^4.0.3",
-    "react-date-picker": "^8.0.5",
-    "react-dom": "^17.0.1",
-    "react-google-maps": "^9.4.5",
-    "react-modal-hook": "^3.0.0",
-    "react-motion": "^0.5.2",
-    "react-redux": "^7.2.5",
-    "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.1",
-    "react-select": "^3.1.1",
-    "recharts": "^2.0.9",
-    "serve": "^11.3.2",
-    "styled-components": "^5.2.1",
-    "styled-system": "^5.1.5",
-    "styled-system-ts": "^0.3.1",
-    "sweetalert2": "^10.12.4",
-    "swiper": "^6.7.5",
-    "swr": "^0.3.9",
-    "typescript": "^4.0.3",
-    "web-vitals": "^0.2.4",
-    "xlsx": "^0.16.9"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "serve": "serve -s build",
-    "test": "node scripts/test.js"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app"
-    ]
-  },
-  "devDependencies": {
-    "@types/jest": "^26.0.15",
-    "@types/node": "^12.0.0",
-    "@types/react": "^16.9.53",
-    "@types/react-dom": "^16.9.8",
-    "@types/file-saver": "^2.0.2",
-    "@types/jsonwebtoken": "^8.5.0",
-    "@types/moment": "^2.13.0",
-    "@types/react-chartjs-2": "^2.5.7",
-    "@types/react-motion": "^0.0.29",
-    "@types/react-router-dom": "^5.1.6",
-    "@types/react-select": "^3.0.27",
-    "@types/styled-components": "^5.1.4",
-    "@types/styled-system": "^5.1.10",
-    "@types/swiper": "^5.4.3",
-    "eslint": "^7.14.0",
-    "eslint-config-airbnb": "^18.2.1",
-    "eslint-import-resolver-alias": "^1.1.2",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-react": "^7.21.5",
-    "eslint-plugin-react-hooks": "^0.0.0-8e5adfbd7"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+	"name": "moa",
+	"version": "0.1.0",
+	"private": true,
+	"dependencies": {
+		"@reduxjs/toolkit": "^1.6.1",
+		"@testing-library/jest-dom": "^5.11.4",
+		"@testing-library/react": "^11.1.0",
+		"@testing-library/user-event": "^12.1.10",
+		"amazon-cognito-identity-js": "^4.5.5",
+		"aws-sdk": "^2.810.0",
+		"axios": "^0.21.0",
+		"file-saver": "^2.0.5",
+		"idb": "3.0.2",
+		"jsonwebtoken": "^8.5.1",
+		"mdx.macro": "^0.2.9",
+		"moment": "^2.29.1",
+		"node-sass": "^6.0.1",
+		"pixel-scale": "^1.0.0",
+		"react": "^17.0.1",
+		"react-cookie": "^4.0.3",
+		"react-dom": "^17.0.1",
+		"react-modal-hook": "^3.0.0",
+		"react-redux": "^7.2.5",
+		"react-router-dom": "^5.2.0",
+		"react-scripts": "4.0.1",
+		"serve": "^11.3.2",
+		"styled-components": "^5.2.1",
+		"swr": "^0.3.9",
+		"typescript": "^4.0.3",
+		"web-vitals": "^0.2.4",
+		"xlsx": "^0.16.9"
+	},
+	"scripts": {
+		"start": "react-scripts start",
+		"build": "react-scripts build",
+		"serve": "serve -s build",
+		"test": "node scripts/test.js"
+	},
+	"eslintConfig": {
+		"extends": [
+			"react-app"
+		]
+	},
+	"devDependencies": {
+		"@types/jest": "^26.0.15",
+		"@types/node": "^12.0.0",
+		"@types/react": "^16.9.53",
+		"@types/react-dom": "^16.9.8",
+		"@types/file-saver": "^2.0.2",
+		"@types/jsonwebtoken": "^8.5.0",
+		"@types/moment": "^2.13.0",
+		"@types/react-router-dom": "^5.1.6",
+		"@types/styled-components": "^5.1.4",
+		"eslint": "^7.14.0",
+		"eslint-config-airbnb": "^18.2.1",
+		"eslint-import-resolver-alias": "^1.1.2",
+		"eslint-plugin-import": "^2.22.1",
+		"eslint-plugin-jsx-a11y": "^6.4.1",
+		"eslint-plugin-react": "^7.21.5",
+		"eslint-plugin-react-hooks": "^0.0.0-8e5adfbd7"
+	},
+	"browserslist": {
+		"production": [
+			">0.2%",
+			"not dead",
+			"not op_mini all"
+		],
+		"development": [
+			"last 1 chrome version",
+			"last 1 firefox version",
+			"last 1 safari version"
+		]
+	}
 }
