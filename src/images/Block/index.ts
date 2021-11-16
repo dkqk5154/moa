@@ -2,11 +2,11 @@ const info = {
 	source: require('./image.png').default,
 	info: {
 		stairsBlock: {
-			width: 48,
-			height: 48,
+			width: 32,
+			height: 32,
 			up: {
-				sx: 48 * 6,
-				sy: 48 * 2,
+				sx: 32 * 0,
+				sy: 32 * 0,
 			},
 			right: {
 				sx: 0,
@@ -22,23 +22,23 @@ const info = {
 			},
 		},
 		grayBlock: {
-			width: 48,
-			height: 48,
+			width: 32,
+			height: 32,
 			up: {
-				sx: 0,
-				sy: 154,
+				sx: 32 * 0,
+				sy: 32 * 0,
 			},
 			right: {
 				sx: 0,
-				sy: 154,
+				sy: 0,
 			},
 			left: {
 				sx: 0,
-				sy: 154,
+				sy: 0,
 			},
 			down: {
 				sx: 0,
-				sy: 154,
+				sy: 0,
 			},
 		},
 	},

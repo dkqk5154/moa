@@ -1,22 +1,24 @@
+const size = 64;
+
 const info = {
-	source: require('./image.png').default,
-	width: 64,
-	height: 64,
+	source: require('./image2.png').default,
+	width: size,
+	height: size,
 	up: {
-		sx: 64,
-		sy: 196,
+		sx: size * 2,
+		sy: 0,
 	},
 	down: {
-		sx: 64,
+		sx: size * 1,
 		sy: 0,
 	},
 	left: {
-		sx: 0,
-		sy: 128,
+		sx: size * 0,
+		sy: 0,
 	},
 	right: {
-		sx: 64,
-		sy: 64,
+		sx: size * 3,
+		sy: 0,
 	},
 };
 

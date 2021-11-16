@@ -155,8 +155,8 @@ const Character = ({ width, height, mapSize }: CharacterProps): JSX.Element => {
 				if (status !== 'build') {
 					ctx.drawImage(
 						playerImage,
-						imageInfo[direction].sx + animationFrame * size.width,
-						imageInfo[direction].sy,
+						imageInfo[direction].sx,
+						imageInfo[direction].sy + animationFrame * size.height,
 						size.width,
 						size.height,
 						point.x,

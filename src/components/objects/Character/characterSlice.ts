@@ -32,7 +32,7 @@ const initialState: CharacterState = {
 	point: { x: 0, y: 0 },
 	direction: 'down',
 	size: { width: 0, height: 0 },
-	speed: 48,
+	speed: 32,
 	delay: 120,
 	imageInfo: {
 		source: '',
