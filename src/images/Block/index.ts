@@ -1,50 +1,34 @@
-const info = {
-	source: require('./image.png').default,
-	info: {
-		stairsBlock: {
-			width: 32,
-			height: 32,
-			up: {
-				sx: 32 * 0,
-				sy: 32 * 0,
-			},
-			right: {
-				sx: 0,
-				sy: 0,
-			},
-			left: {
-				sx: 0,
-				sy: 0,
-			},
-			down: {
-				sx: 0,
-				sy: 0,
-			},
+const defaultSize = 16;
+const defaultSource = require('./image.png').default;
+
+const infos = [
+	{
+		name: 'WoodBlock',
+		source: defaultSource,
+		width: defaultSize,
+		height: defaultSize,
+		up: {
+			sx: defaultSize * 0,
+			sy: defaultSize * 3,
 		},
-		grayBlock: {
-			width: 32,
-			height: 32,
-			up: {
-				sx: 32 * 0,
-				sy: 32 * 0,
-			},
-			right: {
-				sx: 0,
-				sy: 0,
-			},
-			left: {
-				sx: 0,
-				sy: 0,
-			},
-			down: {
-				sx: 0,
-				sy: 0,
-			},
+		right: {
+			sx: defaultSize * 0,
+			sy: defaultSize * 3,
+		},
+		left: {
+			sx: defaultSize * 0,
+			sy: defaultSize * 3,
+		},
+		down: {
+			sx: defaultSize * 0,
+			sy: defaultSize * 3,
 		},
 	},
-};
+];
 
-export interface BlockInfoProps {
+export interface BlockSourceProps {
+	name: string;
+	source: string;
 	width: number;
 	height: number;
 	up: {
@@ -65,4 +49,4 @@ export interface BlockInfoProps {
 	};
 }
 
-export default info;
+export default infos;

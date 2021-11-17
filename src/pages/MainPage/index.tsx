@@ -6,6 +6,7 @@ import Character from 'components/objects/Character';
 import Block from 'components/objects/Block';
 import Map from 'components/objects/Map';
 import SystemBlock from 'components/objects/Block/SystemBlock';
+import ObjectBlock from 'components/objects/Block/ObjectBlock';
 
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import {
@@ -13,18 +14,13 @@ import {
 	setImageInfo,
 	setSize,
 } from 'components/objects/Character/characterSlice';
-import {
-	setBlockInfos,
-	BlockStateInfosProps,
-} from 'components/objects/Block/blockSlice';
+import { setBlockInfos } from 'components/objects/Block/blockSlice';
 // import { setBuildBlockInfos } from 'components/atoms/BuildMenu/buildMenuSlice';
 
 import { selectStatus } from 'components/ui/molecules/GlobalSidebar/globalSidebarSlice';
 
-import TestBlock from 'images/Block';
-import TestTile from 'images/Tile';
-import TestUser from 'images/Character';
-import ObjectBlock from 'components/objects/Block/ObjectBlock';
+import tileSource from 'images/Tile';
+import characterSource from 'images/Character';
 import GlobalPopupMenu from 'components/ui/organisms/GlobalPopupMenu';
 
 const Styled = {
@@ -48,38 +44,8 @@ const Styled = {
 	`,
 };
 
-const testBlockInfos: Array<BlockStateInfosProps> = new Array(120).fill({
-	name: 'grayBlock',
-	point: { x: 0, y: 0 },
-	size: {
-		width: TestBlock.info.grayBlock.width,
-		height: TestBlock.info.grayBlock.height,
-	},
-	key: '1',
-	type: 'block',
-	imageInfo: {
-		source: TestBlock.source,
-		...TestBlock.info.grayBlock,
-	},
-});
-
-const testTileInfos: Array<BlockStateInfosProps> = new Array(60).fill({
-	name: 'grassTile',
-	point: { x: 0, y: 0 },
-	size: {
-		width: TestTile.info.grassTile.width,
-		height: TestTile.info.grassTile.height,
-	},
-	key: '1',
-	type: 'tile',
-	imageInfo: {
-		source: TestTile.source,
-		...TestTile.info.grassTile,
-	},
-});
-
-const mapSize = { width: 1280, height: 1080 };
-const spawnPoint = { x: 32 * 5, y: 32 * 5 };
+const mapSize = { width: 300, height: 300 };
+const spawnPoint = { x: 16 * 5, y: 16 * 5 };
 
 const MainPage = (): JSX.Element => {
 	const MapWrapperRef = useRef(null);
@@ -93,111 +59,51 @@ const MainPage = (): JSX.Element => {
 	const dispatch = useAppDispatch();
 
 	useEffect(() => {
-		dispatch(setImageInfo(TestUser));
-		dispatch(setSize({ width: TestUser.width, height: TestUser.height }));
+		dispatch(setImageInfo(characterSource));
+		dispatch(
+			setSize({
+				width: characterSource.width,
+				height: characterSource.height,
+			}),
+		);
 		dispatch(setPosition(spawnPoint));
 
 		let mapBlockInfos = [];
-		for (
-			let i = 0;
-			i < mapSize.height;
-			i += TestTile.info.grassTile.height
-		) {
-			for (
-				let j = 0;
-				j < mapSize.width;
-				j += TestTile.info.grassTile.width
-			) {
+		for (let i = 0; i < mapSize.height; i += tileSource[0].height) {
+			for (let j = 0; j < mapSize.width; j += tileSource[0].width) {
 				mapBlockInfos.push({
-					name: 'grassTile',
+					name: 'woodTile',
 					point: { x: j, y: i },
 					size: {
-						width: TestTile.info.grassTile.width,
-						height: TestTile.info.grassTile.height,
+						width: tileSource[0].width,
+						height: tileSource[0].height,
 					},
 					key: '1',
 					type: 'tile',
 					imageInfo: {
-						source: TestTile.source,
-						...TestTile.info.grassTile,
+						source: tileSource[0].source,
+						...tileSource[0],
 					},
 				});
 				mapBlockInfos.push({
-					name: 'grassTile',
+					name: 'systemBlock',
 					point: { x: j, y: i },
 					size: {
-						width: TestTile.info.grassTile.width,
-						height: TestTile.info.grassTile.height,
+						width: tileSource[0].width,
+						height: tileSource[0].height,
 					},
 					key: '1',
 					type: 'system',
 					imageInfo: {
-						source: TestTile.source,
-						...TestTile.info.grassTile,
+						...tileSource[0],
 					},
 				});
 			}
 		}
 
-		//test block
-		const formatBlockInfos = testBlockInfos.map(
-			(res: BlockStateInfosProps, i) => {
-				const lineBlockCount = 50;
-				if (i >= lineBlockCount * 3) {
-					return {
-						...res,
-						point: {
-							x: res.point.x,
-							y:
-								lineBlockCount * res.size.height -
-								(i - lineBlockCount * 3) * res.size.height,
-						},
-					};
-				} else if (i >= lineBlockCount * 2) {
-					return {
-						...res,
-						point: {
-							x:
-								lineBlockCount * res.size.width -
-								(i - lineBlockCount * 2) * res.size.width,
-							y: lineBlockCount * res.size.height,
-						},
-					};
-				} else if (i >= lineBlockCount) {
-					return {
-						...res,
-						point: {
-							x: lineBlockCount * res.size.width,
-							y: (i - lineBlockCount) * res.size.height,
-						},
-					};
-				}
-				return {
-					...res,
-					point: {
-						x: i * res.size.width,
-						y: 0,
-					},
-				};
-			},
-		);
-
-		//test tile
-		const formatTileInfos = testTileInfos.map(
-			(res: BlockStateInfosProps, i) => {
-				let y = Math.round(i / 5);
-				return {
-					...res,
-					point: { x: res.size.width * i, y: res.size.height * y },
-				};
-			},
-		);
-
 		dispatch(
 			setBlockInfos({
 				infos: [
-					...formatBlockInfos,
-					...formatTileInfos,
 					...mapBlockInfos,
 					{
 						point: spawnPoint,

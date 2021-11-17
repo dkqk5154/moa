@@ -1,7 +1,7 @@
-const size = 64;
+const size = 16;
 
 const info = {
-	source: require('./image2.png').default,
+	source: require('./image.png').default,
 	width: size,
 	height: size,
 	up: {

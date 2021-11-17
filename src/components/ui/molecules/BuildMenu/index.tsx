@@ -2,9 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { useAppDispatch } from 'app/hooks';
-import testBlock, { BlockInfoProps } from 'images/Block';
-import testTile from 'images/Tile';
-import testObject from 'images/Object';
+import blockSources, { BlockSourceProps } from 'images/Block';
+import tileSources, { TileSourcesProps } from 'images/Tile';
+import objectSources from 'images/Object';
 import { setSelectBuildInfo } from './buildMenuSlice';
 import { BlockTypeProps } from 'components/objects/Block/blockSlice';
 import TileImage from 'components/ui/atoms/TileImage';
@@ -22,6 +22,7 @@ const Styled = {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		justify-content: center;
 		background-color: var(--gray5);
 		padding: var(--space3);
 		border-radius: var(--radius3);
@@ -38,32 +39,29 @@ const BuildMenu = () => {
 	const dispatch = useAppDispatch();
 
 	const formatBlockInfos = ({
-		info,
-		source,
+		infos,
 		type,
 	}: {
-		info: { [key: string]: BlockInfoProps };
-		source: string;
+		infos: Array<TileSourcesProps>;
 		type: BlockTypeProps;
 	}) => {
-		return Object.keys(info).map((res: string) => {
-			const { width, height, up } = info[res];
+		return infos.map((res: TileSourcesProps | BlockSourceProps) => {
+			const { name, width, height, up, source } = res;
 			const { sx, sy } = up;
 
 			return (
 				<Styled.ImageWrapper
-					key={res}
+					key={name}
 					onClick={() => {
 						dispatch(
 							setSelectBuildInfo({
-								name: res,
+								name: name,
 								point: { x: 0, y: 0 },
 								size: { width: width, height: height },
 								type: type,
 								key: '0',
 								imageInfo: {
-									source: source,
-									...info[res],
+									...res,
 								},
 							}),
 						);
@@ -79,7 +77,7 @@ const BuildMenu = () => {
 						/>
 					</Styled.TileImageWrapper>
 					<span>
-						<b>{res}</b>
+						<b>{name}</b>
 					</span>
 				</Styled.ImageWrapper>
 			);
@@ -87,20 +85,17 @@ const BuildMenu = () => {
 	};
 
 	const blockInfos = formatBlockInfos({
-		info: testBlock.info,
-		source: testBlock.source,
+		infos: blockSources,
 		type: 'block',
 	});
 
 	const tileInfos = formatBlockInfos({
-		info: testTile.info,
-		source: testTile.source,
+		infos: tileSources,
 		type: 'tile',
 	});
 
 	const objectInfos = formatBlockInfos({
-		info: testObject.info,
-		source: testObject.source,
+		infos: objectSources,
 		type: 'object',
 	});
 

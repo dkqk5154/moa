@@ -40,23 +40,23 @@ export const loadCanvasFromFile = (canvas: HTMLCanvasElement, file: any) => {
 export const scaleCanvas = async ({
 	canvas,
 	imgFile,
-	scale = 1,
+	scale,
 }: {
 	canvas: HTMLCanvasElement;
 	imgFile: any;
-	scale?: number;
+	scale: number;
 }) => {
 	//imgFile input img type file
 	const ctx = canvas.getContext('2d');
-	if (imgFile) {
-		const loadedImageData = await loadCanvasFromFile(canvas, imgFile);
-		const scaleImg = scalePixels(loadedImageData as any, scale, {
-			from: 0,
-		});
-		canvas.width = canvas.width * scale;
-		canvas.height = canvas.height * scale;
-		ctx.putImageData(scaleImg, 0, 0);
-	}
+	ctx.drawImage(imgFile, 0, 0);
+	const scaleUpImage = ctx.getImageData(0, 0, imgFile.width, imgFile.height);
+	const scaleImg = scalePixels(scaleUpImage, scale, {
+		from: 0,
+	});
+	return scaleImg;
+	// canvas.width = canvas.width * scale;
+	// canvas.height = canvas.height * scale;
+	// ctx.putImageData(scaleImg, 0, 0);
 };
 
 export const getImgDataToRgba = (imgData: Array<number>) => {

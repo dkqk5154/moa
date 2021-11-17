@@ -135,7 +135,7 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 					} else {
 						ctx.fillStyle = '#fbace67a';
 					}
-					ctx.fillRect(x, y, 48, 48);
+					ctx.fillRect(x, y, size.width, size.height);
 				},
 			);
 

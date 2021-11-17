@@ -1,30 +1,34 @@
-const info = {
-	source: require('./image.png').default,
-	info: {
-		TestObject1: {
-			width: 48 * 2,
-			height: 48,
-			up: {
-				sx: 0,
-				sy: 48 * 41,
-			},
-			right: {
-				sx: 0,
-				sy: 0,
-			},
-			left: {
-				sx: 0,
-				sy: 0,
-			},
-			down: {
-				sx: 0,
-				sy: 0,
-			},
+const defaultSize = 16;
+const defaultSource = require('./image.png').default;
+
+const infos = [
+	{
+		name: 'WoodObject',
+		source: defaultSource,
+		width: defaultSize,
+		height: defaultSize,
+		up: {
+			sx: defaultSize * 0,
+			sy: defaultSize * 3,
+		},
+		right: {
+			sx: defaultSize * 0,
+			sy: defaultSize * 0,
+		},
+		left: {
+			sx: defaultSize * 0,
+			sy: defaultSize * 1,
+		},
+		down: {
+			sx: defaultSize * 0,
+			sy: defaultSize * 3,
 		},
 	},
-};
+];
 
-export interface TestObjectInfoProps {
+export interface ObjectSourceProps {
+	name: string;
+	source: string;
 	width: number;
 	height: number;
 	up: {
@@ -45,4 +49,4 @@ export interface TestObjectInfoProps {
 	};
 }
 
-export default info;
+export default infos;
