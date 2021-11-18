@@ -25,15 +25,16 @@ const Styled = {
 
 export interface PopupBlockMenuProps {
 	info?: GlobalPopupMenuProps['selectBlockInfo'];
+	scale: number;
 }
 
-const PopupBlockMenu = ({ info }: PopupBlockMenuProps) => {
+const PopupBlockMenu = ({ info, scale }: PopupBlockMenuProps) => {
 	return (
 		<PopupMenuCard>
 			<Styled.Wrapper>
 				<Styled.Column>
 					<TileImage
-						src={info.imageInfo.source}
+						src={info.imageInfo.sources[scale]}
 						width={info.size.width}
 						height={info.size.height}
 						sx={info.imageInfo.up.sx}

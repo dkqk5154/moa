@@ -1,7 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import { selectSelectBlockInfo } from './globalPopupMenuSlice';
-import { selectStatus } from 'components/ui/molecules/GlobalSidebar/globalSidebarSlice';
+import {
+	selectScale,
+	selectStatus,
+} from 'components/ui/molecules/GlobalSidebar/globalSidebarSlice';
 import { useAppSelector } from 'app/hooks';
 import PopupBlockMenu from 'components/ui/molecules/PopupBlockMenu';
 
@@ -18,6 +21,7 @@ const Styled = {
 const GlobalObjectMenu = () => {
 	const selectObjectBlockInfo = useAppSelector(selectSelectBlockInfo);
 	const status = useAppSelector(selectStatus);
+	const scale = useAppSelector(selectScale);
 
 	const selectBlockType = selectObjectBlockInfo?.type;
 
@@ -26,7 +30,10 @@ const GlobalObjectMenu = () => {
 			<Styled.Wrapper>
 				{(selectBlockType === 'block' ||
 					selectBlockType === 'object') && (
-					<PopupBlockMenu info={selectObjectBlockInfo} />
+					<PopupBlockMenu
+						info={selectObjectBlockInfo}
+						scale={scale}
+					/>
 				)}
 			</Styled.Wrapper>
 		)

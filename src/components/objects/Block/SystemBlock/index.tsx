@@ -6,10 +6,11 @@ import {
 	selectSystemBlockInfos,
 	addBlockInfo,
 	// selectBlockInfos,
-	BlockStateInfosProps,
+	BlockStateInfoProps,
 } from 'components/objects/Block/blockSlice';
 import { selectPosition } from 'components/objects/Character/characterSlice';
 import { selectSelectBuildBlockInfo } from 'components/ui/molecules/BuildMenu/buildMenuSlice';
+import { selectScale } from 'components/ui/molecules/GlobalSidebar/globalSidebarSlice';
 
 const Styled = {
 	Canvas: styled.canvas`
@@ -34,6 +35,7 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 	const systemBlockInfos = useAppSelector(selectSystemBlockInfos);
 	// const blockInfos = useAppSelector(selectBlockInfos);
 	const point = useAppSelector(selectPosition);
+	const scale = useAppSelector(selectScale);
 
 	const dispatch = useAppDispatch();
 
@@ -41,13 +43,15 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 		let imageSourceInfos = Array.from(
 			new Set(
 				systemBlockInfos.map(
-					(res: BlockStateInfosProps) => res.imageInfo.source,
+					(res: BlockStateInfoProps) => res.imageInfo.sources[scale],
 				),
 			),
 		);
 
 		if (selectBuildBlockInfo?.imageInfo) {
-			imageSourceInfos.push(selectBuildBlockInfo.imageInfo.source);
+			imageSourceInfos.push(
+				selectBuildBlockInfo.imageInfo.sources[scale],
+			);
 		}
 
 		imageSourceInfos.forEach((res: string) => {
@@ -64,7 +68,7 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 				};
 			}
 		});
-	}, [systemBlockInfos, selectBuildBlockInfo]);
+	}, [systemBlockInfos, selectBuildBlockInfo, scale]);
 
 	const handleCanvasMouseMove = ({ offsetX, offsetY }) => {
 		setMousePoint({ x: offsetX, y: offsetY });
@@ -109,7 +113,7 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 			canvas.addEventListener('mouseup', handleCanvasMouseUp);
 
 			systemBlockInfos.forEach(
-				({ point, size, key }: BlockStateInfosProps) => {
+				({ point, size, key }: BlockStateInfoProps) => {
 					const { x, y } = point;
 
 					if (
@@ -141,9 +145,15 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 
 			ctx.restore();
 
-			if (loadingImageInfo[selectBuildBlockInfo?.imageInfo?.source]) {
+			if (
+				loadingImageInfo[
+					selectBuildBlockInfo?.imageInfo?.sources[scale]
+				]
+			) {
 				ctx.drawImage(
-					loadingImageInfo[selectBuildBlockInfo.imageInfo.source],
+					loadingImageInfo[
+						selectBuildBlockInfo.imageInfo.sources[scale]
+					],
 					selectBuildBlockInfo.imageInfo.up.sx,
 					selectBuildBlockInfo.imageInfo.up.sy,
 					selectBuildBlockInfo.size.width,
@@ -169,6 +179,7 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 		selectBuildBlockInfo,
 		dispatch,
 		handleCanvasMouseUp,
+		scale,
 	]);
 
 	return <Styled.Canvas ref={canvasRef} width={width} height={height} />;

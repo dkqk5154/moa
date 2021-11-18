@@ -7,9 +7,11 @@ import {
 } from 'app/hooks';
 import {
 	selectTileInfos,
-	BlockStateInfosProps,
+	BlockStateInfoProps,
 } from 'components/objects/Block/blockSlice';
 import { selectPosition } from 'components/objects/Character/characterSlice';
+import { selectScale } from 'components/ui/molecules/GlobalSidebar/globalSidebarSlice';
+import { loadingCanvasImageInfo, scaleBlockCanvasDraw } from 'utils/canvas';
 
 const Styled = {
 	Tile: styled.canvas`
@@ -27,60 +29,41 @@ export interface MapProps {
 
 const Map = ({ width, height }: MapProps): JSX.Element => {
 	const tileInfos = useAppSelector(selectTileInfos);
+	const scale = useAppSelector(selectScale);
 	const canvasRef = useRef(null);
 	const [loadingImageInfo, setLoadingImageInfo] = useState({});
+
 	// const dispatch = useAppDispatch();
 
 	const point = useAppSelector(selectPosition);
 
 	useEffect(() => {
-		const imageSourceInfos = Array.from(
-			new Set(tileInfos.map(res => res.imageInfo.source)),
-		);
-
-		imageSourceInfos.forEach((res: string) => {
-			const imageData = new Image();
-			imageData.src = res;
-			imageData.onload = () => {
-				setLoadingImageInfo(prevState => {
-					return {
-						...prevState,
-						[res]: imageData,
-					};
-				});
-			};
-		});
-	}, [tileInfos]);
+		const loadingCanvasImage = async () => {
+			const imageInfos = await loadingCanvasImageInfo({
+				blockInfos: tileInfos,
+				scale: scale,
+			});
+			setLoadingImageInfo(prevState => {
+				return { ...imageInfos, ...prevState };
+			});
+		};
+		loadingCanvasImage();
+	}, [tileInfos, scale]);
 
 	useEffect(() => {
 		if (canvasRef && Object.keys(loadingImageInfo).length) {
 			const canvas = canvasRef.current;
 			const ctx = canvas.getContext('2d');
-
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			ctx.save();
-			ctx.translate(
-				canvas.width / 2 - point.x,
-				canvas.height / 2 - point.y,
-			);
-
-			tileInfos.forEach((res: BlockStateInfosProps) => {
-				ctx.drawImage(
-					loadingImageInfo[res.imageInfo.source],
-					res.imageInfo.up.sx,
-					res.imageInfo.up.sy,
-					res.size.width,
-					res.size.height,
-					res.point.x,
-					res.point.y,
-					res.size.width,
-					res.size.height,
-				);
+			scaleBlockCanvasDraw({
+				canvas,
+				ctx,
+				infos: tileInfos,
+				point,
+				loadingImageInfo,
+				scale,
 			});
-
-			ctx.restore();
 		}
-	}, [point, width, height, tileInfos, loadingImageInfo]);
+	}, [point, width, height, tileInfos, loadingImageInfo, scale]);
 
 	return <Styled.Tile ref={canvasRef} width={width} height={height} />;
 };

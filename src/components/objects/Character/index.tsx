@@ -17,10 +17,14 @@ import {
 	selectObjectBlockInfos,
 } from 'components/objects/Block/blockSlice';
 import { setSelectBlockInfo } from 'components/ui/organisms/GlobalPopupMenu/globalPopupMenuSlice';
-import { selectStatus } from 'components/ui/molecules/GlobalSidebar/globalSidebarSlice';
+import {
+	selectScale,
+	selectStatus,
+} from 'components/ui/molecules/GlobalSidebar/globalSidebarSlice';
 import useInterval from 'hooks/useInterval';
 
 import { isCollision, isClamp } from 'utils/objectEvent';
+import { scaleCharacterCanvasDraw } from 'utils/canvas';
 
 const Styled = {
 	Character: styled.canvas`
@@ -50,6 +54,7 @@ const Character = ({ width, height, mapSize }: CharacterProps): JSX.Element => {
 	const imageInfo = useAppSelector(selectImageInfo);
 	const status = useAppSelector(selectStatus);
 	const dispatch = useAppDispatch();
+	const scale = useAppSelector(selectScale);
 
 	const canvasRef = useRef(null);
 
@@ -57,6 +62,50 @@ const Character = ({ width, height, mapSize }: CharacterProps): JSX.Element => {
 		() => (status === 'build' ? 200 : reduceSpeed),
 		[status, reduceSpeed],
 	);
+
+	useEffect(() => {
+		if (canvasRef) {
+			const canvas = canvasRef.current;
+			const ctx = canvas.getContext('2d');
+
+			const playerImage = new Image();
+			playerImage.src = imageInfo.sources[scale];
+			playerImage.onload = () => {
+				console.log(
+					imageInfo[direction].sx,
+					scale,
+					animationFrame,
+					size.width,
+				);
+				scaleCharacterCanvasDraw({
+					canvas,
+					ctx,
+					info: {
+						imageInfo,
+						size,
+						point,
+					},
+					scale,
+					direction,
+					loadingImageInfo: {
+						[imageInfo.sources[scale]]: playerImage,
+					},
+					animationFrame: animationFrame,
+				});
+			};
+		}
+	}, [
+		imageInfo,
+		point,
+		direction,
+		size,
+		width,
+		height,
+		animationFrame,
+		blockInfos,
+		status,
+		scale,
+	]);
 
 	useInterval(
 		() => {
@@ -139,50 +188,6 @@ const Character = ({ width, height, mapSize }: CharacterProps): JSX.Element => {
 		},
 		isKeyPress ? delay : null,
 	);
-
-	useEffect(() => {
-		if (canvasRef) {
-			const canvas = canvasRef.current;
-			const ctx = canvas.getContext('2d');
-
-			const playerImage = new Image();
-			playerImage.src = imageInfo.source;
-			playerImage.onload = () => {
-				ctx.drawImage(playerImage, 0, 0);
-				ctx.clearRect(0, 0, canvas.width, canvas.height);
-				ctx.save();
-				ctx.translate(
-					canvas.width / 2 - point.x,
-					canvas.height / 2 - point.y,
-				);
-				if (status !== 'build') {
-					ctx.drawImage(
-						playerImage,
-						imageInfo[direction].sx + animationFrame * size.width,
-						imageInfo[direction].sy,
-						size.width,
-						size.height,
-						point.x,
-						point.y,
-						size.width,
-						size.height,
-					);
-				}
-
-				ctx.restore();
-			};
-		}
-	}, [
-		imageInfo,
-		point,
-		direction,
-		size,
-		width,
-		height,
-		animationFrame,
-		blockInfos,
-		status,
-	]);
 
 	const handleKeyPress = useCallback(
 		(e: KeyboardEvent) => {

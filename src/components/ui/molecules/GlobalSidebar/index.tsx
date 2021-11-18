@@ -3,7 +3,12 @@ import styled from 'styled-components';
 
 import Button from 'components/ui/atoms/Button';
 
-import { selectStatus, setStatus } from './globalSidebarSlice';
+import {
+	selectStatus,
+	setStatus,
+	selectScale,
+	setScale,
+} from './globalSidebarSlice';
 import { useAppSelector, useAppDispatch } from 'app/hooks';
 import BuildMenu from 'components/ui/molecules/BuildMenu';
 
@@ -44,7 +49,13 @@ const Styled = {
 
 const GlobalSidebar = (): JSX.Element => {
 	const status = useAppSelector(selectStatus);
+	const scale = useAppSelector(selectScale);
 	const dispatch = useAppDispatch();
+
+	const handleClickHomeButton = (e: React.MouseEvent<HTMLButtonElement>) => {
+		e.preventDefault();
+		dispatch(setStatus('home'));
+	};
 
 	const handleClickCustomButton = (
 		e: React.MouseEvent<HTMLButtonElement>,
@@ -53,9 +64,18 @@ const GlobalSidebar = (): JSX.Element => {
 		dispatch(setStatus('build'));
 	};
 
-	const handleClickHomeButton = (e: React.MouseEvent<HTMLButtonElement>) => {
+	const handleClickScaleUpButton = (
+		e: React.MouseEvent<HTMLButtonElement>,
+	) => {
 		e.preventDefault();
-		dispatch(setStatus('home'));
+		dispatch(setScale(scale + 1));
+	};
+
+	const handleClickScaleDownButton = (
+		e: React.MouseEvent<HTMLButtonElement>,
+	) => {
+		e.preventDefault();
+		dispatch(setScale(scale - 1));
 	};
 
 	return (
@@ -76,6 +96,12 @@ const GlobalSidebar = (): JSX.Element => {
 							src={require('images/ic-build.svg').default}
 						/>
 					</Button>
+				</Styled.Row>
+				<Styled.Row>
+					<Button onClick={handleClickScaleUpButton}>+</Button>
+				</Styled.Row>
+				<Styled.Row>
+					<Button onClick={handleClickScaleDownButton}>-</Button>
 				</Styled.Row>
 			</Styled.Wrapper>
 			{status !== 'home' ? (

@@ -7,9 +7,11 @@ import {
 } from 'app/hooks';
 import {
 	selectObjectBlockInfos,
-	BlockStateInfosProps,
+	BlockStateInfoProps,
 } from 'components/objects/Block/blockSlice';
 import { selectPosition } from 'components/objects/Character/characterSlice';
+import { selectScale } from 'components/ui/molecules/GlobalSidebar/globalSidebarSlice';
+import { loadingCanvasImageInfo } from 'utils/canvas';
 
 const Styled = {
 	Block: styled.canvas`
@@ -30,29 +32,17 @@ const ObjectBlock = ({ width, height }: ObjectBlockProps): JSX.Element => {
 	const [loadingImageInfo, setLoadingImageInfo] = useState({});
 
 	const point = useAppSelector(selectPosition);
+	const scale = useAppSelector(selectScale);
 
 	useEffect(() => {
-		const imageSourceInfos = Array.from(
-			new Set(
-				objectBlockInfos.map(
-					(res: BlockStateInfosProps) => res.imageInfo.source,
-				),
-			),
-		);
-
-		imageSourceInfos.forEach((res: string) => {
-			const imageData = new Image();
-			imageData.src = res;
-			imageData.onload = () => {
-				setLoadingImageInfo(prevState => {
-					return {
-						...prevState,
-						[res]: imageData,
-					};
-				});
-			};
+		const imageInfos = loadingCanvasImageInfo({
+			blockInfos: objectBlockInfos,
+			scale: scale,
 		});
-	}, [objectBlockInfos]);
+		setLoadingImageInfo(prevState => {
+			return { ...imageInfos, ...prevState };
+		});
+	}, [objectBlockInfos, scale]);
 
 	useEffect(() => {
 		if (canvasRef && Object.keys(loadingImageInfo).length) {
@@ -66,9 +56,9 @@ const ObjectBlock = ({ width, height }: ObjectBlockProps): JSX.Element => {
 				canvas.height / 2 - point.y,
 			);
 
-			objectBlockInfos.forEach((res: BlockStateInfosProps) => {
+			objectBlockInfos.forEach((res: BlockStateInfoProps) => {
 				ctx.drawImage(
-					loadingImageInfo[res.imageInfo.source],
+					loadingImageInfo[res.imageInfo.sources[scale]],
 					res.imageInfo.up.sx,
 					res.imageInfo.up.sy,
 					res.size.width,
@@ -82,7 +72,7 @@ const ObjectBlock = ({ width, height }: ObjectBlockProps): JSX.Element => {
 
 			ctx.restore();
 		}
-	}, [point, width, height, objectBlockInfos, loadingImageInfo]);
+	}, [point, width, height, objectBlockInfos, loadingImageInfo, scale]);
 
 	return <Styled.Block ref={canvasRef} width={width} height={height} />;
 };

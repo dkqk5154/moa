@@ -5,8 +5,10 @@ import {
 	useAppSelector,
 	// useAppDispatch
 } from 'app/hooks';
-import { selectBlockInfos, BlockStateInfosProps } from './blockSlice';
+import { selectBlockInfos, BlockStateInfoProps } from './blockSlice';
 import { selectPosition } from 'components/objects/Character/characterSlice';
+import { selectScale } from 'components/ui/molecules/GlobalSidebar/globalSidebarSlice';
+import { loadingCanvasImageInfo } from 'utils/canvas';
 
 const Styled = {
 	Block: styled.canvas`
@@ -27,29 +29,20 @@ const Block = ({ width, height }: BlockProps): JSX.Element => {
 	const [loadingImageInfo, setLoadingImageInfo] = useState({});
 
 	const point = useAppSelector(selectPosition);
+	const scale = useAppSelector(selectScale);
 
 	useEffect(() => {
-		const imageSourceInfos = Array.from(
-			new Set(
-				blockInfos.map(
-					(res: BlockStateInfosProps) => res.imageInfo.source,
-				),
-			),
-		);
-
-		imageSourceInfos.forEach((res: string) => {
-			const imageData = new Image();
-			imageData.src = res;
-			imageData.onload = () => {
-				setLoadingImageInfo(prevState => {
-					return {
-						...prevState,
-						[res]: imageData,
-					};
-				});
-			};
-		});
-	}, [blockInfos]);
+		const loadingCanvasImage = async () => {
+			const imageInfos = await loadingCanvasImageInfo({
+				blockInfos: blockInfos,
+				scale: scale,
+			});
+			setLoadingImageInfo(prevState => {
+				return { ...imageInfos, ...prevState };
+			});
+		};
+		loadingCanvasImage();
+	}, [blockInfos, scale]);
 
 	useEffect(() => {
 		if (canvasRef && Object.keys(loadingImageInfo).length) {
@@ -63,9 +56,9 @@ const Block = ({ width, height }: BlockProps): JSX.Element => {
 				canvas.height / 2 - point.y,
 			);
 
-			blockInfos.forEach((res: BlockStateInfosProps) => {
+			blockInfos.forEach((res: BlockStateInfoProps) => {
 				ctx.drawImage(
-					loadingImageInfo[res.imageInfo.source],
+					loadingImageInfo[res.imageInfo.sources[scale]],
 					res.imageInfo.up.sx,
 					res.imageInfo.up.sy,
 					res.size.width,
@@ -79,7 +72,7 @@ const Block = ({ width, height }: BlockProps): JSX.Element => {
 
 			ctx.restore();
 		}
-	}, [point, width, height, blockInfos, loadingImageInfo]);
+	}, [point, width, height, blockInfos, loadingImageInfo, scale]);
 
 	return <Styled.Block ref={canvasRef} width={width} height={height} />;
 };
