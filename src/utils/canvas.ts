@@ -1,65 +1,169 @@
-import scalePixels from 'pixel-scale';
+import { BlockStateInfoProps } from 'components/objects/Block/blockSlice';
+import { CharacterState } from 'components/objects/Character/characterSlice';
 
-export const loadCanvasFromSrc = (canvas: HTMLCanvasElement, src: string) => {
-	return new Promise(resolve => {
-		const image = new Image();
-
-		image.onload = async () => {
-			const context = canvas.getContext('2d');
-
-			canvas.width = image.naturalWidth;
-			canvas.height = image.naturalHeight;
-			context.drawImage(image, 0, 0, canvas.width, canvas.height);
-
-			const imageData = context.getImageData(
-				0,
-				0,
-				canvas.width,
-				canvas.height,
-			);
-			resolve(imageData);
-		};
-
-		image.src = src;
-	});
-};
-
-export const loadCanvasFromFile = (canvas: HTMLCanvasElement, file: any) => {
-	return new Promise(resolve => {
-		const fileReader = new FileReader();
-		fileReader.onload = event => {
-			const result = event?.target?.result;
-			if (typeof result === 'string') {
-				resolve(loadCanvasFromSrc(canvas, result));
-			}
-		};
-		fileReader.readAsDataURL(file);
-	});
-};
-
-export const scaleCanvas = async ({
-	canvas,
-	imgFile,
+export const loadingCanvasImageInfo = async ({
+	blockInfos,
 	scale,
 }: {
-	canvas: HTMLCanvasElement;
-	imgFile: any;
+	blockInfos: Array<BlockStateInfoProps>;
 	scale: number;
-}) => {
-	//imgFile input img type file
-	const ctx = canvas.getContext('2d');
-	ctx.drawImage(imgFile, 0, 0);
-	const scaleUpImage = ctx.getImageData(0, 0, imgFile.width, imgFile.height);
-	const scaleImg = scalePixels(scaleUpImage, scale, {
-		from: 0,
-	});
-	return scaleImg;
-	// canvas.width = canvas.width * scale;
-	// canvas.height = canvas.height * scale;
-	// ctx.putImageData(scaleImg, 0, 0);
+}): Promise<object> => {
+	const imageSourceInfos = Array.from(
+		new Set(
+			blockInfos.map(
+				(res: BlockStateInfoProps) => res.imageInfo.sources[scale],
+			),
+		),
+	);
+	const result = await formatLoadingImageInfos(imageSourceInfos);
+
+	return result;
 };
 
-export const getImgDataToRgba = (imgData: Array<number>) => {
-	let result = `rgba(${imgData[0]},${imgData[1]},${imgData[2]},${imgData[3]})`;
+export const formatLoadingImage = (image: HTMLImageElement) => {
+	return new Promise(resolve => {
+		image.onload = () => {
+			resolve(image);
+		};
+	});
+};
+
+export const formatLoadingImageInfos = async (imageSourceInfos: Array<any>) => {
+	let result = {};
+	await Promise.all(
+		imageSourceInfos.map(async (res: string) => {
+			let imageData = new Image();
+			imageData.src = res;
+			const formatImage = await formatLoadingImage(imageData);
+			result = {
+				...result,
+				[res]: formatImage,
+			};
+		}),
+	);
 	return result;
+};
+
+export const drawCanvasCamera = ({
+	canvas,
+	ctx,
+	point,
+	callback,
+}: {
+	ctx: any;
+	canvas: HTMLCanvasElement;
+	point: CharacterState['point'];
+	callback: () => any;
+}) => {
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	ctx.save();
+	ctx.translate(canvas.width / 2 - point.x, canvas.height / 2 - point.y);
+	callback();
+	ctx.restore();
+};
+
+export interface ScaleDrawImageProps {
+	ctx: any;
+	info: {
+		imageInfo:
+			| CharacterState['imageInfo']
+			| BlockStateInfoProps['imageInfo'];
+		size: CharacterState['size'] | BlockStateInfoProps['size'];
+		point: CharacterState['point'] | BlockStateInfoProps['point'];
+	};
+	loadingImageInfo: object;
+	scale: number;
+	direction: string;
+	animationFrame: number;
+}
+
+export const scaleDrawImage = ({
+	ctx,
+	info,
+	loadingImageInfo,
+	direction,
+	scale,
+	animationFrame,
+}: ScaleDrawImageProps) => {
+	ctx.drawImage(
+		loadingImageInfo[info.imageInfo.sources[scale]],
+		(info.imageInfo[direction].sx + info.size.width * animationFrame) *
+			scale,
+		info.imageInfo[direction].sy * scale,
+		info.size.width * scale,
+		info.size.height * scale,
+		info.point.x * scale,
+		info.point.y * scale,
+		info.size.width * scale,
+		info.size.height * scale,
+	);
+};
+
+export const scaleCharacterCanvasDraw = ({
+	canvas,
+	ctx,
+	info,
+	scale,
+	loadingImageInfo,
+	direction,
+	animationFrame,
+}: {
+	canvas: HTMLCanvasElement;
+	ctx: ScaleDrawImageProps['ctx'];
+	info: ScaleDrawImageProps['info'];
+	scale: ScaleDrawImageProps['scale'];
+	loadingImageInfo: ScaleDrawImageProps['loadingImageInfo'];
+	direction: ScaleDrawImageProps['direction'];
+	animationFrame: ScaleDrawImageProps['animationFrame'];
+}) => {
+	drawCanvasCamera({
+		ctx,
+		canvas,
+		point: info.point,
+		callback: () => {
+			scaleDrawImage({
+				ctx,
+				scale,
+				loadingImageInfo,
+				info,
+				direction,
+				animationFrame,
+			});
+		},
+	});
+};
+
+export const scaleBlockCanvasDraw = ({
+	canvas,
+	ctx,
+	infos,
+	scale,
+	point,
+	loadingImageInfo,
+}: {
+	canvas: HTMLCanvasElement;
+	ctx: ScaleDrawImageProps['ctx'];
+	infos: Array<ScaleDrawImageProps['info']>;
+	scale: ScaleDrawImageProps['scale'];
+	point: ScaleDrawImageProps['info']['point'];
+	loadingImageInfo: ScaleDrawImageProps['loadingImageInfo'];
+}) => {
+	drawCanvasCamera({
+		ctx,
+		canvas,
+		point,
+		callback: () => {
+			infos.forEach((res: BlockStateInfoProps | CharacterState) => {
+				if (loadingImageInfo[res.imageInfo.sources[scale]])
+					scaleDrawImage({
+						ctx,
+						scale,
+						loadingImageInfo,
+						info: res,
+						direction: 'up',
+						animationFrame: 0,
+					});
+			});
+		},
+	});
 };

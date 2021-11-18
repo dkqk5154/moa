@@ -1,4 +1,4 @@
-import { BlockStateInfosProps } from 'components/objects/Block/blockSlice';
+import { BlockStateInfoProps } from 'components/objects/Block/blockSlice';
 
 export const objectPositionCheck = ({ point, size }: SelfObjectParams) => {
 	return {
@@ -18,10 +18,10 @@ export const isCollision = ({
 	objects,
 }: {
 	self: SelfObjectParams;
-	objects: Array<BlockStateInfosProps>;
+	objects: Array<BlockStateInfoProps>;
 }) => {
-	let result = null as BlockStateInfosProps;
-	objects.some((object: BlockStateInfosProps) => {
+	let result = null as BlockStateInfoProps;
+	objects.some((object: BlockStateInfoProps) => {
 		const selfPosition = objectPositionCheck(self);
 		const objectPosition = objectPositionCheck(object);
 		const objectCheck =
