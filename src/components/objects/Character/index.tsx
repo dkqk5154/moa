@@ -1,6 +1,5 @@
 import { useEffect, useState, useCallback, useRef, useMemo } from 'react';
 import styled from 'styled-components';
-import scalePixels from 'pixel-scale';
 
 import { useAppSelector, useAppDispatch } from 'app/hooks';
 import {
@@ -22,7 +21,6 @@ import { selectStatus } from 'components/ui/molecules/GlobalSidebar/globalSideba
 import useInterval from 'hooks/useInterval';
 
 import { isCollision, isClamp } from 'utils/objectEvent';
-import { scaleCanvas } from 'utils/canvas';
 
 const Styled = {
 	Character: styled.canvas`
@@ -99,7 +97,9 @@ const Character = ({ width, height, mapSize }: CharacterProps): JSX.Element => {
 
 				if (isMove) {
 					setAnimationFrame((prevState: number) =>
-						prevState >= 2 ? 1 : prevState + 1,
+						prevState >= imageInfo.animationFrame
+							? 1
+							: prevState + 1,
 					);
 					dispatch(setPosition(movePoint));
 				}
@@ -144,28 +144,11 @@ const Character = ({ width, height, mapSize }: CharacterProps): JSX.Element => {
 		if (canvasRef) {
 			const canvas = canvasRef.current;
 			const ctx = canvas.getContext('2d');
-			const scale = 2;
 
 			const playerImage = new Image();
 			playerImage.src = imageInfo.source;
 			playerImage.onload = () => {
 				ctx.drawImage(playerImage, 0, 0);
-				const tempImageData = ctx.getImageData(
-					0,
-					0,
-					playerImage.width,
-					playerImage.height,
-				);
-
-				const scaleUpImage = scalePixels(tempImageData, scale, {
-					from: 0,
-				});
-
-				// let reader = new FileReader();
-				// reader.readAsDataURL(new Blob([scaleUpImage]));
-
-				console.log('scaleUpImage : ', scaleUpImage);
-
 				ctx.clearRect(0, 0, canvas.width, canvas.height);
 				ctx.save();
 				ctx.translate(
@@ -173,11 +156,10 @@ const Character = ({ width, height, mapSize }: CharacterProps): JSX.Element => {
 					canvas.height / 2 - point.y,
 				);
 				if (status !== 'build') {
-					// ctx.putImageData(scaleUpImage, point.x, point.y);
 					ctx.drawImage(
 						playerImage,
-						imageInfo[direction].sx,
-						imageInfo[direction].sy + animationFrame * size.height,
+						imageInfo[direction].sx + animationFrame * size.width,
+						imageInfo[direction].sy,
 						size.width,
 						size.height,
 						point.x,

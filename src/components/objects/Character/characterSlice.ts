@@ -8,6 +8,7 @@ export interface CharacterState {
 	speed: number;
 	delay: number;
 	imageInfo: {
+		animationFrame: number;
 		source: string;
 		up: {
 			sx: number;
@@ -35,6 +36,7 @@ const initialState: CharacterState = {
 	speed: 16,
 	delay: 120,
 	imageInfo: {
+		animationFrame: 7,
 		source: '',
 		up: {
 			sx: 0,

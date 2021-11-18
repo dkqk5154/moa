@@ -1,24 +1,25 @@
-const size = 16;
+const size = 32;
 
 const info = {
 	source: require('./image.png').default,
 	width: size,
 	height: size,
+	animationFrame: 7,
 	up: {
-		sx: size * 2,
-		sy: 0,
+		sx: 0,
+		sy: size * 1,
 	},
 	down: {
-		sx: size * 1,
-		sy: 0,
+		sx: 0,
+		sy: size * 0,
 	},
 	left: {
-		sx: size * 0,
-		sy: 0,
+		sx: 0,
+		sy: size * 3,
 	},
 	right: {
-		sx: size * 3,
-		sy: 0,
+		sx: 0,
+		sy: size * 2,
 	},
 };
 
