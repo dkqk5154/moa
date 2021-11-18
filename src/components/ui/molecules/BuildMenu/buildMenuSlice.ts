@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from 'app/store';
 
-import { BlockStateInfosProps } from 'components/objects/Block/blockSlice';
+import { BlockStateInfoProps } from 'components/objects/Block/blockSlice';
 
 export interface BuildMenuStateProps {
-	buildBlockInfos: Array<BlockStateInfosProps>;
-	selectBuildBlockInfo?: BlockStateInfosProps;
+	buildBlockInfos: Array<BlockStateInfoProps>;
+	selectBuildBlockInfo?: BlockStateInfoProps;
 }
 
 const initialState: BuildMenuStateProps = {

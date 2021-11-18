@@ -1,6 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from 'app/store';
 
+const maxScale = 2;
+const minScale = 0;
+
 export interface GlobalSideBarStateProps {
 	status: 'home' | 'build' | 'popup';
 	scale: number;
@@ -19,7 +22,9 @@ export const globalSideBarSlice = createSlice({
 			props.status = action.payload;
 		},
 		setScale: (props, action) => {
-			props.scale = action.payload;
+			if (action.payload < maxScale || action.payload > minScale) {
+				props.scale = action.payload;
+			}
 		},
 	},
 });

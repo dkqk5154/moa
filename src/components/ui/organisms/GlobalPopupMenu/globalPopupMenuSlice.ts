@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from 'app/store';
-import { BlockStateInfosProps } from 'components/objects/Block/blockSlice';
+import { BlockStateInfoProps } from 'components/objects/Block/blockSlice';
 
 export interface GlobalPopupMenuProps {
-	selectBlockInfo?: BlockStateInfosProps;
+	selectBlockInfo?: BlockStateInfoProps;
 }
 
 const initialState: GlobalPopupMenuProps = {};

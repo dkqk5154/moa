@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from 'app/store';
+import characterSource, { CharacterSourceProps } from 'images/Character';
 
 export interface CharacterState {
 	point: { x: number; y: number };
@@ -7,26 +8,7 @@ export interface CharacterState {
 	direction: 'up' | 'left' | 'right' | 'down';
 	speed: number;
 	delay: number;
-	imageInfo: {
-		animationFrame: number;
-		source: string;
-		up: {
-			sx: number;
-			sy: number;
-		};
-		down: {
-			sx: number;
-			sy: number;
-		};
-		left: {
-			sx: number;
-			sy: number;
-		};
-		right: {
-			sx: number;
-			sy: number;
-		};
-	};
+	imageInfo: CharacterSourceProps;
 }
 
 const initialState: CharacterState = {
@@ -35,26 +17,7 @@ const initialState: CharacterState = {
 	size: { width: 0, height: 0 },
 	speed: 16,
 	delay: 120,
-	imageInfo: {
-		animationFrame: 7,
-		source: '',
-		up: {
-			sx: 0,
-			sy: 0,
-		},
-		down: {
-			sx: 0,
-			sy: 0,
-		},
-		left: {
-			sx: 0,
-			sy: 0,
-		},
-		right: {
-			sx: 0,
-			sy: 0,
-		},
-	},
+	imageInfo: characterSource,
 };
 
 export const characterSlice = createSlice({
