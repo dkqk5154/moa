@@ -17,7 +17,10 @@ import {
 import { setBlockInfos } from 'components/objects/Block/blockSlice';
 // import { setBuildBlockInfos } from 'components/atoms/BuildMenu/buildMenuSlice';
 
-import { selectStatus } from 'components/ui/molecules/GlobalSidebar/globalSidebarSlice';
+import {
+	selectStatus,
+	selectScale,
+} from 'components/ui/molecules/GlobalSidebar/globalSidebarSlice';
 
 import tileSource from 'images/Tile';
 import characterSource from 'images/Character';
@@ -55,7 +58,7 @@ const MainPage = (): JSX.Element => {
 	});
 
 	const status = useAppSelector(selectStatus);
-
+	const scale = useAppSelector(selectScale);
 	const dispatch = useAppDispatch();
 
 	useEffect(() => {
@@ -81,7 +84,7 @@ const MainPage = (): JSX.Element => {
 					key: '1',
 					type: 'tile',
 					imageInfo: {
-						source: tileSource[0].source,
+						source: tileSource[0].sources[scale],
 						...tileSource[0],
 					},
 				});
@@ -118,7 +121,7 @@ const MainPage = (): JSX.Element => {
 				],
 			}),
 		);
-	}, [dispatch]);
+	}, [dispatch, scale]);
 
 	useEffect(() => {
 		if (status === 'home') {
@@ -151,7 +154,7 @@ const MainPage = (): JSX.Element => {
 					<Character {...mapContainerInfo} mapSize={mapSize} />
 					<Block {...mapContainerInfo} />
 					<Map {...mapContainerInfo} />
-					<ObjectBlock {...mapContainerInfo} />
+					{/* <ObjectBlock {...mapContainerInfo} /> */}
 					{status === 'build' ? (
 						<SystemBlock {...mapContainerInfo} />
 					) : (
