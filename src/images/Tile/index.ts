@@ -1,10 +1,12 @@
 const defaultSize = 16;
-const defaultSource = require('./image.png').default;
+const scale1Source = require('./image1.png').default;
+const scale2Source = require('./image2.png').default;
+const scale3Source = require('./image3.png').default;
 
 const infos = [
 	{
 		name: 'WoodTile',
-		source: defaultSource,
+		sources: ['', scale1Source, scale2Source, scale3Source],
 		width: defaultSize,
 		height: defaultSize,
 		up: {
@@ -28,7 +30,7 @@ const infos = [
 
 export interface TileSourcesProps {
 	name: string;
-	source: string;
+	sources: Array<string>;
 	width: number;
 	height: number;
 	up: {
