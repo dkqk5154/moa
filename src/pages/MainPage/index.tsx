@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import GlobalSidebar from 'components/ui/molecules/GlobalSidebar';
 import Character from 'components/objects/Character';
 import Block from 'components/objects/Block';
-import Map from 'components/objects/Map';
+import TileBlock from 'components/objects/Block/TileBlock';
 import SystemBlock from 'components/objects/Block/SystemBlock';
 import ObjectBlock from 'components/objects/Block/ObjectBlock';
 
@@ -17,10 +17,7 @@ import {
 import { setBlockInfos } from 'components/objects/Block/blockSlice';
 // import { setBuildBlockInfos } from 'components/atoms/BuildMenu/buildMenuSlice';
 
-import {
-	selectStatus,
-	selectScale,
-} from 'components/ui/molecules/GlobalSidebar/globalSidebarSlice';
+import { selectStatus } from 'components/ui/molecules/GlobalSidebar/globalSidebarSlice';
 
 import tileSource from 'images/Tile';
 import characterSource from 'images/Character';
@@ -47,6 +44,7 @@ const Styled = {
 	`,
 };
 
+const mapStartPoint = { x: -128, y: -128 };
 const mapSize = { width: 300, height: 300 };
 const spawnPoint = { x: 16 * 5, y: 16 * 5 };
 
@@ -58,7 +56,6 @@ const MainPage = (): JSX.Element => {
 	});
 
 	const status = useAppSelector(selectStatus);
-	const scale = useAppSelector(selectScale);
 	const dispatch = useAppDispatch();
 
 	useEffect(() => {
@@ -72,8 +69,16 @@ const MainPage = (): JSX.Element => {
 		dispatch(setPosition(spawnPoint));
 
 		let mapBlockInfos = [];
-		for (let i = 0; i < mapSize.height; i += tileSource[0].height) {
-			for (let j = 0; j < mapSize.width; j += tileSource[0].width) {
+		for (
+			let i = mapStartPoint.y;
+			i < mapSize.height + mapStartPoint.y;
+			i += tileSource[0].height
+		) {
+			for (
+				let j = mapStartPoint.x;
+				j < mapSize.width + mapStartPoint.x;
+				j += tileSource[0].width
+			) {
 				mapBlockInfos.push({
 					name: 'woodTile',
 					point: { x: j, y: i },
@@ -84,7 +89,7 @@ const MainPage = (): JSX.Element => {
 					key: '1',
 					type: 'tile',
 					imageInfo: {
-						source: tileSource[0].sources[scale],
+						source: tileSource[0].sources[1],
 						...tileSource[0],
 					},
 				});
@@ -103,7 +108,6 @@ const MainPage = (): JSX.Element => {
 				});
 			}
 		}
-
 		dispatch(
 			setBlockInfos({
 				infos: [
@@ -121,7 +125,7 @@ const MainPage = (): JSX.Element => {
 				],
 			}),
 		);
-	}, [dispatch, scale]);
+	}, [dispatch]);
 
 	useEffect(() => {
 		if (status === 'home') {
@@ -151,10 +155,10 @@ const MainPage = (): JSX.Element => {
 				<GlobalSidebar />
 				<Styled.MapWrapper ref={MapWrapperRef}>
 					<GlobalPopupMenu />
-					<Character {...mapContainerInfo} mapSize={mapSize} />
+					<Character {...mapContainerInfo} canvasSize={mapSize} />
 					<Block {...mapContainerInfo} />
-					<Map {...mapContainerInfo} />
-					{/* <ObjectBlock {...mapContainerInfo} /> */}
+					<TileBlock {...mapContainerInfo} />
+					<ObjectBlock {...mapContainerInfo} />
 					{status === 'build' ? (
 						<SystemBlock {...mapContainerInfo} />
 					) : (
