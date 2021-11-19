@@ -5,36 +5,39 @@ import {
 	useAppSelector,
 	// useAppDispatch
 } from 'app/hooks';
-import { selectObjectBlockInfos } from 'components/objects/Block/blockSlice';
+import { selectTileInfos } from 'components/objects/Block/blockSlice';
 import { selectPosition } from 'components/objects/Character/characterSlice';
 import { selectScale } from 'components/ui/molecules/GlobalSidebar/globalSidebarSlice';
 import { loadingCanvasImageInfo, scaleBlockCanvasDraw } from 'utils/canvas';
 
 const Styled = {
-	Block: styled.canvas`
+	Tile: styled.canvas`
 		position: absolute;
-		z-index: 100;
 		top: 0;
+		z-index: -100;
+		background-color: var(--black);
 	`,
 };
 
-export interface ObjectBlockProps {
+export interface MapProps {
 	width: number;
 	height: number;
 }
 
-const ObjectBlock = ({ width, height }: ObjectBlockProps): JSX.Element => {
-	const objectBlockInfos = useAppSelector(selectObjectBlockInfos);
+const TileBlock = ({ width, height }: MapProps): JSX.Element => {
+	const tileInfos = useAppSelector(selectTileInfos);
+	const scale = useAppSelector(selectScale);
 	const canvasRef = useRef(null);
 	const [loadingImageInfo, setLoadingImageInfo] = useState({});
 
+	// const dispatch = useAppDispatch();
+
 	const point = useAppSelector(selectPosition);
-	const scale = useAppSelector(selectScale);
 
 	useEffect(() => {
 		const loadingCanvasImage = async () => {
 			const imageInfos = await loadingCanvasImageInfo({
-				blockInfos: objectBlockInfos,
+				blockInfos: tileInfos,
 				scale: scale,
 			});
 			setLoadingImageInfo(prevState => {
@@ -42,7 +45,7 @@ const ObjectBlock = ({ width, height }: ObjectBlockProps): JSX.Element => {
 			});
 		};
 		loadingCanvasImage();
-	}, [objectBlockInfos, scale]);
+	}, [tileInfos, scale]);
 
 	useEffect(() => {
 		if (canvasRef && Object.keys(loadingImageInfo).length) {
@@ -51,15 +54,15 @@ const ObjectBlock = ({ width, height }: ObjectBlockProps): JSX.Element => {
 			scaleBlockCanvasDraw({
 				canvas,
 				ctx,
-				infos: objectBlockInfos,
+				infos: tileInfos,
 				point,
 				loadingImageInfo,
 				scale,
 			});
 		}
-	}, [point, width, height, objectBlockInfos, loadingImageInfo, scale]);
+	}, [point, width, height, tileInfos, loadingImageInfo, scale]);
 
-	return <Styled.Block ref={canvasRef} width={width} height={height} />;
+	return <Styled.Tile ref={canvasRef} width={width} height={height} />;
 };
 
-export default ObjectBlock;
+export default TileBlock;

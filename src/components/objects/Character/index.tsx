@@ -24,7 +24,8 @@ import {
 import useInterval from 'hooks/useInterval';
 
 import { isCollision, isClamp } from 'utils/objectEvent';
-import { scaleCharacterCanvasDraw } from 'utils/canvas';
+import { drawCanvasCamera, scaleDrawImage } from 'utils/canvas';
+import { selectMapPoint, selectMapSize } from '../Block/mapSlice';
 
 const Styled = {
 	Character: styled.canvas`
@@ -36,10 +37,14 @@ const Styled = {
 export interface CharacterProps {
 	width: number;
 	height: number;
-	mapSize: { width: number; height: number };
+	canvasSize: { width: number; height: number };
 }
 
-const Character = ({ width, height, mapSize }: CharacterProps): JSX.Element => {
+const Character = ({
+	width,
+	height,
+	canvasSize,
+}: CharacterProps): JSX.Element => {
 	const [isKeyPress, setIsKeyPress] = useState(false);
 	const [pushKeyArray, setPushKeyArray] = useState([]);
 	const [animationFrame, setAnimationFrame] = useState(0);
@@ -56,6 +61,9 @@ const Character = ({ width, height, mapSize }: CharacterProps): JSX.Element => {
 	const dispatch = useAppDispatch();
 	const scale = useAppSelector(selectScale);
 
+	const mapSize = useAppSelector(selectMapSize);
+	const mapPoint = useAppSelector(selectMapPoint);
+
 	const canvasRef = useRef(null);
 
 	const speed = useMemo(
@@ -71,26 +79,28 @@ const Character = ({ width, height, mapSize }: CharacterProps): JSX.Element => {
 			const playerImage = new Image();
 			playerImage.src = imageInfo.sources[scale];
 			playerImage.onload = () => {
-				console.log(
-					imageInfo[direction].sx,
-					scale,
-					animationFrame,
-					size.width,
-				);
-				scaleCharacterCanvasDraw({
+				drawCanvasCamera({
 					canvas,
 					ctx,
-					info: {
-						imageInfo,
-						size,
-						point,
+					point: point,
+					callback: () => {
+						if (status !== 'build') {
+							scaleDrawImage({
+								ctx,
+								scale,
+								loadingImageInfo: {
+									[imageInfo.sources[scale]]: playerImage,
+								},
+								info: {
+									size,
+									point,
+									imageInfo,
+								},
+								direction,
+								animationFrame,
+							});
+						}
 					},
-					scale,
-					direction,
-					loadingImageInfo: {
-						[imageInfo.sources[scale]]: playerImage,
-					},
-					animationFrame: animationFrame,
 				});
 			};
 		}
@@ -136,7 +146,11 @@ const Character = ({ width, height, mapSize }: CharacterProps): JSX.Element => {
 
 				const isObjectClamp = isClamp({
 					point: movePoint,
-					mapSize,
+					mapPoint: {
+						...mapPoint,
+						endX: mapSize.width + mapPoint.startX,
+						endY: mapSize.height + mapPoint.startY,
+					},
 				});
 
 				const isMove =
