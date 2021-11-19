@@ -155,7 +155,7 @@ const MainPage = (): JSX.Element => {
 				<GlobalSidebar />
 				<Styled.MapWrapper ref={MapWrapperRef}>
 					<GlobalPopupMenu />
-					<Character {...mapContainerInfo} canvasSize={mapSize} />
+					<Character {...mapContainerInfo} />
 					<Block {...mapContainerInfo} />
 					<TileBlock {...mapContainerInfo} />
 					<ObjectBlock {...mapContainerInfo} />
