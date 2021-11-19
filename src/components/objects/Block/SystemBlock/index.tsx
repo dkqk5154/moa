@@ -139,14 +139,14 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 					loadingImageInfo[
 						selectBuildBlockInfo.imageInfo.sources[scale]
 					],
-					selectBuildBlockInfo.imageInfo.up.sx * scale,
-					selectBuildBlockInfo.imageInfo.up.sy * scale,
-					selectBuildBlockInfo.size.width * scale,
-					selectBuildBlockInfo.size.height * scale,
-					mousePoint.x - 12 * scale,
-					mousePoint.y - 12 * scale,
-					selectBuildBlockInfo.size.width * scale,
-					selectBuildBlockInfo.size.height * scale,
+					selectBuildBlockInfo.imageInfo.up.sx,
+					selectBuildBlockInfo.imageInfo.up.sy,
+					selectBuildBlockInfo.size.width,
+					selectBuildBlockInfo.size.height,
+					mousePoint.x - 12,
+					mousePoint.y - 12,
+					selectBuildBlockInfo.size.width,
+					selectBuildBlockInfo.size.height,
 				);
 			}
 		}

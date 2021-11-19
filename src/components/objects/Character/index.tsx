@@ -37,17 +37,13 @@ const Styled = {
 export interface CharacterProps {
 	width: number;
 	height: number;
-	canvasSize: { width: number; height: number };
 }
 
-const Character = ({
-	width,
-	height,
-	canvasSize,
-}: CharacterProps): JSX.Element => {
+const Character = ({ width, height }: CharacterProps): JSX.Element => {
 	const [isKeyPress, setIsKeyPress] = useState(false);
 	const [pushKeyArray, setPushKeyArray] = useState([]);
 	const [animationFrame, setAnimationFrame] = useState(0);
+	// const [loadingImageInfo, setLoadingImageInfo] = useState({});
 
 	const point = useAppSelector(selectPosition);
 	const direction = useAppSelector(selectDirection);
@@ -70,6 +66,22 @@ const Character = ({
 		() => (status === 'build' ? 200 : reduceSpeed),
 		[status, reduceSpeed],
 	);
+
+	// useEffect(() => {
+	// 	const loadingCanvasImage = async () => {
+	// 		console.log(
+	// 			'imageInfo.sources : ',
+	// 			require('images/Character/image1.png'),
+	// 		);
+	// 		console.log('imageInfo.sources : ', imageInfo.sources);
+	// 		const result = await formatLoadingImageInfos(
+	// 			imageInfo.sources.map(res => String(res)),
+	// 		);
+	// 		console.log('result : ', result);
+	// 		setLoadingImageInfo(result);
+	// 	};
+	// 	loadingCanvasImage();
+	// }, [imageInfo, scale]);
 
 	useEffect(() => {
 		if (canvasRef) {

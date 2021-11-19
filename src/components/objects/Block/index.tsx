@@ -5,10 +5,10 @@ import {
 	useAppSelector,
 	// useAppDispatch
 } from 'app/hooks';
-import { selectBlockInfos, BlockStateInfoProps } from './blockSlice';
+import { selectBlockInfos } from './blockSlice';
 import { selectPosition } from 'components/objects/Character/characterSlice';
 import { selectScale } from 'components/ui/molecules/GlobalSidebar/globalSidebarSlice';
-import { loadingCanvasImageInfo } from 'utils/canvas';
+import { loadingCanvasImageInfo, scaleBlockCanvasDraw } from 'utils/canvas';
 
 const Styled = {
 	Block: styled.canvas`
@@ -48,29 +48,14 @@ const Block = ({ width, height }: BlockProps): JSX.Element => {
 		if (canvasRef && Object.keys(loadingImageInfo).length) {
 			const canvas = canvasRef.current;
 			const ctx = canvas.getContext('2d');
-
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			ctx.save();
-			ctx.translate(
-				canvas.width / 2 - point.x,
-				canvas.height / 2 - point.y,
-			);
-
-			blockInfos.forEach((res: BlockStateInfoProps) => {
-				ctx.drawImage(
-					loadingImageInfo[res.imageInfo.sources[scale]],
-					res.imageInfo.up.sx,
-					res.imageInfo.up.sy,
-					res.size.width,
-					res.size.height,
-					res.point.x,
-					res.point.y,
-					res.size.width,
-					res.size.height,
-				);
+			scaleBlockCanvasDraw({
+				canvas,
+				ctx,
+				infos: blockInfos,
+				point,
+				loadingImageInfo,
+				scale,
 			});
-
-			ctx.restore();
 		}
 	}, [point, width, height, blockInfos, loadingImageInfo, scale]);
 
