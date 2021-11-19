@@ -10,9 +10,12 @@ export const loadingCanvasImageInfo = async ({
 }): Promise<object> => {
 	const imageSourceInfos = Array.from(
 		new Set(
-			blockInfos.map(
-				(res: BlockStateInfoProps) => res.imageInfo.sources[scale],
-			),
+			blockInfos.map((res: BlockStateInfoProps) => {
+				if (res.type === 'system') {
+					return '';
+				}
+				return res.imageInfo.sources[scale];
+			}),
 		),
 	);
 	const result = await formatLoadingImageInfos(imageSourceInfos);
@@ -97,40 +100,6 @@ export const scaleDrawImage = ({
 		info.size.width * scale,
 		info.size.height * scale,
 	);
-};
-
-export const scaleCharacterCanvasDraw = ({
-	canvas,
-	ctx,
-	info,
-	scale,
-	loadingImageInfo,
-	direction,
-	animationFrame,
-}: {
-	canvas: HTMLCanvasElement;
-	ctx: ScaleDrawImageProps['ctx'];
-	info: ScaleDrawImageProps['info'];
-	scale: ScaleDrawImageProps['scale'];
-	loadingImageInfo: ScaleDrawImageProps['loadingImageInfo'];
-	direction: ScaleDrawImageProps['direction'];
-	animationFrame: ScaleDrawImageProps['animationFrame'];
-}) => {
-	drawCanvasCamera({
-		ctx,
-		canvas,
-		point: info.point,
-		callback: () => {
-			scaleDrawImage({
-				ctx,
-				scale,
-				loadingImageInfo,
-				info,
-				direction,
-				animationFrame,
-			});
-		},
-	});
 };
 
 export const scaleBlockCanvasDraw = ({
