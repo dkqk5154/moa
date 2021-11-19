@@ -40,12 +40,13 @@ export const isCollision = ({
 	return result;
 };
 
-export const isClamp = ({ point, mapSize }: ClampParams) => {
+export const isClamp = ({ point, mapPoint }: ClampParams) => {
+	const { startX, startY, endX, endY } = mapPoint;
 	return (
-		point.x >= mapSize.width ||
-		point.x < 0 ||
-		point.y >= mapSize.height ||
-		point.y < 0
+		point.x >= endX ||
+		point.x < startX ||
+		point.y >= endY ||
+		point.y < startY
 	);
 };
 
@@ -56,5 +57,5 @@ export interface SelfObjectParams {
 
 export interface ClampParams {
 	point: SelfObjectParams['point'];
-	mapSize: { width: number; height: number };
+	mapPoint: { startX: number; endX: number; startY: number; endY: number };
 }
