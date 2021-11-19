@@ -1,14 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { useAppDispatch, useAppSelector } from 'app/hooks';
+import {
+	useAppDispatch,
+	// useAppSelector
+} from 'app/hooks';
 import blockSources, { BlockSourceProps } from 'images/Block';
 import tileSources, { TileSourcesProps } from 'images/Tile';
 import objectSources from 'images/Object';
 import { setSelectBuildInfo } from './buildMenuSlice';
 import { BlockTypeProps } from 'components/objects/Block/blockSlice';
 import TileImage from 'components/ui/atoms/TileImage';
-import { selectScale } from 'components/ui/molecules/GlobalSidebar/globalSidebarSlice';
+// import { selectScale } from 'components/ui/molecules/GlobalSidebar/globalSidebarSlice';
 
 const Styled = {
 	Wrapper: styled.div`
@@ -38,7 +41,7 @@ export interface BuildMenuProps {}
 
 const BuildMenu = () => {
 	const dispatch = useAppDispatch();
-	const scale = useAppSelector(selectScale);
+	// const scale = useAppSelector(selectScale);
 
 	const formatBlockInfos = ({
 		infos,
@@ -71,11 +74,11 @@ const BuildMenu = () => {
 				>
 					<Styled.TileImageWrapper>
 						<TileImage
-							sx={sx}
-							sy={sy}
-							src={sources[scale]}
-							width={width}
-							height={height}
+							sx={sx * 2}
+							sy={sy * 2}
+							src={sources[2]}
+							width={width * 2}
+							height={height * 2}
 						/>
 					</Styled.TileImageWrapper>
 					<span>
