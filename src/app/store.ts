@@ -4,6 +4,7 @@ import blockReducer from 'components/objects/Block/blockSlice';
 import buildMenuReducer from 'components/ui/molecules/BuildMenu/buildMenuSlice';
 import globalSidebarReducer from 'components/ui/molecules/GlobalSidebar/globalSidebarSlice';
 import globalPopupMenuReducer from 'components/ui/organisms/GlobalPopupMenu/globalPopupMenuSlice';
+import mapReducer from 'components/objects/Block/mapSlice';
 
 export const store = configureStore({
 	reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
 		buildMenuReducer: buildMenuReducer,
 		globalSidebarReducer: globalSidebarReducer,
 		globalPopupMenuReducer: globalPopupMenuReducer,
+		map: mapReducer,
 	},
 });
 
