@@ -31,7 +31,9 @@ export const formatLoadingImage = (image: HTMLImageElement) => {
 	});
 };
 
-export const formatLoadingImageInfos = async (imageSourceInfos: Array<any>) => {
+export const formatLoadingImageInfos = async (
+	imageSourceInfos: Array<string>,
+) => {
 	let result = {};
 	await Promise.all(
 		imageSourceInfos.map(async (res: string) => {
@@ -88,6 +90,8 @@ export const scaleDrawImage = ({
 	scale,
 	animationFrame,
 }: ScaleDrawImageProps) => {
+	// console.log('info : ', info);
+	// console.log('loadingImageInfo : ', loadingImageInfo);
 	ctx.drawImage(
 		loadingImageInfo[info.imageInfo.sources[scale]],
 		(info.imageInfo[direction].sx + info.size.width * animationFrame) *
