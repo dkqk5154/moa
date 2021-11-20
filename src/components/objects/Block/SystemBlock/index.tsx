@@ -89,9 +89,11 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 				point,
 				callback: () => {
 					const formatMouseBlockPointX =
-						mousePoint.x - (canvas.width / 2 - point.x);
+						(mousePoint.x ) - (canvas.width / 2 - point.x) ;
 					const formatMouseBlockPointY =
-						mousePoint.y - (canvas.height / 2 - point.y);
+						(mousePoint.y ) - (canvas.height / 2 - point.y) ;
+					
+					console.log('my :',formatMouseBlockPointX, formatMouseBlockPointY)
 
 					systemBlockInfos.forEach(
 						({ point, size, key }: BlockStateInfoProps) => {
@@ -112,6 +114,7 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 								if (key === 'spawn_point') {
 									ctx.fillStyle = '#d61313a8';
 								} else {
+									console.log('green : ',x, y)
 									ctx.fillStyle = '#64ef6480';
 								}
 								setMouseBlockPoint(point);
@@ -139,14 +142,14 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 					loadingImageInfo[
 						selectBuildBlockInfo.imageInfo.sources[scale]
 					],
-					selectBuildBlockInfo.imageInfo.up.sx,
-					selectBuildBlockInfo.imageInfo.up.sy,
-					selectBuildBlockInfo.size.width,
-					selectBuildBlockInfo.size.height,
+					selectBuildBlockInfo.imageInfo.up.sx  * scale,
+					selectBuildBlockInfo.imageInfo.up.sy  * scale,
+					selectBuildBlockInfo.size.width * scale,
+					selectBuildBlockInfo.size.height * scale,
 					mousePoint.x - 12,
 					mousePoint.y - 12,
-					selectBuildBlockInfo.size.width,
-					selectBuildBlockInfo.size.height,
+					selectBuildBlockInfo.size.width * scale,
+					selectBuildBlockInfo.size.height * scale,
 				);
 			}
 		}
