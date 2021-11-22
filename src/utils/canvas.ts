@@ -75,10 +75,12 @@ export interface ScaleDrawImageProps {
 			| BlockStateInfoProps['imageInfo'];
 		size: CharacterState['size'] | BlockStateInfoProps['size'];
 		point: CharacterState['point'] | BlockStateInfoProps['point'];
+		direction:
+			| CharacterState['direction']
+			| BlockStateInfoProps['direction'];
 	};
 	loadingImageInfo: object;
 	scale: number;
-	direction: string;
 	animationFrame: number;
 }
 
@@ -86,17 +88,14 @@ export const scaleDrawImage = ({
 	ctx,
 	info,
 	loadingImageInfo,
-	direction,
 	scale,
 	animationFrame,
 }: ScaleDrawImageProps) => {
-	// console.log('info : ', info);
-	// console.log('loadingImageInfo : ', loadingImageInfo);
 	ctx.drawImage(
 		loadingImageInfo[info.imageInfo.sources[scale]],
-		(info.imageInfo[direction].sx + info.size.width * animationFrame) *
+		(info.imageInfo[info.direction].sx + info.size.width * animationFrame) *
 			scale,
-		info.imageInfo[direction].sy * scale,
+		info.imageInfo[info.direction].sy * scale,
 		info.size.width * scale,
 		info.size.height * scale,
 		info.point.x * scale,
@@ -133,7 +132,6 @@ export const scaleBlockCanvasDraw = ({
 						scale,
 						loadingImageInfo,
 						info: res,
-						direction: 'up',
 						animationFrame: 0,
 					});
 			});
