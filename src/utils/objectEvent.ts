@@ -43,10 +43,7 @@ export const isCollision = ({
 export const isClamp = ({ point, mapPoint }: ClampParams) => {
 	const { startX, startY, endX, endY } = mapPoint;
 	return (
-		point.x >= endX ||
-		point.x < startX ||
-		point.y >= endY ||
-		point.y < startY
+		point.x > endX || point.x < startX || point.y > endY || point.y < startY
 	);
 };
 
