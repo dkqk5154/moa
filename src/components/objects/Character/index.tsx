@@ -47,7 +47,7 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 
 	const point = useAppSelector(selectPosition);
 	const direction = useAppSelector(selectDirection);
-	const reduceSpeed = useAppSelector(selectSpeed);
+	const speed = useAppSelector(selectSpeed);
 	const blockInfos = useAppSelector(selectBlockInfos);
 	const objectBlockInfos = useAppSelector(selectObjectBlockInfos);
 	const delay = useAppSelector(selectDelay);
@@ -62,26 +62,10 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 
 	const canvasRef = useRef(null);
 
-	const speed = useMemo(
-		() => (status === 'build' ? 200 : reduceSpeed),
-		[status, reduceSpeed],
+	const formatSpeed = useMemo(
+		() => (status === 'build' ? 200 : speed),
+		[status, speed],
 	);
-
-	// useEffect(() => {
-	// 	const loadingCanvasImage = async () => {
-	// 		console.log(
-	// 			'imageInfo.sources : ',
-	// 			require('images/Character/image1.png'),
-	// 		);
-	// 		console.log('imageInfo.sources : ', imageInfo.sources);
-	// 		const result = await formatLoadingImageInfos(
-	// 			imageInfo.sources.map(res => String(res)),
-	// 		);
-	// 		console.log('result : ', result);
-	// 		setLoadingImageInfo(result);
-	// 	};
-	// 	loadingCanvasImage();
-	// }, [imageInfo, scale]);
 
 	useEffect(() => {
 		if (canvasRef) {
@@ -107,8 +91,8 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 									size,
 									point,
 									imageInfo,
+									direction,
 								},
-								direction,
 								animationFrame,
 							});
 						}
@@ -131,7 +115,7 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 
 	useInterval(
 		() => {
-			const commonFunction = (
+			const commonMoveFunction = (
 				movePoint: {
 					x: number;
 					y: number;
@@ -141,14 +125,16 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 					y: number;
 				},
 			) => {
-				const isCharacterCollision = isCollision({
+				const isCharacterToBlockCollision = isCollision({
 					self: { point: movePoint, size },
 					objects: [...blockInfos, ...objectBlockInfos],
 				});
 
 				const selectObjectInfo = isCollision({
 					self: {
-						point: isCharacterCollision ? movePoint : frontPoint,
+						point: isCharacterToBlockCollision
+							? movePoint
+							: frontPoint,
 						size,
 					},
 					objects: [...blockInfos, ...objectBlockInfos],
@@ -156,7 +142,7 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 
 				dispatch(setSelectBlockInfo(selectObjectInfo));
 
-				const isObjectClamp = isClamp({
+				const isMapOut = isClamp({
 					point: movePoint,
 					mapPoint: {
 						...mapPoint,
@@ -165,10 +151,17 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 					},
 				});
 
+				console.log('movePoint : ', movePoint.x, movePoint.y);
+				console.log(
+					'mapPoint : ',
+					mapSize.width + mapPoint.startX,
+					mapSize.height + mapPoint.startY,
+				);
+
 				const isMove =
 					status === 'build'
 						? true
-						: !isCharacterCollision && !isObjectClamp;
+						: !isCharacterToBlockCollision && !isMapOut;
 
 				if (isMove) {
 					setAnimationFrame((prevState: number) =>
@@ -176,33 +169,33 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 							? 1
 							: prevState + 1,
 					);
-					dispatch(setPosition(movePoint));
+					dispatch(setPosition({ ...movePoint }));
 				}
 			};
 			const objectSetPosition = () => {
 				switch (direction) {
 					case 'up':
-						commonFunction(
-							{ x: point.x, y: point.y - speed },
-							{ x: point.x, y: point.y - speed * 2 },
+						commonMoveFunction(
+							{ x: point.x, y: point.y - formatSpeed },
+							{ x: point.x, y: point.y - formatSpeed * 2 },
 						);
 						break;
 					case 'down':
-						commonFunction(
-							{ x: point.x, y: point.y + speed },
-							{ x: point.x, y: point.y + speed * 2 },
+						commonMoveFunction(
+							{ x: point.x, y: point.y + formatSpeed },
+							{ x: point.x, y: point.y + formatSpeed * 2 },
 						);
 						break;
 					case 'left':
-						commonFunction(
-							{ x: point.x - speed, y: point.y },
-							{ x: point.x - speed * 2, y: point.y },
+						commonMoveFunction(
+							{ x: point.x - formatSpeed, y: point.y },
+							{ x: point.x - formatSpeed * 2, y: point.y },
 						);
 						break;
 					case 'right':
-						commonFunction(
-							{ x: point.x + speed, y: point.y },
-							{ x: point.x + speed * 2, y: point.y },
+						commonMoveFunction(
+							{ x: point.x + formatSpeed, y: point.y },
+							{ x: point.x + formatSpeed * 2, y: point.y },
 						);
 						break;
 
