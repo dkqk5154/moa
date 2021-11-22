@@ -61,6 +61,7 @@ const BuildMenu = () => {
 						dispatch(
 							setSelectBuildInfo({
 								name: name,
+								direction: 'up',
 								point: { x: 0, y: 0 },
 								size: { width: width, height: height },
 								type: type,
