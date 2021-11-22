@@ -89,20 +89,22 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 				point,
 				callback: () => {
 					const formatMouseBlockPointX =
-						(mousePoint.x ) - (canvas.width / 2 - point.x) ;
+						mousePoint.x - (canvas.width / 2 - point.x);
 					const formatMouseBlockPointY =
-						(mousePoint.y ) - (canvas.height / 2 - point.y) ;
-					
-					console.log('my :',formatMouseBlockPointX, formatMouseBlockPointY)
+						mousePoint.y - (canvas.height / 2 - point.y);
+
+					console.log('my :', mousePoint.x, mousePoint.y);
 
 					systemBlockInfos.forEach(
 						({ point, size, key }: BlockStateInfoProps) => {
 							const { x, y } = point;
 							if (
-								x + size.width > formatMouseBlockPointX &&
-								x < formatMouseBlockPointX &&
-								y + size.height > formatMouseBlockPointY &&
-								y < formatMouseBlockPointY &&
+								x * scale + size.width * scale >
+									formatMouseBlockPointX &&
+								x * scale < formatMouseBlockPointX &&
+								y * scale + size.height * scale >
+									formatMouseBlockPointY &&
+								y * scale < formatMouseBlockPointY &&
 								selectBuildBlockInfo
 							) {
 								// const isBlockOrObject = blockInfos.some(
@@ -114,7 +116,7 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 								if (key === 'spawn_point') {
 									ctx.fillStyle = '#d61313a8';
 								} else {
-									console.log('green : ',x, y)
+									console.log('green : ', x, y);
 									ctx.fillStyle = '#64ef6480';
 								}
 								setMouseBlockPoint(point);
@@ -142,8 +144,8 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 					loadingImageInfo[
 						selectBuildBlockInfo.imageInfo.sources[scale]
 					],
-					selectBuildBlockInfo.imageInfo.up.sx  * scale,
-					selectBuildBlockInfo.imageInfo.up.sy  * scale,
+					selectBuildBlockInfo.imageInfo.up.sx * scale,
+					selectBuildBlockInfo.imageInfo.up.sy * scale,
 					selectBuildBlockInfo.size.width * scale,
 					selectBuildBlockInfo.size.height * scale,
 					mousePoint.x - 12,
