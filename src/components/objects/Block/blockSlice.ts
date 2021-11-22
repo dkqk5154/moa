@@ -2,11 +2,16 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from 'app/store';
 import { BlockSourceProps } from 'images/Block';
 
+export type BlockDirectionProps = 'up' | 'left' | 'right' | 'down';
+
+export type BlockTypeProps = 'object' | 'block' | 'tile' | 'system';
+
 export type BlockStateInfoProps = {
 	name: string;
 	point: { x: number; y: number };
 	size: { width: number; height: number };
 	type: BlockTypeProps;
+	direction: BlockDirectionProps;
 	key: string;
 	objectInfo?: {
 		type: string;
@@ -18,8 +23,6 @@ export type BlockStateInfoProps = {
 export interface BlockStateProps {
 	infos: Array<BlockStateInfoProps>;
 }
-
-export type BlockTypeProps = 'object' | 'block' | 'tile' | 'system';
 
 const initialState: BlockStateProps = {
 	infos: [],
