@@ -44,7 +44,7 @@ const Styled = {
 	`,
 };
 
-const mapStartPoint = { x: -128, y: -128 };
+const mapStartPoint = { x: -16 * 8, y: -16 * 8 };
 const mapSize = { width: 300, height: 300 };
 const spawnPoint = { x: 16 * 5, y: 16 * 5 };
 
@@ -81,6 +81,7 @@ const MainPage = (): JSX.Element => {
 			) {
 				mapBlockInfos.push({
 					name: 'woodTile',
+					direction: 'up',
 					point: { x: j, y: i },
 					size: {
 						width: tileSource[0].width,
@@ -95,6 +96,7 @@ const MainPage = (): JSX.Element => {
 				});
 				mapBlockInfos.push({
 					name: 'systemBlock',
+					direction: 'up',
 					point: { x: j, y: i },
 					size: {
 						width: tileSource[0].width,
