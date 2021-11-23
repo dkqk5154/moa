@@ -1,5 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import styled from 'styled-components';
+import moment from 'moment';
 
 import GlobalSidebar from 'components/ui/molecules/GlobalSidebar';
 import Character from 'components/objects/Character';
@@ -17,7 +18,10 @@ import {
 import { setBlockInfos } from 'components/objects/Block/blockSlice';
 // import { setBuildBlockInfos } from 'components/atoms/BuildMenu/buildMenuSlice';
 
-import { selectStatus } from 'components/ui/molecules/GlobalSidebar/globalSidebarSlice';
+import {
+	selectStatus,
+	setScale,
+} from 'components/ui/molecules/GlobalSidebar/globalSidebarSlice';
 
 import tileSource from 'images/Tile';
 import characterSource from 'images/Character';
@@ -44,6 +48,7 @@ const Styled = {
 	`,
 };
 
+const mapResizeScale = [360, 1480, 1980];
 const mapStartPoint = { x: -16 * 8, y: -16 * 8 };
 const mapSize = { width: 300, height: 300 };
 const spawnPoint = { x: 16 * 5, y: 16 * 5 };
@@ -87,7 +92,7 @@ const MainPage = (): JSX.Element => {
 						width: tileSource[0].width,
 						height: tileSource[0].height,
 					},
-					key: '1',
+					key: `${moment().format('YYYYMMDDHHMMss')}${j}-${i}`,
 					type: 'tile',
 					imageInfo: {
 						source: tileSource[0].sources[1],
@@ -102,7 +107,7 @@ const MainPage = (): JSX.Element => {
 						width: tileSource[0].width,
 						height: tileSource[0].height,
 					},
-					key: '1',
+					key: `${moment().format('YYYYMMDDHHMMss')}${j}-${i}`,
 					type: 'system',
 					imageInfo: {
 						...tileSource[0],
@@ -110,6 +115,7 @@ const MainPage = (): JSX.Element => {
 				});
 			}
 		}
+		console.log(mapBlockInfos);
 		dispatch(
 			setBlockInfos({
 				infos: [
@@ -129,18 +135,41 @@ const MainPage = (): JSX.Element => {
 		);
 	}, [dispatch]);
 
+	const mapResizeSetScale = useCallback(
+		(offsetWidth: number) => {
+			if (offsetWidth < mapResizeScale[0]) {
+				dispatch(setScale(1));
+			} else if (offsetWidth < mapResizeScale[1]) {
+				dispatch(setScale(2));
+			} else {
+				dispatch(setScale(3));
+			}
+		},
+		[dispatch],
+	);
+
 	useEffect(() => {
 		if (status === 'home') {
 			dispatch(setPosition(spawnPoint));
 		}
 	}, [status, dispatch]);
 
-	const handleResize = () => {
+	useEffect(() => {
+		if (MapWrapperRef.current) {
+			const offsetWidth = MapWrapperRef?.current?.offsetWidth;
+			mapResizeSetScale(offsetWidth);
+		}
+	}, [mapResizeSetScale]);
+
+	const handleResize = useCallback(() => {
+		const offsetWidth = MapWrapperRef?.current?.offsetWidth;
+		const offsetHeight = MapWrapperRef?.current?.offsetHeight;
+		mapResizeSetScale(offsetWidth);
 		setMapContainerInfo({
-			width: MapWrapperRef?.current?.offsetWidth,
-			height: MapWrapperRef?.current?.offsetHeight,
+			width: offsetWidth,
+			height: offsetHeight,
 		});
-	};
+	}, [mapResizeSetScale]);
 
 	useEffect(() => {
 		setMapContainerInfo({
@@ -149,7 +178,7 @@ const MainPage = (): JSX.Element => {
 		});
 		window.addEventListener('resize', handleResize);
 		return () => window.removeEventListener('resize', handleResize);
-	}, []);
+	}, [handleResize]);
 
 	return (
 		<Styled.Wrapper>
