@@ -3,9 +3,13 @@ const scale1Source = require('./image1.png').default;
 const scale2Source = require('./image2.png').default;
 const scale3Source = require('./image3.png').default;
 
-const infos = [
+const infos: Array<ImageSourceProps> = [
 	{
-		name: 'WoodObject',
+		name: 'woodObject',
+		locationName: {
+			kr: '나무 오브젝트',
+			en: 'WoodObject',
+		},
 		sources: ['', scale1Source, scale2Source, scale3Source],
 		width: defaultSize,
 		height: defaultSize,
@@ -27,28 +31,5 @@ const infos = [
 		},
 	},
 ];
-
-export interface ObjectSourceProps {
-	name: string;
-	sources: Array<string>;
-	width: number;
-	height: number;
-	up: {
-		sx: number;
-		sy: number;
-	};
-	right: {
-		sx: number;
-		sy: number;
-	};
-	left: {
-		sx: number;
-		sy: number;
-	};
-	down: {
-		sx: number;
-		sy: number;
-	};
-}
 
 export default infos;
