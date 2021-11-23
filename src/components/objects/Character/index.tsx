@@ -151,12 +151,12 @@ const Character = ({ width, height }: CharacterProps): JSX.Element => {
 					},
 				});
 
-				console.log('movePoint : ', movePoint.x, movePoint.y);
-				console.log(
-					'mapPoint : ',
-					mapSize.width + mapPoint.startX,
-					mapSize.height + mapPoint.startY,
-				);
+				// console.log('movePoint : ', movePoint.x, movePoint.y);
+				// console.log(
+				// 	'mapPoint : ',
+				// 	mapSize.width + mapPoint.startX,
+				// 	mapSize.height + mapPoint.startY,
+				// );
 
 				const isMove =
 					status === 'build'
