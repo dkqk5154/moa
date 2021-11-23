@@ -1,15 +1,22 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import styled from 'styled-components';
+import moment from 'moment';
 
 import { useAppSelector, useAppDispatch } from 'app/hooks';
 import {
 	selectSystemBlockInfos,
 	addBlockInfo,
-	// selectBlockInfos,
+	removeBlockInfo,
+	selectBlockInfos,
+	selectTileInfos,
 	BlockStateInfoProps,
+	BlockDirectionProps,
 } from 'components/objects/Block/blockSlice';
 import { selectPosition } from 'components/objects/Character/characterSlice';
-import { selectSelectBuildBlockInfo } from 'components/ui/molecules/BuildMenu/buildMenuSlice';
+import {
+	selectSelectBuildBlockInfo,
+	setSelectBuildBlockInfo,
+} from 'components/ui/molecules/BuildMenu/buildMenuSlice';
 import { selectScale } from 'components/ui/molecules/GlobalSidebar/globalSidebarSlice';
 import { drawCanvasCamera, loadingCanvasImageInfo } from 'utils/canvas';
 
@@ -26,6 +33,13 @@ export interface SystemBlockProps {
 	height: number;
 }
 
+const blockDirections: Array<BlockDirectionProps> = [
+	'up',
+	'left',
+	'right',
+	'down',
+];
+
 const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 	const canvasRef = useRef(null);
 	const [loadingImageInfo, setLoadingImageInfo] = useState({});
@@ -34,11 +48,49 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 
 	const selectBuildBlockInfo = useAppSelector(selectSelectBuildBlockInfo);
 	const systemBlockInfos = useAppSelector(selectSystemBlockInfos);
+	const blockInfos = useAppSelector(selectBlockInfos);
+	const tileInfos = useAppSelector(selectTileInfos);
 	// const blockInfos = useAppSelector(selectBlockInfos);
 	const point = useAppSelector(selectPosition);
 	const scale = useAppSelector(selectScale);
 
 	const dispatch = useAppDispatch();
+
+	const handleKeyPress = useCallback(
+		(e: KeyboardEvent) => {
+			switch (e.code) {
+				case 'KeyR':
+					if (selectBuildBlockInfo) {
+						let matchDirectionIndex = 0;
+						blockDirections.some((res, i) => {
+							matchDirectionIndex = i;
+							return res === selectBuildBlockInfo.direction;
+						});
+
+						dispatch(
+							setSelectBuildBlockInfo({
+								...selectBuildBlockInfo,
+								direction: blockDirections[
+									matchDirectionIndex + 1
+								]
+									? blockDirections[matchDirectionIndex + 1]
+									: 'up',
+							}),
+						);
+					}
+
+					break;
+				default:
+					break;
+			}
+		},
+		[selectBuildBlockInfo, dispatch],
+	);
+
+	useEffect(() => {
+		window.addEventListener('keypress', handleKeyPress);
+		return () => window.removeEventListener('keypress', handleKeyPress);
+	}, [handleKeyPress]);
 
 	useEffect(() => {
 		if (selectBuildBlockInfo) {
@@ -67,14 +119,53 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 				res.point.y === mouseBlockPoint.y,
 		);
 		if (selectBuildBlockInfo && !isSpawn) {
+			if (selectBuildBlockInfo.type === 'block') {
+				let matchIndex = 0;
+				const isMatchBlock = blockInfos.some((res, i) => {
+					matchIndex = i;
+					return (
+						res.point.x === mouseBlockPoint.x &&
+						res.point.y === mouseBlockPoint.y
+					);
+				});
+				if (isMatchBlock) {
+					dispatch(removeBlockInfo(blockInfos[matchIndex]));
+				}
+			} else if (selectBuildBlockInfo.type === 'tile') {
+				let matchIndex = 0;
+				const isMatchBlock = tileInfos.some((res, i) => {
+					matchIndex = i;
+					return (
+						res.point.x === mouseBlockPoint.x &&
+						res.point.y === mouseBlockPoint.y
+					);
+				});
+				console.log(
+					'isMatchBlock : ',
+					tileInfos[matchIndex],
+					isMatchBlock,
+					matchIndex,
+				);
+				if (isMatchBlock) {
+					dispatch(removeBlockInfo(tileInfos[matchIndex]));
+				}
+			}
 			dispatch(
 				addBlockInfo({
 					...selectBuildBlockInfo,
+					key: moment().format('YYMMDDHHmmss'),
 					point: mouseBlockPoint,
 				}),
 			);
 		}
-	}, [mouseBlockPoint, selectBuildBlockInfo, dispatch, systemBlockInfos]);
+	}, [
+		mouseBlockPoint,
+		selectBuildBlockInfo,
+		dispatch,
+		systemBlockInfos,
+		blockInfos,
+		tileInfos,
+	]);
 
 	useEffect(() => {
 		const canvas = canvasRef?.current;
@@ -93,18 +184,20 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 					const formatMouseBlockPointY =
 						mousePoint.y - (canvas.height / 2 - point.y);
 
-					console.log('my :', mousePoint.x, mousePoint.y);
-
 					systemBlockInfos.forEach(
 						({ point, size, key }: BlockStateInfoProps) => {
 							const { x, y } = point;
+							const formatX = x * scale;
+							const formatY = y * scale;
+							const formatWidth = size.width * scale;
+							const formatHeight = size.height * scale;
 							if (
-								x * scale + size.width * scale >
+								formatX + formatWidth >
 									formatMouseBlockPointX &&
-								x * scale < formatMouseBlockPointX &&
-								y * scale + size.height * scale >
+								formatX < formatMouseBlockPointX &&
+								formatY + formatHeight >
 									formatMouseBlockPointY &&
-								y * scale < formatMouseBlockPointY &&
+								formatY < formatMouseBlockPointY &&
 								selectBuildBlockInfo
 							) {
 								// const isBlockOrObject = blockInfos.some(
@@ -116,7 +209,6 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 								if (key === 'spawn_point') {
 									ctx.fillStyle = '#d61313a8';
 								} else {
-									console.log('green : ', x, y);
 									ctx.fillStyle = '#64ef6480';
 								}
 								setMouseBlockPoint(point);
@@ -138,14 +230,19 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 			if (
 				loadingImageInfo[
 					selectBuildBlockInfo?.imageInfo?.sources[scale]
-				]
+				] &&
+				selectBuildBlockInfo
 			) {
 				ctx.drawImage(
 					loadingImageInfo[
 						selectBuildBlockInfo.imageInfo.sources[scale]
 					],
-					selectBuildBlockInfo.imageInfo.up.sx * scale,
-					selectBuildBlockInfo.imageInfo.up.sy * scale,
+					selectBuildBlockInfo.imageInfo[
+						selectBuildBlockInfo.direction
+					].sx * scale,
+					selectBuildBlockInfo.imageInfo[
+						selectBuildBlockInfo.direction
+					].sy * scale,
 					selectBuildBlockInfo.size.width * scale,
 					selectBuildBlockInfo.size.height * scale,
 					mousePoint.x - 12,
