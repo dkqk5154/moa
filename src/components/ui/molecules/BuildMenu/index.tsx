@@ -5,12 +5,14 @@ import {
 	useAppDispatch,
 	// useAppSelector
 } from 'app/hooks';
-import blockSources, { BlockSourceProps } from 'images/Block';
-import tileSources, { TileSourcesProps } from 'images/Tile';
+import blockSources from 'images/Block';
+import tileSources from 'images/Tile';
 import objectSources from 'images/Object';
-import { setSelectBuildInfo } from './buildMenuSlice';
+import { setSelectBuildBlockInfo } from './buildMenuSlice';
 import { BlockTypeProps } from 'components/objects/Block/blockSlice';
 import TileImage from 'components/ui/atoms/TileImage';
+import 'images/type.d.ts';
+import moment from 'moment';
 // import { selectScale } from 'components/ui/molecules/GlobalSidebar/globalSidebarSlice';
 
 const Styled = {
@@ -47,11 +49,11 @@ const BuildMenu = () => {
 		infos,
 		type,
 	}: {
-		infos: Array<TileSourcesProps>;
+		infos: Array<ImageSourceProps>;
 		type: BlockTypeProps;
 	}) => {
-		return infos.map((res: TileSourcesProps | BlockSourceProps) => {
-			const { name, width, height, up, sources } = res;
+		return infos.map((res: ImageSourceProps) => {
+			const { name, width, height, up, sources, locationName } = res;
 			const { sx, sy } = up;
 
 			return (
@@ -59,13 +61,13 @@ const BuildMenu = () => {
 					key={name}
 					onClick={() => {
 						dispatch(
-							setSelectBuildInfo({
+							setSelectBuildBlockInfo({
 								name: name,
 								direction: 'up',
 								point: { x: 0, y: 0 },
 								size: { width: width, height: height },
 								type: type,
-								key: '0',
+								key: moment().format('YYMMDDHHmmss'),
 								imageInfo: {
 									...res,
 								},
@@ -83,7 +85,7 @@ const BuildMenu = () => {
 						/>
 					</Styled.TileImageWrapper>
 					<span>
-						<b>{name}</b>
+						<b>{locationName['kr']}</b>
 					</span>
 				</Styled.ImageWrapper>
 			);
