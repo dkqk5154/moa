@@ -11,6 +11,7 @@ import {
 	selectTileInfos,
 	BlockStateInfoProps,
 	BlockDirectionProps,
+	addBlockInfos,
 } from 'components/objects/Block/blockSlice';
 import { selectPosition } from 'components/objects/Character/characterSlice';
 import {
@@ -46,8 +47,6 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 	const [mousePoint, setMousePoint] = useState({ x: 0, y: 0 });
 	const [shiftKeyPressMousePointStart, setShiftKeyPressMousePointStart] =
 		useState({ x: 0, y: 0 });
-	const [selectShiftKeyPressBlockInfos, setSelectShiftKeyPressBlockInfos] =
-		useState<Array<BlockStateInfoProps>>([]);
 
 	const [mouseBlockPoint, setMouseBlockPoint] = useState({ x: 0, y: 0 });
 	const [isShiftKeyPress, setIsShiftKeyPress] = useState(false);
@@ -62,7 +61,7 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 
 	const dispatch = useAppDispatch();
 
-	const handleKeyPress = useCallback(
+	const handleKeyDown = useCallback(
 		(e: KeyboardEvent) => {
 			switch (e.code) {
 				case 'KeyR':
@@ -87,7 +86,8 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 
 					break;
 				case 'KeyT':
-					if (e.shiftKey) {
+					if (e.shiftKey && !e.repeat) {
+						console.log('on shift');
 						setIsShiftKeyPress(true);
 					}
 					break;
@@ -95,22 +95,22 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 					break;
 			}
 		},
-		[selectBuildBlockInfo, dispatch],
+		[dispatch, selectBuildBlockInfo],
 	);
 
-	const handleKeyUp = (e: MouseEvent) => {
+	const handleKeyUp = (e: KeyboardEvent) => {
 		setIsShiftKeyPress(false);
 		setShiftKeyPressMousePointStart({ x: 0, y: 0 });
 	};
 
 	useEffect(() => {
-		window.addEventListener('keypress', handleKeyPress);
+		window.addEventListener('keydown', handleKeyDown);
 		window.addEventListener('keyup', handleKeyUp);
 		return () => {
-			window.removeEventListener('keydown', handleKeyUp);
-			window.removeEventListener('keyup', handleKeyPress);
+			window.removeEventListener('keydown', handleKeyDown);
+			window.removeEventListener('keyup', handleKeyUp);
 		};
-	}, [handleKeyPress]);
+	}, [handleKeyDown]);
 
 	useEffect(() => {
 		if (selectBuildBlockInfo) {
@@ -126,6 +126,52 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 			loadingCanvasImage();
 		}
 	}, [systemBlockInfos, selectBuildBlockInfo, scale]);
+
+	const filterMatchBlock = ({
+		blockInfos,
+		mouseBlockPoint,
+	}: {
+		blockInfos: Array<BlockStateInfoProps>;
+		mouseBlockPoint: { x: number; y: number };
+	}) => {
+		let result = null;
+		blockInfos.some((res, i) => {
+			if (
+				res.point.x === mouseBlockPoint.x &&
+				res.point.y === mouseBlockPoint.y
+			) {
+				result = blockInfos[i];
+				return true;
+			}
+			return false;
+		});
+		return result;
+	};
+
+	const duplicationRemoveBlock = useCallback(
+		({
+			selectBlockInfo,
+			mouseBlockPoint,
+		}: {
+			selectBlockInfo: BlockStateInfoProps;
+			mouseBlockPoint: { x: number; y: number };
+		}) => {
+			let selectRemoveBlockInfo = null as BlockStateInfoProps;
+			if (selectBlockInfo.type === 'block') {
+				selectRemoveBlockInfo = filterMatchBlock({
+					blockInfos,
+					mouseBlockPoint,
+				});
+			} else if (selectBlockInfo.type === 'tile') {
+				selectRemoveBlockInfo = filterMatchBlock({
+					blockInfos: tileInfos,
+					mouseBlockPoint,
+				});
+			}
+			return selectRemoveBlockInfo;
+		},
+		[blockInfos, tileInfos],
+	);
 
 	const handleCanvasMouseMove = useCallback(
 		e => {
@@ -143,62 +189,96 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 		[isShiftKeyPress, shiftKeyPressMousePointStart],
 	);
 
-	const handleCanvasMouseUp = useCallback(() => {
-		console.log(
-			'selectShiftKeyPressBlockInfos : ',
-			selectShiftKeyPressBlockInfos,
-		);
-		const isSpawn = systemBlockInfos.some(
-			res =>
-				res.key === 'spawn_point' &&
-				res.point.x === mouseBlockPoint.x &&
-				res.point.y === mouseBlockPoint.y,
-		);
-		if (selectBuildBlockInfo && !isSpawn) {
-			if (selectBuildBlockInfo.type === 'block') {
-				let matchIndex = 0;
-				const isMatchBlock = blockInfos.some((res, i) => {
-					matchIndex = i;
-					return (
-						res.point.x === mouseBlockPoint.x &&
-						res.point.y === mouseBlockPoint.y
-					);
-				});
-				if (isMatchBlock) {
-					dispatch(removeBlockInfo(blockInfos[matchIndex]));
-				}
-			} else if (selectBuildBlockInfo.type === 'tile') {
-				let matchIndex = 0;
-				const isMatchBlock = tileInfos.some((res, i) => {
-					matchIndex = i;
-					return (
-						res.point.x === mouseBlockPoint.x &&
-						res.point.y === mouseBlockPoint.y
-					);
-				});
-
-				if (isMatchBlock) {
-					dispatch(removeBlockInfo(tileInfos[matchIndex]));
-				}
-			}
-			dispatch(
-				addBlockInfo({
-					...selectBuildBlockInfo,
-					key: moment().format('YYMMDDHHmmss'),
-					point: mouseBlockPoint,
-				}),
+	const handleCanvasMouseUp = useCallback(
+		({ offsetX, offsetY }: MouseEvent) => {
+			const isSpawn = systemBlockInfos.some(
+				res =>
+					res.key === 'spawn_point' &&
+					res.point.x === mouseBlockPoint.x &&
+					res.point.y === mouseBlockPoint.y,
 			);
+			if (selectBuildBlockInfo && !isSpawn && !isShiftKeyPress) {
+				let selectRemoveBlockInfo = {} as BlockStateInfoProps;
+				selectRemoveBlockInfo = duplicationRemoveBlock({
+					selectBlockInfo: selectBuildBlockInfo,
+					mouseBlockPoint: mouseBlockPoint,
+				});
+				if (selectRemoveBlockInfo) {
+					dispatch(removeBlockInfo(selectRemoveBlockInfo));
+				}
+				dispatch(
+					addBlockInfo({
+						...selectBuildBlockInfo,
+						key: moment().format('x'),
+						point: mouseBlockPoint,
+					}),
+				);
+			} else if (isShiftKeyPress) {
+				console.log('isShiftKeyPress : ', true);
+				let result = [];
+				const canvas = canvasRef?.current;
+				systemBlockInfos.map(res => {
+					const { point, key } = res;
+					const { x, y } = point;
+					const formatShiftKeyMouseBlockPointX =
+						shiftKeyPressMousePointStart.x -
+						(canvas.width / 2 - point.x);
+					const formatShiftKeyMouseBlockPointY =
+						shiftKeyPressMousePointStart.y -
+						(canvas.height / 2 - point.y);
+					const formatMouseBlockPointX =
+						offsetX - (canvas.width / 2 - point.x);
+					const formatMouseBlockPointY =
+						offsetY - (canvas.height / 2 - point.y);
+
+					const selectFormatX = selectMinMax(
+						formatShiftKeyMouseBlockPointX,
+						formatMouseBlockPointX,
+					);
+					const selectFormatY = selectMinMax(
+						formatShiftKeyMouseBlockPointY,
+						formatMouseBlockPointY,
+					);
+					const formatX = x * scale;
+					const formatY = y * scale;
+					if (
+						formatX >= selectFormatX.min &&
+						formatX <= selectFormatX.max &&
+						formatY >= selectFormatY.min &&
+						formatY <= selectFormatY.max
+					) {
+						if (key !== 'spawn_point') {
+							result.push({ point, key: moment().format('x') });
+						}
+					}
+					return res;
+				});
+				result = result.map(res => {
+					return { ...selectBuildBlockInfo, ...res };
+				});
+				console.log('selectBuildBlockInfo : ', selectBuildBlockInfo);
+				console.log('result : ', result);
+				dispatch(addBlockInfos(result));
+				setIsShiftKeyPress(false);
+			}
 			setShiftKeyPressMousePointStart({ x: 0, y: 0 });
-		}
-	}, [
-		mouseBlockPoint,
-		selectBuildBlockInfo,
-		dispatch,
-		systemBlockInfos,
-		blockInfos,
-		tileInfos,
-		selectShiftKeyPressBlockInfos,
-	]);
+		},
+		[
+			mouseBlockPoint,
+			selectBuildBlockInfo,
+			dispatch,
+			systemBlockInfos,
+			isShiftKeyPress,
+			duplicationRemoveBlock,
+			scale,
+			shiftKeyPressMousePointStart,
+		],
+	);
+
+	const selectMinMax = (number1, number2) =>
+		number1 > number2
+			? { max: number1, min: number2 }
+			: { max: number2, min: number1 };
 
 	useEffect(() => {
 		const canvas = canvasRef?.current;
@@ -227,8 +307,6 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 					const selectBlockColor = '#64ef6480';
 					const systemColor = '#fbace67a';
 
-					let shiftKeyPressSelectBlockInfos = [];
-
 					systemBlockInfos.forEach((res: BlockStateInfoProps) => {
 						const { point, size, key } = res;
 						const { x, y } = point;
@@ -244,12 +322,6 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 							formatY < formatMouseBlockPointY &&
 							selectBuildBlockInfo
 						) {
-							// const isBlockOrObject = blockInfos.some(
-							// 	res =>
-							// 		res.point.x === point.x &&
-							// 		res.point.y === point.y &&
-							// 		(res.type === 'block' || res.type === 'object'),
-							// );
 							if (key === 'spawn_point') {
 								ctx.fillStyle = spawnColor;
 							} else {
@@ -261,10 +333,6 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 						}
 
 						if (isShiftKeyPress) {
-							const selectMinMax = (number1, number2) =>
-								number1 > number2
-									? { max: number1, min: number2 }
-									: { max: number2, min: number1 };
 							const selectFormatX = selectMinMax(
 								formatShiftKeyMouseBlockPointX,
 								formatMouseBlockPointX,
@@ -281,7 +349,6 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 								formatY <= selectFormatY.max
 							) {
 								if (key !== 'spawn_point') {
-									shiftKeyPressSelectBlockInfos.push(res);
 									ctx.fillStyle = selectBlockColor;
 								} else {
 									ctx.fillStyle = spawnColor;
@@ -296,9 +363,6 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 							size.height * scale,
 						);
 					});
-					setSelectShiftKeyPressBlockInfos(
-						shiftKeyPressSelectBlockInfos,
-					);
 				},
 			});
 
