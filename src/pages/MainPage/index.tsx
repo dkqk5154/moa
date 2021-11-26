@@ -123,8 +123,8 @@ const MainPage = (): JSX.Element => {
 					{
 						point: spawnPoint,
 						size: {
-							width: 48,
-							height: 48,
+							width: 16 * 3,
+							height: 16 * 3,
 						},
 						key: 'spawn_point',
 						type: 'system',

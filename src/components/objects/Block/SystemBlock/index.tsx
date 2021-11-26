@@ -56,7 +56,7 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 	const blockInfos = useAppSelector(selectBlockInfos);
 	const tileInfos = useAppSelector(selectTileInfos);
 	// const blockInfos = useAppSelector(selectBlockInfos);
-	const point = useAppSelector(selectPosition);
+	const characterPoint = useAppSelector(selectPosition);
 	const scale = useAppSelector(selectScale);
 
 	const dispatch = useAppDispatch();
@@ -206,6 +206,7 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 				if (selectRemoveBlockInfo) {
 					dispatch(removeBlockInfo(selectRemoveBlockInfo));
 				}
+				console.log('one select block : ', mouseBlockPoint);
 				dispatch(
 					addBlockInfo({
 						...selectBuildBlockInfo,
@@ -214,22 +215,25 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 					}),
 				);
 			} else if (isShiftKeyPress) {
-				console.log('isShiftKeyPress : ', true);
 				let result = [];
 				const canvas = canvasRef?.current;
-				systemBlockInfos.map(res => {
-					const { point, key } = res;
+				const formatShiftKeyMouseBlockPointX =
+					shiftKeyPressMousePointStart.x -
+					(canvas.width / 2 - characterPoint.x);
+				const formatShiftKeyMouseBlockPointY =
+					shiftKeyPressMousePointStart.y -
+					(canvas.height / 2 - characterPoint.y);
+				const formatMouseBlockPointX =
+					offsetX - (canvas.width / 2 - characterPoint.x);
+				const formatMouseBlockPointY =
+					offsetY - (canvas.height / 2 - characterPoint.y);
+				const spawnPointInfos = systemBlockInfos.filter(
+					res => res.key === 'spawn_point',
+				);
+				console.log('spawnPointInfos : ', spawnPointInfos);
+				systemBlockInfos.map((res, i) => {
+					const { point, size } = res;
 					const { x, y } = point;
-					const formatShiftKeyMouseBlockPointX =
-						shiftKeyPressMousePointStart.x -
-						(canvas.width / 2 - point.x);
-					const formatShiftKeyMouseBlockPointY =
-						shiftKeyPressMousePointStart.y -
-						(canvas.height / 2 - point.y);
-					const formatMouseBlockPointX =
-						offsetX - (canvas.width / 2 - point.x);
-					const formatMouseBlockPointY =
-						offsetY - (canvas.height / 2 - point.y);
 
 					const selectFormatX = selectMinMax(
 						formatShiftKeyMouseBlockPointX,
@@ -239,16 +243,29 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 						formatShiftKeyMouseBlockPointY,
 						formatMouseBlockPointY,
 					);
+
+					const formatWidth = size.width * scale;
+					const formatHeight = size.height * scale;
+
 					const formatX = x * scale;
 					const formatY = y * scale;
+
 					if (
-						formatX >= selectFormatX.min &&
+						formatX + formatWidth >= selectFormatX.min &&
 						formatX <= selectFormatX.max &&
-						formatY >= selectFormatY.min &&
+						formatY + formatHeight >= selectFormatY.min &&
 						formatY <= selectFormatY.max
 					) {
-						if (key !== 'spawn_point') {
-							result.push({ point, key: moment().format('x') });
+						if (
+							!spawnPointInfos.some(
+								inRes =>
+									inRes.point.x === x && inRes.point.y === y,
+							)
+						) {
+							result.push({
+								point,
+								key: `${moment().format('x')}_${i}`,
+							});
 						}
 					}
 					return res;
@@ -256,11 +273,9 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 				result = result.map(res => {
 					return { ...selectBuildBlockInfo, ...res };
 				});
-				console.log('selectBuildBlockInfo : ', selectBuildBlockInfo);
-				console.log('result : ', result);
 				dispatch(addBlockInfos(result));
-				setIsShiftKeyPress(false);
 			}
+			setIsShiftKeyPress(false);
 			setShiftKeyPressMousePointStart({ x: 0, y: 0 });
 		},
 		[
@@ -272,6 +287,7 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 			duplicationRemoveBlock,
 			scale,
 			shiftKeyPressMousePointStart,
+			characterPoint,
 		],
 	);
 
@@ -290,18 +306,18 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 			drawCanvasCamera({
 				canvas,
 				ctx,
-				point,
+				point: characterPoint,
 				callback: () => {
 					const formatShiftKeyMouseBlockPointX =
 						shiftKeyPressMousePointStart.x -
-						(canvas.width / 2 - point.x);
+						(canvas.width / 2 - characterPoint.x);
 					const formatShiftKeyMouseBlockPointY =
 						shiftKeyPressMousePointStart.y -
-						(canvas.height / 2 - point.y);
+						(canvas.height / 2 - characterPoint.y);
 					const formatMouseBlockPointX =
-						mousePoint.x - (canvas.width / 2 - point.x);
+						mousePoint.x - (canvas.width / 2 - characterPoint.x);
 					const formatMouseBlockPointY =
-						mousePoint.y - (canvas.height / 2 - point.y);
+						mousePoint.y - (canvas.height / 2 - characterPoint.y);
 
 					const spawnColor = '#d61313a8';
 					const selectBlockColor = '#64ef6480';
@@ -343,9 +359,9 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 							);
 
 							if (
-								formatX >= selectFormatX.min &&
+								formatX + formatWidth >= selectFormatX.min &&
 								formatX <= selectFormatX.max &&
-								formatY >= selectFormatY.min &&
+								formatY + formatHeight >= selectFormatY.min &&
 								formatY <= selectFormatY.max
 							) {
 								if (key !== 'spawn_point') {
@@ -396,7 +412,7 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 			canvas.removeEventListener('mouseup', handleCanvasMouseUp);
 		};
 	}, [
-		point,
+		characterPoint,
 		width,
 		height,
 		systemBlockInfos,
