@@ -7,6 +7,7 @@ import {
 	selectSystemBlockInfos,
 	addBlockInfo,
 	removeBlockInfo,
+	removeBlockInfos,
 	selectBlockInfos,
 	selectTileInfos,
 	BlockStateInfoProps,
@@ -18,7 +19,10 @@ import {
 	selectSelectBuildBlockInfo,
 	setSelectBuildBlockInfo,
 } from 'components/ui/molecules/BuildMenu/buildMenuSlice';
-import { selectScale } from 'components/ui/molecules/GlobalSidebar/globalSidebarSlice';
+import {
+	selectScale,
+	selectTileSize,
+} from 'components/ui/molecules/GlobalSidebar/globalSidebarSlice';
 import { drawCanvasCamera, loadingCanvasImageInfo } from 'utils/canvas';
 
 const Styled = {
@@ -58,6 +62,7 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 	// const blockInfos = useAppSelector(selectBlockInfos);
 	const characterPoint = useAppSelector(selectPosition);
 	const scale = useAppSelector(selectScale);
+	const tileSize = useAppSelector(selectTileSize);
 
 	const dispatch = useAppDispatch();
 
@@ -206,12 +211,22 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 				if (selectRemoveBlockInfo) {
 					dispatch(removeBlockInfo(selectRemoveBlockInfo));
 				}
-				console.log('one select block : ', mouseBlockPoint);
 				dispatch(
 					addBlockInfo({
 						...selectBuildBlockInfo,
 						key: moment().format('x'),
-						point: mouseBlockPoint,
+						point: {
+							x:
+								selectBuildBlockInfo.size.width === tileSize
+									? mouseBlockPoint.x
+									: mouseBlockPoint.x -
+									  selectBuildBlockInfo.size.width / 2,
+							y:
+								selectBuildBlockInfo.size.height === tileSize
+									? mouseBlockPoint.y
+									: mouseBlockPoint.y -
+									  selectBuildBlockInfo.size.height / 2,
+						},
 					}),
 				);
 			} else if (isShiftKeyPress) {
@@ -230,7 +245,6 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 				const spawnPointInfos = systemBlockInfos.filter(
 					res => res.key === 'spawn_point',
 				);
-				console.log('spawnPointInfos : ', spawnPointInfos);
 				systemBlockInfos.map((res, i) => {
 					const { point, size } = res;
 					const { x, y } = point;
@@ -256,12 +270,19 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 						formatY + formatHeight >= selectFormatY.min &&
 						formatY <= selectFormatY.max
 					) {
-						if (
-							!spawnPointInfos.some(
-								inRes =>
-									inRes.point.x === x && inRes.point.y === y,
-							)
-						) {
+						const isSpawnPoint = spawnPointInfos.some(
+							inRes => inRes.point.x === x && inRes.point.y === y,
+						);
+						if (!isSpawnPoint) {
+							// const selectRemoveBlockInfo = duplicationRemoveBlock({
+							// 	selectBlockInfo: selectBuildBlockInfo,
+							// 	mouseBlockPoint: mouseBlockPoint,
+							// });
+							// if (selectRemoveBlockInfo) {
+							// 	dispatch(
+							// 		removeBlockInfo(selectRemoveBlockInfo),
+							// 	);
+							// }
 							result.push({
 								point,
 								key: `${moment().format('x')}_${i}`,
@@ -288,6 +309,7 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 			scale,
 			shiftKeyPressMousePointStart,
 			characterPoint,
+			tileSize,
 		],
 	);
 
@@ -315,9 +337,16 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 						shiftKeyPressMousePointStart.y -
 						(canvas.height / 2 - characterPoint.y);
 					const formatMouseBlockPointX =
-						mousePoint.x - (canvas.width / 2 - characterPoint.x);
+						(selectBuildBlockInfo?.point.x === mousePoint.x
+							? mousePoint.x
+							: mousePoint.x + selectBuildBlockInfo?.size.width) -
+						(canvas.width / 2 - characterPoint.x);
 					const formatMouseBlockPointY =
-						mousePoint.y - (canvas.height / 2 - characterPoint.y);
+						(selectBuildBlockInfo?.size.height === mousePoint.y
+							? mousePoint.y
+							: mousePoint.y +
+							  selectBuildBlockInfo?.size.height) -
+						(canvas.height / 2 - characterPoint.y);
 
 					const spawnColor = '#d61313a8';
 					const selectBlockColor = '#64ef6480';
@@ -326,16 +355,18 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 					systemBlockInfos.forEach((res: BlockStateInfoProps) => {
 						const { point, size, key } = res;
 						const { x, y } = point;
-						const formatX = x * scale;
-						const formatY = y * scale;
-						const formatWidth = size.width * scale;
-						const formatHeight = size.height * scale;
+						const scaleX = x * scale;
+						const scaleY = y * scale;
+						const scaleWidth =
+							selectBuildBlockInfo?.size.width * scale;
+						const scaleHeight =
+							selectBuildBlockInfo?.size.height * scale;
 
 						if (
-							formatX + formatWidth > formatMouseBlockPointX &&
-							formatX < formatMouseBlockPointX &&
-							formatY + formatHeight > formatMouseBlockPointY &&
-							formatY < formatMouseBlockPointY &&
+							scaleX + scaleWidth > formatMouseBlockPointX &&
+							scaleX < formatMouseBlockPointX &&
+							scaleY + scaleHeight > formatMouseBlockPointY &&
+							scaleY < formatMouseBlockPointY &&
 							selectBuildBlockInfo
 						) {
 							if (key === 'spawn_point') {
@@ -359,10 +390,10 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 							);
 
 							if (
-								formatX + formatWidth >= selectFormatX.min &&
-								formatX <= selectFormatX.max &&
-								formatY + formatHeight >= selectFormatY.min &&
-								formatY <= selectFormatY.max
+								scaleX + scaleWidth >= selectFormatX.min &&
+								scaleX <= selectFormatX.max &&
+								scaleY + scaleHeight >= selectFormatY.min &&
+								scaleY <= selectFormatY.max
 							) {
 								if (key !== 'spawn_point') {
 									ctx.fillStyle = selectBlockColor;
