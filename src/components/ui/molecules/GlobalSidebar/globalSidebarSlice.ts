@@ -7,11 +7,13 @@ const minScale = 0;
 export interface GlobalSideBarStateProps {
 	status: 'home' | 'build' | 'popup';
 	scale: number;
+	tileSize: number;
 }
 
 const initialState: GlobalSideBarStateProps = {
 	status: 'home',
 	scale: 1,
+	tileSize: 16,
 };
 
 export const globalSideBarSlice = createSlice({
@@ -36,5 +38,8 @@ export const selectStatus = (state: RootState) =>
 
 export const selectScale = (state: RootState) =>
 	state.globalSidebarReducer.scale;
+
+export const selectTileSize = (state: RootState) =>
+	state.globalSidebarReducer.tileSize;
 
 export default globalSideBarSlice.reducer;
