@@ -13,7 +13,7 @@ import { loadingCanvasImageInfo, scaleBlockCanvasDraw } from 'utils/canvas';
 const Styled = {
 	Block: styled.canvas`
 		position: absolute;
-		z-index: 100;
+		z-index: -50;
 		top: 0;
 	`,
 };
