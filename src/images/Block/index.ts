@@ -5,10 +5,10 @@ const scale3Source = require('./image3.png').default;
 
 const infos: Array<ImageSourceProps> = [
 	{
-		name: 'WoodBlock',
+		name: 'woodBlock',
 		locationName: {
-			kr: '나무 블럭',
-			en: 'woodBlock',
+			kr: '파란 나무바닥 블럭',
+			en: 'WoodBlock',
 		},
 		sources: ['', scale1Source, scale2Source, scale3Source],
 		width: defaultSize,
