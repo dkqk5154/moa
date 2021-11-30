@@ -49,16 +49,18 @@ export const blockSlice = createSlice({
 			state,
 			action: PayloadAction<BlockStateProps['infos']>,
 		) => {
-			state.infos = state.infos.filter(
-				res => !action.payload.some(inRes => res.key === inRes.key),
-			);
+			state.infos = state.infos.filter(info => {
+				return !action.payload.some(inputInfo => {
+					return JSON.stringify(info) === JSON.stringify(inputInfo);
+				});
+			});
 		},
 		removeBlockInfo: (
 			state,
 			action: PayloadAction<BlockStateInfoProps>,
 		) => {
 			state.infos = state.infos.filter(
-				res => res.key !== action.payload.key,
+				res => JSON.stringify(res) !== JSON.stringify(action.payload),
 			);
 		},
 	},
