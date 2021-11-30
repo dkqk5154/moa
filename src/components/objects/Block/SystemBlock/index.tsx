@@ -10,6 +10,7 @@ import {
 	removeBlockInfos,
 	selectBlockInfos,
 	selectTileInfos,
+	selectObjectBlockInfos,
 	BlockStateInfoProps,
 	BlockDirectionProps,
 	addBlockInfos,
@@ -59,6 +60,7 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 	const systemBlockInfos = useAppSelector(selectSystemBlockInfos);
 	const blockInfos = useAppSelector(selectBlockInfos);
 	const tileInfos = useAppSelector(selectTileInfos);
+	const objectBlockInfos = useAppSelector(selectObjectBlockInfos);
 	// const blockInfos = useAppSelector(selectBlockInfos);
 	const characterPoint = useAppSelector(selectPosition);
 	const scale = useAppSelector(selectScale);
@@ -172,10 +174,15 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 					blockInfos: tileInfos,
 					mouseBlockPoint,
 				});
+			} else if (selectBlockInfo.type === 'object') {
+				selectRemoveBlockInfo = filterMatchBlock({
+					blockInfos: objectBlockInfos,
+					mouseBlockPoint,
+				});
 			}
 			return selectRemoveBlockInfo;
 		},
-		[blockInfos, tileInfos],
+		[blockInfos, tileInfos, objectBlockInfos],
 	);
 
 	const handleCanvasMouseMove = useCallback(
@@ -231,6 +238,7 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 				);
 			} else if (isShiftKeyPress) {
 				let result = [];
+				let duplicationRemoveBlockInfos = [];
 				const canvas = canvasRef?.current;
 				const formatShiftKeyMouseBlockPointX =
 					shiftKeyPressMousePointStart.x -
@@ -274,15 +282,14 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 							inRes => inRes.point.x === x && inRes.point.y === y,
 						);
 						if (!isSpawnPoint) {
-							// const selectRemoveBlockInfo = duplicationRemoveBlock({
-							// 	selectBlockInfo: selectBuildBlockInfo,
-							// 	mouseBlockPoint: mouseBlockPoint,
-							// });
-							// if (selectRemoveBlockInfo) {
-							// 	dispatch(
-							// 		removeBlockInfo(selectRemoveBlockInfo),
-							// 	);
-							// }
+							const selectRemoveBlockInfo =
+								duplicationRemoveBlock({
+									selectBlockInfo: res,
+									mouseBlockPoint: mouseBlockPoint,
+								});
+							if (selectRemoveBlockInfo) {
+								duplicationRemoveBlockInfos.push();
+							}
 							result.push({
 								point,
 								key: `${moment().format('x')}_${i}`,
@@ -294,6 +301,9 @@ const SystemBlock = ({ width, height }: SystemBlockProps): JSX.Element => {
 				result = result.map(res => {
 					return { ...selectBuildBlockInfo, ...res };
 				});
+				if (duplicationRemoveBlockInfos) {
+					dispatch(removeBlockInfos(duplicationRemoveBlockInfos));
+				}
 				dispatch(addBlockInfos(result));
 			}
 			setIsShiftKeyPress(false);
