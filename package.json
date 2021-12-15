@@ -7,11 +7,7 @@
 		"@testing-library/jest-dom": "^5.11.4",
 		"@testing-library/react": "^11.1.0",
 		"@testing-library/user-event": "^12.1.10",
-		"amazon-cognito-identity-js": "^4.5.5",
-		"aws-sdk": "^2.810.0",
 		"axios": "^0.21.0",
-		"file-saver": "^2.0.5",
-		"idb": "3.0.2",
 		"jsonwebtoken": "^8.5.1",
 		"mdx.macro": "^0.2.9",
 		"moment": "^2.29.1",
@@ -43,7 +39,6 @@
 		]
 	},
 	"devDependencies": {
-		"@types/file-saver": "^2.0.2",
 		"@types/jest": "^26.0.15",
 		"@types/jsonwebtoken": "^8.5.0",
 		"@types/moment": "^2.13.0",

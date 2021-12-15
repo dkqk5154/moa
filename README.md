@@ -1,3 +1,7 @@
+# Canvas Tile Game
+
+you can build block and move character
+
 # Create React App typescript setting
 
 cra based on setting
@@ -21,13 +25,7 @@ cra based on setting
 
 ## library
 
+-   [redux-toolkit](https://github.com/reduxjs/redux-toolkit)
 -   [styled-components](https://github.com/styled-components/styled-components)
--   [styled-system](https://github.com/styled-system/styled-system/)
--   [ESlint](https://github.com/eslint/eslint)
--   [Prettier](https://github.com/prettier/prettier)
--   [Airbnb](https://github.com/airbnb/javascript)
--   [react-router-dom](https://github.com/ReactTraining/react-router)
 -   [swr](https://github.com/vercel/swr)
--   [amazon-cognito-identity-js](https://github.com/aws-amplify/amplify-js)
--   [nivo](https://github.com/plouc/nivo)
 -   [axios](https://github.com/axios/axios)
