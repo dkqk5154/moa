@@ -4,12 +4,9 @@ you can build block and move character
 
 # Key Setting
 
-move : arrow keyboard or a, w, s, d
-
-## build Key Setting
-
-build : left mouse click
-multi-build : shift + left mouse click
+-   move : arrow keyboard or a, w, s, d \n
+-   build : left mouse click
+-   multi-build : shift + left mouse click
 
 ## Getting started
 
