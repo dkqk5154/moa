@@ -1,6 +1,4 @@
-# Moa
-
-## Canvas Tile Game
+# Canvas Tile Game
 
 -   you can build block and move character
 
