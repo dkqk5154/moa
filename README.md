@@ -2,9 +2,14 @@
 
 you can build block and move character
 
-# Create React App typescript setting
+# Key Setting
 
-cra based on setting
+move : arrow keyboard or a, w, s, d
+
+## build Key Setting
+
+build : left mouse click
+multi-build : shift + left mouse click
 
 ## Getting started
 
