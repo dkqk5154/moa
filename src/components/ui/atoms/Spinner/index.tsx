@@ -13,49 +13,41 @@ const Keyframes = {
 };
 
 const Styled = {
-	Body: styled.div<{ height: string }>`
-		display: flex;
-		width: 100%;
-		height: ${props => props.height};
-		margin: auto;
-		justify-content: center;
-		align-items: center;
-	`,
-	LoadingCircle: styled.div<{ size: string }>`
+	Spinner: styled.div<{ size: string }>`
 		margin: 0 auto;
 		width: ${props => props.size};
 		height: ${props => props.size};
-		border: 0.35rem solid ${props => props.theme.colors.gray100};
+		border: 0.35rem solid #ffffff;
 		border-radius: 50%;
-		border-top-color: ${props => props.theme.colors.primary3};
+		border-top-color: #3082f2;
 		animation: ${Keyframes.spinnerSpin} 1s ease-in-out infinite;
+	`,
+	SpinnerWrapper: styled.div`
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 80vh;
 	`,
 };
 
 interface SpinnerInterface {
-	size: string;
-	height: string;
-	isLoading: boolean;
-	children: any;
+	size?: string;
+	isLoading?: boolean;
+	children?: React.ReactNode;
 }
 
-const Spinner = (props: SpinnerInterface) => {
-	const { size, height, isLoading, children } = props;
-
+const Spinner = ({
+	size = '100%',
+	isLoading = true,
+	children,
+}: SpinnerInterface): JSX.Element => {
 	return isLoading ? (
-		<Styled.Body height={height}>
-			<Styled.LoadingCircle size={size} />
-		</Styled.Body>
+		<Styled.SpinnerWrapper>
+			<Styled.Spinner size={size} />
+		</Styled.SpinnerWrapper>
 	) : (
 		<>{children}</>
 	);
-};
-
-Spinner.defaultProps = {
-	size: '100%',
-	height: '',
-	isLoading: true,
-	children: '',
 };
 
 export default Spinner;
