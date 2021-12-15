@@ -1,8 +1,10 @@
-# Canvas Tile Game Moa
+# Moa
 
-you can build block and move character
+## Canvas Tile Game
 
-# Key Setting
+-   you can build block and move character
+
+## Key Setting
 
 -   move : arrow keyboard or a, w, s, d \n
 -   build : left mouse click
